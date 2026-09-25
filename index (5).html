@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>krapfen — запись</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#121014;
+    --surface:#1b181c;
+    --surface-2:#221e23;
+    --ink:#f4f1ec;
+    --ink-dim:#a79fa0;
+    --accent:#c1402b;
+    --line:#332e31;
+    --radius:6px;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:inherit;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 1px 1px, rgba(244,241,236,0.05) 1px, transparent 0) 0 0/14px 14px,
+      var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    display:flex;
+    flex-direction:column;
+    min-height:100%;
+  }
+  header{
+    padding:22px 20px 16px;
+    border-bottom:1px solid var(--line);
+  }
+  .wordmark{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:700;
+    font-size:30px;
+    letter-spacing:0.5px;
+    line-height:1;
+  }
+  .wordmark span{color:var(--accent);}
+  .sub{
+    margin-top:4px;
+    font-size:13px;
+    color:var(--ink-dim);
+  }
+  main{
+    flex:1;
+    padding:18px 20px 130px;
+  }
+  section{
+    margin-bottom:26px;
+  }
+  .label{
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:10px;
+    color:var(--ink);
+  }
+  .row{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .row.scroll{
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    padding-bottom:4px;
+    margin:0 -20px;
+    padding-left:20px;
+    padding-right:20px;
+  }
+  .row.scroll::-webkit-scrollbar{display:none;}
+  .chip{
+    position:relative;
+    flex:0 0 auto;
+    padding:10px 14px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    font-size:14px;
+    color:var(--ink);
+    cursor:pointer;
+    user-select:none;
+    transition:border-color .15s, background .15s;
+  }
+  .chip .tick{
+    position:absolute;
+    width:5px;height:5px;
+    border:1px solid var(--line);
+    border-radius:1px;
+    opacity:0;
+    transition:opacity .15s, border-color .15s;
+  }
+  .chip .tick.tl{top:-1px;left:-1px;border-right:none;border-bottom:none;}
+  .chip .tick.br{bottom:-1px;right:-1px;border-left:none;border-top:none;}
+  .chip.date{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-width:52px;
+    padding:10px 8px;
+  }
+  .chip.date .dow{font-size:11px;color:var(--ink-dim);text-transform:lowercase;}
+  .chip.date .num{font-family:'Big Shoulders Display',sans-serif;font-size:20px;font-weight:600;margin-top:2px;}
+  .chip.selected{
+    border-color:var(--accent);
+    background:rgba(193,64,43,0.12);
+  }
+  .chip.selected .tick{opacity:1;border-color:var(--accent);}
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    margin-bottom:14px;
+  }
+  .field label{font-size:13px;color:var(--ink-dim);}
+  .field input, .field textarea{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    color:var(--ink);
+    font-family:inherit;
+    font-size:15px;
+    padding:12px 13px;
+    outline:none;
+  }
+  .field input:focus, .field textarea:focus{border-color:var(--accent);}
+  .field textarea{resize:none;min-height:64px;}
+  .hint{
+    font-size:12px;
+    color:var(--ink-dim);
+    margin-top:8px;
+  }
+  .hint.warn{color:var(--accent);}
+  footer{
+    position:fixed;
+    left:0;right:0;bottom:0;
+    padding:14px 20px calc(14px + env(safe-area-inset-bottom,0px));
+    background:linear-gradient(180deg, rgba(18,16,20,0) 0%, var(--bg) 30%);
+  }
+  .submit{
+    width:100%;
+    padding:15px;
+    background:var(--accent);
+    color:#f4f1ec;
+    border:none;
+    border-radius:var(--radius);
+    font-family:'Big Shoulders Display',sans-serif;
+    font-weight:700;
+    font-size:19px;
+    letter-spacing:0.5px;
+    cursor:pointer;
+  }
+  .submit:disabled{
+    background:var(--surface-2);
+    color:var(--ink-dim);
+  }
+  .divider{
+    border:none;
+    border-top:1px dashed var(--line);
+    margin:0 0 26px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wordmark">krapfen<span>.</span></div>
+  <div class="sub">запись к тату-мастеру, Калининград</div>
+</header>
+
+<main>
+  <section>
+    <div class="label">Услуга</div>
+    <div class="row" id="services"></div>
+  </section>
+
+  <hr class="divider" />
+
+  <section>
+    <div class="label">Дата</div>
+    <div class="row scroll" id="dates"></div>
+  </section>
+
+  <hr class="divider" />
+
+  <section>
+    <div class="label">Время</div>
+    <div class="row" id="times"></div>
+  </section>
+
+  <hr class="divider" />
+
+  <section>
+    <div class="label">Ваши данные</div>
+    <div class="field">
+      <label for="name">Имя</label>
+      <input id="name" type="text" placeholder="Как к вам обращаться" />
+    </div>
+    <div class="field">
+      <label for="comment">Комментарий</label>
+      <textarea id="comment" placeholder="Что хотите набить, куда, размер, референс"></textarea>
+    </div>
+    <div class="hint" id="hint">Выберите услугу, дату и время</div>
+  </section>
+</main>
+
+<footer>
+  <button class="submit" id="submit" disabled>Записаться</button>
+</footer>
+
+<script>
+  const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+  if (tg) { tg.ready(); tg.expand(); }
+
+  const state = { service: null, date: null, time: null };
+
+  const SERVICES = ["Эскиз", "Оформление", "Кавер-ап", "Коррекция"];
+  const TIMES = ["11:00", "13:00", "15:00", "17:00", "19:00"];
+  const DOW = ["вс","пн","вт","ср","чт","пт","сб"];
+
+  function makeChip(text, group, value, opts) {
+    opts = opts || {};
+    const el = document.createElement('div');
+    el.className = 'chip' + (opts.extraClass ? ' ' + opts.extraClass : '');
+    el.innerHTML = '<span class="tick tl"></span><span class="tick br"></span>' + (opts.html || text);
+    el.addEventListener('click', () => {
+      document.querySelectorAll('#' + group + ' .chip').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      state[group.slice(0, -1)] = value;
+      updateSubmit();
+    });
+    return el;
+  }
+
+  const servicesEl = document.getElementById('services');
+  SERVICES.forEach(s => servicesEl.appendChild(makeChip(s, 'services', s)));
+
+  const datesEl = document.getElementById('dates');
+  const dateObjs = [];
+  const today = new Date();
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    dateObjs.push(d);
+    const label = d.getDate();
+    const dow = DOW[d.getDay()];
+    const iso = d.toISOString().slice(0, 10);
+    const html = '<span class="dow">' + dow + '</span><span class="num">' + label + '</span>';
+    datesEl.appendChild(makeChip(null, 'dates', iso, { html, extraClass: 'date' }));
+  }
+
+  const timesEl = document.getElementById('times');
+  TIMES.forEach(t => timesEl.appendChild(makeChip(t, 'times', t)));
+
+  const nameInput = document.getElementById('name');
+  const commentInput = document.getElementById('comment');
+  const hint = document.getElementById('hint');
+  const submitBtn = document.getElementById('submit');
+
+  if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.first_name) {
+    nameInput.value = tg.initDataUnsafe.user.first_name;
+  }
+
+  function updateSubmit() {
+    const ready = state.service && state.date && state.time;
+    submitBtn.disabled = !ready;
+    hint.textContent = ready
+      ? 'Всё готово — можно отправлять заявку'
+      : 'Выберите услугу, дату и время';
+  }
+
+  submitBtn.addEventListener('click', () => {
+    if (submitBtn.disabled) return;
+    const payload = {
+      action: 'booking_request',
+      service: state.service,
+      date: state.date,
+      time: state.time,
+      name: nameInput.value.trim() || undefined,
+      comment: commentInput.value.trim() || undefined,
+    };
+    if (tg) {
+      tg.sendData(JSON.stringify(payload));
+      tg.close();
+    } else {
+      hint.textContent = 'Открыто вне Telegram — данные: ' + JSON.stringify(payload);
+    }
+  });
+</script>
+</body>
+</html>
