@@ -2,562 +2,584 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<meta name="theme-color" content="#090a0b">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0705">
 <meta name="color-scheme" content="dark">
 <title>krapfen · тату · поддержка · запись 24/7</title>
 <style>
-:root{--bg:#090a0b;--ink:#f3f0eb;--muted:#85898d;--muted2:#64686d;--hair:#24272a;--cream:#efece6;--accent:#b43b32;--green:#5fbf6e;--orange:#d69a4a;--red:#c1544a;--ease:cubic-bezier(.16,1,.3,1)}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;height:100%;margin:0}
-body{overflow:hidden;background:#030404;color:var(--ink);font-family:Arial,Helvetica,sans-serif}
-button,input,textarea{font:inherit;color:inherit}
-button{border:0;background:none;text-align:left;cursor:pointer}
-.app{position:fixed;inset:50% auto auto 50%;transform:translate(-50%,-50%);width:min(100vw,480px);height:min(100svh,780px);min-height:560px;background:var(--bg);box-shadow:0 0 0 1px rgba(255,255,255,.05),0 25px 80px rgba(0,0,0,.55);display:flex;flex-direction:column;overflow:hidden}
-@media(max-width:480px){.app{width:100vw;height:100svh;min-height:0}}
+:root{
+  box-sizing:border-box;
+  --bg:#0a0705; --ink:#f3efe8; --muted:#8a8580; --muted2:#65605c; --hair:#252220; --hair2:#37332f;
+  --cream:#efece6; --accent:#c2432c; --accent2:#e3963f; --green:#4fae72; --orange:#e0a23c; --red:#c2432c;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;width:100%;height:100%;background:#000;}
+body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+button,input,textarea{font:inherit;color:inherit;}
+button{border:0;background:none;padding:0;cursor:pointer;}
+input,textarea{background:#000;border:0;outline:none;}
+input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid rgba(243,239,232,.5);outline-offset:2px;}
+a{color:inherit;text-decoration:none;}
+
+.app{position:relative;width:min(100vw,440px);height:min(100svh,860px);background:var(--bg);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6);display:flex;flex-direction:column;}
 
 /* topbar */
-.topbar{flex:0 0 auto;height:52px;padding:0 8px 0 4px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #181a1d;position:relative;z-index:20}
-.tb-left{display:flex;align-items:center;gap:2px;min-width:0}
-.tb-btn{width:30px;height:30px;display:grid;place-items:center;color:#b7b8b9;font-size:20px;flex:0 0 auto}
-.title{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:15px;font-weight:700;letter-spacing:-.3px}
-.tb-right{display:flex;gap:14px}
-.tb-right .tb-btn{font-size:19px}
+.topbar{flex:none;height:52px;padding:calc(env(safe-area-inset-top,0px)) 8px 0;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--hair);background:#080605;position:relative;z-index:30;}
+.tb-l{display:flex;align-items:center;gap:8px;min-width:0;}
+.tb-back{width:26px;height:26px;display:none;align-items:center;justify-content:center;font-size:18px;color:#c9c5c0;flex:none;}
+.tb-back.show{display:flex;}
+.tb-title{font-size:14px;font-weight:700;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tb-r{display:flex;align-items:center;gap:16px;flex:none;}
+.tb-icon{font-size:19px;color:#a9a5a0;width:20px;text-align:center;}
 
-/* scroll area */
-.scroll{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;position:relative}
-.view{display:none}
-.view.active{display:block}
-
-/* hero */
-.hero{position:relative;min-height:250px;padding:34px 14px 16px;overflow:hidden;border-bottom:1px solid #25272a;background:radial-gradient(75% 90% at 8% 0%,rgba(185,79,37,.44),rgba(133,49,29,.28) 27%,transparent 66%),radial-gradient(70% 100% at 92% 2%,rgba(112,64,26,.45),transparent 59%),linear-gradient(180deg,#2d1810 0%,#160d0c 31%,#0e1011 68%,#0a0c0d 100%)}
-.hero::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.55;background-image:radial-gradient(rgba(232,207,193,.5) .7px,transparent .8px);background-size:6px 6px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),transparent 90%)}
-.corner{position:absolute;width:13px;height:13px;border-color:#d6d0c8;border-style:solid;opacity:.9;z-index:2}
-.corner.tl{left:6px;top:12px;border-width:2px 0 0 2px}
-.corner.tr{right:14px;top:12px;border-width:2px 2px 0 0}
-.eyebrow{position:relative;z-index:3;margin:0 0 10px;font:9px/1 "Courier New",monospace;letter-spacing:2px;color:#ebe6e1;text-transform:uppercase}
-.brand{position:relative;z-index:3;margin:0;font-family:Impact,"Arial Black",Arial,sans-serif;font-weight:900;font-size:15vw;max-font-size:64px;line-height:.82;letter-spacing:-3px;color:#f0eee9;text-transform:uppercase;text-shadow:0 4px 20px rgba(0,0,0,.25)}
-@media(min-width:481px){.brand{font-size:64px}}
-.brand .dot{color:var(--accent)}
-.tagline{position:relative;z-index:3;margin-top:10px;font-size:12.5px;line-height:1.5;color:#ece9e4}
-.tagline span{display:block;color:#8a8f93}
-
-/* menu */
-.menu-item{width:100%;height:46px;padding:0 4px;display:flex;align-items:center;border-bottom:1px solid var(--hair);position:relative}
-.menu-item::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent);transform:scaleY(0);transition:transform .15s var(--ease)}
-.menu-item:active::before{transform:scaleY(1)}
-.m-label{font-size:14px;font-weight:700}
-.m-rule{flex:1;min-width:14px;margin:0 9px;border-bottom:1px dotted #383b3f;transform:translateY(1px)}
-.m-meta{white-space:nowrap;font:8px/1 "Courier New",monospace;letter-spacing:1.5px;color:#6d7176;text-transform:uppercase}
-.m-arrow{margin-left:4px;color:#777b7f;font-size:12px}
-.footer-note{padding:16px 4px 20px;font:9px/1 "Courier New",monospace;letter-spacing:1.5px;color:#5a5e62;text-transform:uppercase}
+/* generic screen */
+.screen{display:none;flex:1;overflow-y:auto;padding:0 0 100px;}
+.screen.active{display:block;}
+#scr-home.active{display:flex;flex-direction:column;overflow:hidden;padding-bottom:0;}
 
 /* ticker */
-.ticker{flex:0 0 auto;height:20px;overflow:hidden;border-bottom:1px solid var(--hair);white-space:nowrap}
-.ticker b{display:inline-block;padding-left:100%;font:8px/20px "Courier New",monospace;letter-spacing:2px;color:#5a5e62;text-transform:uppercase;animation:tick 18s linear infinite}
-@keyframes tick{to{transform:translateX(-100%)}}
+.ticker{overflow:hidden;white-space:nowrap;border-bottom:1px solid var(--hair);background:#070504;}
+.ticker b{display:inline-block;padding:6px 0;font:9px/1 "Courier New",monospace;font-weight:400;letter-spacing:2px;color:#5c5854;text-transform:uppercase;animation:tick 22s linear infinite;}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-/* page (care/faq/bookings/wizard) */
-.page{padding:14px 14px 18px}
-.page h1{font-family:Impact,"Arial Black",Arial,sans-serif;font-size:26px;letter-spacing:-.5px;margin:0 0 8px;text-transform:uppercase;font-style:italic}
-.page .intro{font-size:12px;line-height:1.5;color:#a3a7ab;margin:0 0 14px}
+/* hero (home) */
+.hero{position:relative;flex:1;min-height:190px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px 16px;border-bottom:1px solid var(--hair2);
+  background:radial-gradient(120% 90% at 15% 0%,rgba(199,86,35,.5),transparent 60%),radial-gradient(110% 100% at 100% 0%,rgba(224,150,63,.4),transparent 62%),linear-gradient(190deg,#2d1710 0%,#170d0b 35%,#0d0908 70%,var(--bg) 100%);}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.55;background-image:radial-gradient(rgba(235,210,196,.55) .7px,transparent .8px);background-size:6px 6px;mask-image:radial-gradient(60% 60% at 50% 45%,#000 0%,transparent 78%);}
+.corner{position:absolute;width:14px;height:14px;border-color:#d8d2c8;border-style:solid;opacity:.85;}
+.corner.tl{left:10px;top:12px;border-width:2px 0 0 2px;}
+.corner.tr{right:10px;top:12px;border-width:2px 2px 0 0;}
+.eyebrow{position:relative;margin:0 0 12px;font:9px/1 "Courier New",monospace;letter-spacing:2.4px;color:#e6e1da;text-transform:uppercase;}
+.brand{position:relative;margin:0;font-family:Impact,"Arial Narrow","Arial Black",Arial,sans-serif;font-weight:900;font-size:15vw;max-font-size:64px;font-size:clamp(40px,15vw,64px);line-height:.82;letter-spacing:-2px;color:#f2efe9;text-transform:uppercase;text-shadow:0 2px 18px rgba(0,0,0,.35);}
+.brand i{color:var(--accent);font-style:normal;}
+.tagline{position:relative;margin:12px 0 0;font-size:12.5px;line-height:1.5;color:#e9e5df;}
+.tagline span{display:block;color:#8a857f;}
+
+/* menu */
+.menu{flex:none;background:var(--bg);}
+.menu-item{width:100%;height:46px;padding:0 14px;display:flex;align-items:center;text-align:left;border-bottom:1px solid var(--hair);position:relative;}
+.menu-item:active{background:rgba(255,255,255,.03);}
+.menu-label{font-size:14px;font-weight:700;letter-spacing:-.1px;flex:none;}
+.menu-rule{flex:1;margin:0 10px;border-bottom:1px dotted var(--hair2);transform:translateY(2px);min-width:10px;}
+.menu-meta{font:8px/1 "Courier New",monospace;letter-spacing:1.6px;color:#6c6863;text-transform:uppercase;flex:none;}
+.menu-arrow{margin-left:6px;color:#75716c;font-size:13px;flex:none;}
+.footer-note{flex:none;padding:12px 14px 14px;font:9px/1 "Courier New",monospace;letter-spacing:1.8px;color:#5c5854;text-transform:uppercase;}
+
+/* cta */
+.cta-area{flex:none;position:absolute;left:0;right:0;bottom:0;z-index:25;padding:10px 12px calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(180deg,rgba(10,7,5,0),rgba(10,7,5,.9) 30%,var(--bg) 62%);}
+.cta{display:block;width:100%;height:42px;border-radius:7px;background:var(--cream);color:#0a0705;font-size:12.5px;font-weight:700;letter-spacing:.2px;transition:transform .12s,filter .12s;}
+.cta:active{transform:translateY(1px);filter:brightness(.92);}
+.cta[disabled]{opacity:.35;pointer-events:none;}
+
+/* generic content padding wrapper */
+.pad{padding:18px 14px 14px;}
+.h1{font-family:Impact,"Arial Narrow","Arial Black",Arial,sans-serif;font-weight:900;font-size:30px;letter-spacing:-1px;text-transform:uppercase;margin:0 0 6px;}
+.sub{font-size:12.5px;line-height:1.55;color:#9d9893;margin:0 0 16px;}
 
 /* tabs */
-.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:12px;margin-bottom:2px}
-.tab{flex:0 0 auto;padding:6px 11px;border:1px solid #2b2e31;border-radius:99px;font:9px "Courier New",monospace;letter-spacing:1px;text-transform:uppercase;color:#b7b8b9}
-.tab.active{background:var(--cream);color:#0a0b0c;border-color:var(--cream)}
-.tabsec{display:none;border-top:1px solid var(--hair);margin-top:2px}
-.tabsec.active{display:block}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.tab{padding:7px 12px;border:1px solid var(--hair2);border-radius:99px;font-size:10.5px;letter-spacing:.8px;text-transform:uppercase;color:#a7a29d;}
+.tab.on{background:var(--cream);color:#0a0705;border-color:var(--cream);font-weight:700;}
+
+/* rows / accordion */
+.row{border-top:1px solid var(--hair);padding:12px 0;}
+.rows{border-bottom:1px solid var(--hair);}
+.rowhead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;cursor:pointer;}
+.rowhead .lbl{font:9px/1.3 "Courier New",monospace;color:#66625d;letter-spacing:1px;white-space:nowrap;flex:none;width:64px;}
+.rowhead b{font-size:13px;flex:1;font-weight:700;}
+.rowhead .x{color:#7a756f;font-size:14px;flex:none;}
+.rowbody{margin-top:9px;padding-left:0;}
+.rowbody p{margin:0 0 8px;font-size:12px;line-height:1.55;color:#a7a29d;}
+.rowbody ul{margin:0;padding-left:14px;}
+.rowbody li{font-size:12px;line-height:1.6;color:#a7a29d;margin-bottom:6px;}
+.warn{margin-top:6px;padding:12px;border:1px solid #3a2420;border-radius:8px;background:rgba(194,67,44,.08);}
+.warn b{display:block;color:#e0917f;font-size:11px;letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px;}
+.warn p{margin:0;font-size:12px;line-height:1.55;color:#c9a8a0;}
+
+/* pain scale */
+.pz{padding:11px 0;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.pz-t b{font-size:13px;font-weight:700;display:block;}
+.pz-t p{margin:3px 0 0;font-size:11.5px;color:#918c87;line-height:1.4;}
+.bar{display:flex;gap:2px;flex:none;}
+.seg{width:8px;height:14px;border-radius:2px;background:#242220;}
 
 /* checklist */
-.progress-head{display:flex;align-items:baseline;gap:8px;padding:12px 0 4px}
-.progress-head .num{font-family:Impact,Arial,sans-serif;font-size:30px}
-.progress-head .lbl{font:8px "Courier New",monospace;letter-spacing:1px;color:#6d7176;text-transform:uppercase}
-.bar{display:flex;gap:3px;margin-bottom:6px}
-.bar i{flex:1;height:3px;background:#24272a;border-radius:2px}
-.bar i.on{background:var(--green)}
-.chk{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--hair)}
-.chk input{width:17px;height:17px;accent-color:var(--green);flex:0 0 auto;margin-top:1px}
-.chk b{font-size:13px;display:block}
-.chk p{margin:2px 0 0;font-size:11.5px;color:#8a8f93}
-.chk.done b{color:#6d7176;text-decoration:line-through}
+.kitcount{display:flex;align-items:baseline;gap:8px;margin-bottom:4px;}
+.kitcount b{font-family:Impact,"Arial Narrow",Arial,sans-serif;font-size:34px;}
+.kitcount span{font:9px/1.3 "Courier New",monospace;color:#65605c;letter-spacing:1px;text-transform:uppercase;}
+.kitbar{height:2px;background:var(--hair2);margin:10px 0 16px;}
+.kitbar i{display:block;height:100%;background:var(--green);width:0%;transition:width .25s;}
+.chk{display:flex;gap:11px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--hair);cursor:pointer;}
+.chk .box{width:16px;height:16px;border:1px solid var(--hair2);border-radius:4px;flex:none;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:11px;}
+.chk.on .box{background:var(--green);border-color:var(--green);color:#08110c;}
+.chk b{font-size:13px;display:block;}
+.chk p{margin:2px 0 0;font-size:11.5px;color:#918c87;}
 
-/* timeline / accordion */
-.tl{border-bottom:1px solid var(--hair)}
-.tl summary{list-style:none;padding:11px 0;cursor:pointer;display:flex;justify-content:space-between;gap:10px}
-.tl summary::-webkit-details-marker{display:none}
-.tl .when{font:8px "Courier New",monospace;color:#6d7176;letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
-.tl b{font-size:13px;display:block}
-.tl p{margin:0 0 11px;font-size:11.5px;color:#8a8f93;line-height:1.5}
-.tl ul{margin:0 0 11px;padding-left:12px;border-left:2px solid var(--green)}
-.tl li{font-size:11.5px;color:#c9cbcd;margin-bottom:6px;list-style:none}
-.warn{margin-top:8px;padding:10px 11px;background:#0c1013;border-left:2px solid var(--accent)}
-.warn b{display:block;font-size:9px;letter-spacing:1px;color:#d98d84;text-transform:uppercase;margin-bottom:4px}
-.warn p{margin:0;font-size:11.5px;color:#a3a7ab;line-height:1.5}
+/* nope list */
+.nn{display:flex;gap:10px;padding:11px 0;border-top:1px solid var(--hair);}
+.nn i{font:10px/1 "Courier New",monospace;color:var(--accent);flex:none;padding-top:2px;font-style:normal;}
+.nn b{font-size:13px;display:block;}
+.nn p{margin:3px 0 0;font-size:11.5px;color:#918c87;}
+.nn .tag{margin-top:5px;display:inline-block;font:8px/1 "Courier New",monospace;letter-spacing:1px;text-transform:uppercase;color:#79746f;border:1px solid var(--hair2);border-radius:99px;padding:3px 7px;}
 
-/* pain rows / nельзя rows */
-.row{padding:11px 0;border-bottom:1px solid var(--hair);display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-.row b{font-size:13px;display:block}
-.row p{margin:2px 0 0;font-size:11.5px;color:#8a8f93}
-.dots{display:flex;gap:3px;flex:0 0 auto;margin-top:3px}
-.dots i{width:6px;height:6px;border-radius:99px;background:#2b2e31}
-.dots i.on.g{background:var(--green)}
-.dots i.on.o{background:var(--orange)}
-.dots i.on.r{background:var(--red)}
-.badge{flex:0 0 auto;font:8px "Courier New",monospace;letter-spacing:.5px;color:#9a9ea2;background:#161a1d;border:1px solid #2b2e31;padding:3px 6px;border-radius:5px;white-space:nowrap}
+/* contact strip */
+.contact{margin-top:14px;padding:12px;border:1px solid var(--hair2);border-radius:8px;display:flex;align-items:center;justify-content:space-between;}
+.contact span:first-child{font-size:12px;color:#a7a29d;}
+.contact b{color:var(--accent2);font-size:12px;}
+.legal{margin-top:10px;font-size:10px;line-height:1.5;color:#57534f;}
 
-.contact-row{margin-top:12px;padding:12px 11px;background:#0c1013;border:1px solid #23272a;border-radius:8px;display:flex;justify-content:space-between;font-size:12.5px}
-.contact-row span:last-child{color:#e0a15c}
-.small-note{margin-top:12px;font:9px "Courier New",monospace;letter-spacing:.5px;color:#54585c}
+/* faq/section title */
+.sec-h{font:9px/1 "Courier New",monospace;letter-spacing:2px;color:#66625d;text-transform:uppercase;margin:20px 0 2px;}
+.sec-h:first-child{margin-top:2px;}
 
-/* faq groups */
-.grp-h{padding:14px 0 4px;font:9px "Courier New",monospace;letter-spacing:1.5px;color:#6d7176;text-transform:uppercase;border-top:1px solid var(--hair);margin-top:4px}
-.grp-h:first-child{border-top:0}
-.qa summary{list-style:none;padding:11px 0;font-size:13px;font-weight:700;display:flex;justify-content:space-between;cursor:pointer}
-.qa summary::-webkit-details-marker{display:none}
-.qa p{margin:0 0 11px;font-size:11.5px;color:#a3a7ab;line-height:1.5}
-.qa{border-bottom:1px solid var(--hair)}
+/* placeholder grid (portfolio) */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hair);}
+.ph{aspect-ratio:1;background:#0d0a08;border:1px dashed #302b27;display:flex;align-items:center;justify-content:center;color:#4c4844;font-size:22px;}
+.ph-note{padding:14px;font-size:12px;line-height:1.55;color:#8a857f;}
 
-/* bookings */
-.stamp{width:74px;height:74px;margin:30px auto 14px;border:1px solid #2b2e31;border-radius:99px;display:grid;place-items:center;position:relative}
-.stamp i{width:6px;height:6px;border-radius:99px;background:var(--accent)}
-.empty-box{border:1px solid #23272a;border-radius:8px;padding:20px 20px 26px;text-align:center;margin-top:6px}
-.empty-box h3{font-family:Impact,Arial,sans-serif;font-size:17px;letter-spacing:-.3px;margin:0 0 6px}
-.empty-box p{margin:0;font-size:12px;color:#8a8f93;line-height:1.5}
-.bk-card{border:1px solid #23272a;border-radius:8px;padding:12px 13px;margin-bottom:9px}
-.bk-card .r1{display:flex;justify-content:space-between;font-size:13px;font-weight:700}
-.bk-card .r2{margin:4px 0 8px;font-size:11.5px;color:#8a8f93}
-.bk-status{font:8px "Courier New",monospace;letter-spacing:1px;text-transform:uppercase;padding:3px 7px;border-radius:5px;background:#1c1712;color:#e0a15c;border:1px solid #3a2c1c}
-.bk-cancel{font:9px "Courier New",monospace;letter-spacing:1px;text-transform:uppercase;color:#c1544a}
+/* service / date rows */
+.svc-row{border-top:1px solid var(--hair);padding:12px 0;cursor:pointer;}
+.svc-row:last-child{border-bottom:1px solid var(--hair);}
+.svc-row.on{background:var(--cream);margin:0 -14px;padding:12px 14px;color:#0a0705;}
+.svc-top{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.svc-top b{font-size:14px;font-weight:800;text-transform:uppercase;}
+.svc-top span{font:9px/1 "Courier New",monospace;letter-spacing:1px;text-transform:uppercase;color:#79746f;flex:none;}
+.svc-row.on .svc-top span{color:#5a564f;}
+.svc-desc{font-size:11px;color:#918c87;margin-top:4px;}
+.svc-row.on .svc-desc{color:#524e49;}
 
-/* wizard */
-.svc-preview{text-align:center;padding:16px 10px 14px}
-.svc-preview h2{font-family:Impact,"Arial Black",Arial,sans-serif;font-size:24px;font-style:italic;text-transform:uppercase;margin:0 0 5px}
-.svc-preview .meta{font:9px "Courier New",monospace;letter-spacing:1px;color:#6d7176;text-transform:uppercase}
-.svc-preview .desc{margin-top:6px;font-size:12px;color:#a3a7ab}
-.svc-preview hr{width:26px;border:none;border-top:2px solid #e0a15c;margin:12px auto}
-.svc-preview .hint{font:8px "Courier New",monospace;letter-spacing:1px;color:#5a5e62;text-transform:uppercase;line-height:1.8}
-.svc-row{display:flex;justify-content:space-between;align-items:center;padding:13px 4px;border-top:1px solid var(--hair);cursor:pointer}
-.svc-row:last-child{border-bottom:1px solid var(--hair)}
-.svc-row.sel{background:var(--cream);color:#0a0b0c;margin:0 -14px;padding-left:18px;padding-right:18px}
-.svc-row b{font-size:13px}
-.svc-row span{font:8px "Courier New",monospace;letter-spacing:1px;text-transform:uppercase;color:#8a8f93}
-.svc-row.sel span{color:#5a5e62}
+.date-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-top:1px solid var(--hair);cursor:pointer;}
+.date-row:last-child{border-bottom:1px solid var(--hair);}
+.date-row.off{opacity:.35;pointer-events:none;}
+.date-row b{font-size:13px;font-weight:700;}
+.date-row span{font:9px/1 "Courier New",monospace;letter-spacing:1px;text-transform:uppercase;color:#7fae8f;}
+.date-row.off span{color:#6c6863;}
 
-.month-h{font-family:Impact,"Arial Black",Arial,sans-serif;font-size:24px;padding:12px 0 2px;display:flex;justify-content:space-between;align-items:baseline}
-.month-h small{font:9px "Courier New",monospace;color:#6d7176;letter-spacing:1px}
-.date-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--hair)}
-.date-row b{font-size:13px}
-.date-row.off b,.date-row.off span{color:#4a4d50}
-.date-row .closed{color:#c1544a}
-.date-row .free{color:var(--green)}
-.date-row.sel{background:var(--cream);color:#0a0b0c;margin:0 -14px;padding:14px 18px;font-size:17px}
-.date-row.sel b{font-size:19px}
-.date-row.sel span{color:#5a5e62}
-.date-sub{font:8px "Courier New",monospace;letter-spacing:1px;color:#6d7176;text-transform:uppercase;padding:0 0 10px;margin:-4px -14px 4px;background:var(--cream);padding-left:18px}
+.tz{display:flex;justify-content:space-between;font:9px/1 "Courier New",monospace;letter-spacing:1.4px;color:#65605c;text-transform:uppercase;margin-bottom:6px;}
 
-.time-h{display:flex;justify-content:space-between;align-items:center;padding:10px 0 12px}
-.time-h .d{font-family:Impact,"Arial Black",Arial,sans-serif;font-size:26px}
-.time-h button{font:8px "Courier New",monospace;letter-spacing:1px;text-transform:uppercase;border:1px solid #2b2e31;border-radius:99px;padding:6px 11px;color:#b7b8b9}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--hair);border-left:1px solid var(--hair)}
-.slot{padding:16px 0;text-align:center;font-size:13px;border-right:1px solid var(--hair);border-bottom:1px solid var(--hair)}
-.slot.sel{background:#c9c6c0;color:#0a0b0c}
-.slot.taken{color:#4a4d50;text-decoration:line-through}
+.time-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.time-head .other{font:9px/1 "Courier New",monospace;letter-spacing:1px;color:#c9c5c0;border:1px solid var(--hair2);border-radius:99px;padding:6px 10px;text-transform:uppercase;}
+.free{font:9px/1 "Courier New",monospace;color:#7fae8f;letter-spacing:1px;text-transform:uppercase;}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--hair);border-radius:8px;overflow:hidden;}
+.tcell{padding:14px 0;text-align:center;font-size:13px;border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);cursor:pointer;}
+.tcell:nth-child(3n){border-right:0;}
+.tcell.off{color:#4c4844;pointer-events:none;}
+.tcell.on{background:var(--cream);color:#0a0705;font-weight:700;}
 
-.f-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--hair);gap:10px}
-.f-row label{font:8px "Courier New",monospace;letter-spacing:1px;color:#6d7176;text-transform:uppercase;flex:0 0 auto}
-.f-row input{flex:1;background:none;border:none;text-align:right;color:var(--ink);outline:none;font-size:13px}
-.f-row input::placeholder{color:#5a5e62}
-.f-area label{display:block;font:8px "Courier New",monospace;letter-spacing:1px;color:#6d7176;text-transform:uppercase;margin:14px 0 8px}
-textarea{width:100%;min-height:72px;background:#0a0c0d;border:1px solid #2b2e31;border-radius:6px;padding:10px 11px;color:var(--ink);outline:none;resize:none;font-size:12.5px}
-textarea::placeholder{color:#5a5e62}
-.refs{width:52px;height:52px;border:1px dashed #3a3d40;border-radius:6px;display:grid;place-items:center;color:#6d7176;font-size:20px;margin-top:8px}
+/* form */
+.field-row{border-bottom:1px solid var(--hair);padding:12px 0;}
+.field-row label{display:block;font:9px/1 "Courier New",monospace;letter-spacing:1.4px;color:#65605c;text-transform:uppercase;margin-bottom:6px;}
+.field-row input,.field-row textarea{width:100%;color:var(--ink);font-size:13.5px;}
+.field-row textarea{resize:none;height:60px;line-height:1.4;}
+.field-row input::placeholder,.field-row textarea::placeholder{color:#524e49;}
+.refs{display:flex;gap:8px;margin-top:4px;}
+.refadd{width:44px;height:44px;border:1px dashed var(--hair2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#79746f;flex:none;}
+.reftile{width:44px;height:44px;border-radius:8px;background:linear-gradient(140deg,#3a2018,#1c1310);flex:none;}
+.chip{display:inline-block;margin-top:14px;font:9px/1 "Courier New",monospace;letter-spacing:1px;text-transform:uppercase;color:#a7a29d;border:1px solid var(--hair2);border-radius:99px;padding:6px 10px;}
 
-/* footer cta */
-.cta-area{flex:0 0 auto;padding:10px 14px 14px;background:linear-gradient(180deg,rgba(9,10,11,0),var(--bg) 40%)}
-.cta{display:block;width:100%;height:42px;border:1px solid #d8d5cf;border-radius:6px;background:var(--cream);color:#08090a;font-size:12px;font-weight:700;letter-spacing:.2px}
-.cta:active{filter:brightness(.93)}
+/* my bookings */
+.mr-head{display:flex;justify-content:space-between;align-items:flex-end;padding:22px 14px 14px;border-bottom:1px solid var(--hair2);position:relative;}
+.mr-head .corner{opacity:.9;}
+.mr-head h1{font-family:Impact,"Arial Narrow",Arial,sans-serif;font-size:26px;letter-spacing:-1px;margin:0;text-transform:uppercase;line-height:.9;}
+.mr-count{font:10px/1 "Courier New",monospace;color:#79746f;border:1px solid var(--hair2);border-radius:99px;padding:5px 9px;}
+.empty{margin:40px auto 0;text-align:center;max-width:260px;}
+.stamp{width:64px;height:64px;margin:0 auto 16px;border:1px dashed var(--hair2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;color:#4c4844;}
+.empty b{display:block;font-size:15px;letter-spacing:.3px;margin-bottom:6px;}
+.empty p{margin:0;font-size:12px;color:#918c87;line-height:1.5;}
+.bcard{margin:0 14px 12px;padding:13px;border:1px solid var(--hair2);border-radius:8px;}
+.bcard-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.bcard b{font-size:14px;}
+.bcard .st{font:8px/1 "Courier New",monospace;letter-spacing:1px;text-transform:uppercase;color:var(--orange);border:1px solid #4a3a20;border-radius:99px;padding:4px 8px;}
+.bcard p{margin:6px 0 0;font-size:12px;color:#918c87;}
+.bcard button{margin-top:8px;font:9px/1 "Courier New",monospace;letter-spacing:1px;color:#7a756f;text-transform:uppercase;}
 
 /* toast */
-.toast{position:absolute;left:50%;bottom:70px;z-index:60;transform:translate(-50%,10px);opacity:0;pointer-events:none;padding:10px 15px;border:1px solid #303438;border-radius:8px;background:#14181b;color:#eeece8;font-size:12px;white-space:nowrap;box-shadow:0 15px 40px rgba(0,0,0,.4);transition:.2s var(--ease)}
-.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast{position:absolute;left:50%;bottom:78px;z-index:60;transform:translate(-50%,10px);opacity:0;pointer-events:none;padding:10px 14px;border:1px solid var(--hair2);border-radius:8px;background:#15100d;font-size:12px;white-space:nowrap;transition:opacity .2s,transform .2s;}
+.toast.show{opacity:1;transform:translate(-50%,0);}
 </style>
 </head>
 <body>
 <div class="app">
 
   <div class="topbar">
-    <div class="tb-left">
-      <button class="tb-btn" id="backBtn" style="display:none" onclick="goHome()">←</button>
-      <div class="title">krapfen · <b>тату</b> · поддержка · запись 24/7</div>
+    <div class="tb-l">
+      <button class="tb-back" id="backBtn" onclick="nav.back()">←</button>
+      <span class="tb-title">krapfen · тату · поддержка · запись 24/7</span>
     </div>
-    <div class="tb-right"><button class="tb-btn">⋮</button><button class="tb-btn">×</button></div>
+    <div class="tb-r">
+      <button class="tb-icon" onclick="toast('Меню скоро появится')">⋮</button>
+      <button class="tb-icon" onclick="nav.home()">×</button>
+    </div>
   </div>
 
-  <div class="scroll" id="scroll">
-
-    <!-- HOME -->
-    <div class="view active" id="v-home">
-      <div class="hero">
-        <span class="corner tl"></span><span class="corner tr"></span>
-        <p class="eyebrow">KRAPFEN / TATTOO</p>
-        <h1 class="brand">KRAP<br>FEN<span class="dot">.</span></h1>
-        <p class="tagline">Блэкворк, орнамент, тонкая линия.<span>Эскиз под тебя, не с листа.</span></p>
-      </div>
-      <div class="menu">
-        <button class="menu-item" onclick="openView('works')"><span class="m-label">работы</span><span class="m-rule"></span><span class="m-meta">портфолио</span><span class="m-arrow">›</span></button>
-        <button class="menu-item" onclick="openView('care')"><span class="m-label">уход за тату</span><span class="m-rule"></span><span class="m-meta">памятка</span><span class="m-arrow">›</span></button>
-        <button class="menu-item" onclick="openView('faq')"><span class="m-label">вопросы</span><span class="m-rule"></span><span class="m-meta">как всё устроено</span><span class="m-arrow">›</span></button>
-        <button class="menu-item" onclick="openView('bookings')"><span class="m-label">мои записи</span><span class="m-rule"></span><span class="m-meta" id="bkMeta">статусы</span><span class="m-arrow">›</span></button>
-        <button class="menu-item" onclick="location.href='https://t.me/krapfenn'"><span class="m-label">написать мастеру</span><span class="m-rule"></span><span class="m-meta">@krapfenn</span><span class="m-arrow">›</span></button>
-      </div>
-      <p class="footer-note">Калининград · сеансы по записи</p>
+  <!-- HOME -->
+  <main class="screen active" id="scr-home">
+    <div class="hero">
+      <div class="corner tl"></div><div class="corner tr"></div>
+      <p class="eyebrow">KRAPFEN / TATTOO</p>
+      <h1 class="brand">KRAP<br>FEN<i>.</i></h1>
+      <p class="tagline">Блэкворк, орнамент, тонкая линия.<span>Эскиз под тебя, не с листа.</span></p>
     </div>
+    <nav class="menu">
+      <button class="menu-item" onclick="nav.go('portfolio')"><span class="menu-label">работы</span><span class="menu-rule"></span><span class="menu-meta">портфолио</span><span class="menu-arrow">›</span></button>
+      <button class="menu-item" onclick="nav.go('care')"><span class="menu-label">уход за тату</span><span class="menu-rule"></span><span class="menu-meta">памятка</span><span class="menu-arrow">›</span></button>
+      <button class="menu-item" onclick="nav.go('faq')"><span class="menu-label">вопросы</span><span class="menu-rule"></span><span class="menu-meta">как всё устроено</span><span class="menu-arrow">›</span></button>
+      <button class="menu-item" onclick="nav.go('book')"><span class="menu-label">мои записи</span><span class="menu-rule"></span><span class="menu-meta">статусы</span><span class="menu-arrow">›</span></button>
+      <a class="menu-item" href="https://t.me/neznai01" target="_blank" rel="noopener"><span class="menu-label">написать мастеру</span><span class="menu-rule"></span><span class="menu-meta">@neznai01</span><span class="menu-arrow">›</span></a>
+    </nav>
+    <p class="footer-note">Калининград · сеанс по записи</p>
+  </main>
 
-    <!-- WORKS -->
-    <div class="view" id="v-works">
-      <div class="page" style="padding-top:14px">
-        <p class="intro">Свежие работы. Оригинальные фото — замени плейсхолдеры на свои снимки.</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px" id="worksGrid"></div>
-        <p class="small-note" style="margin-top:14px">@krapfenn</p>
-      </div>
+  <!-- PORTFOLIO -->
+  <main class="screen" id="scr-portfolio">
+    <p class="ph-note">Фото работ пока не загружены — сюда попадут снимки из портфолио, как только они появятся.</p>
+    <div class="grid2" id="phGrid"></div>
+  </main>
+
+  <!-- CARE -->
+  <main class="screen" id="scr-care">
+    <div class="ticker"><b id="careTick"></b></div>
+    <div class="pad">
+      <h1 class="h1">Уход за тату</h1>
+      <p class="sub">Заживление зависит от ухода не меньше, чем от работы мастера. Здесь то, что важно знать до и после сеанса.</p>
+      <div class="tabs" id="careTabs"></div>
+      <div id="careBody"></div>
+      <div class="contact"><span>Вопрос по своей работе</span><a href="https://t.me/neznai01" target="_blank" rel="noopener"><b>@neznai01 ›</b></a></div>
+      <p class="legal">Памятка носит ознакомительный характер. Вопросы по конкретной работе — мастеру, по здоровью — врачу.</p>
     </div>
+  </main>
 
-    <!-- CARE -->
-    <div class="view" id="v-care">
-      <div class="ticker"><b id="tickCare"></b></div>
-      <div class="page">
-        <h1>Уход за тату</h1>
-        <p class="intro">Заживление зависит от ухода не меньше, чем от работы мастера. Здесь то, что важно знать до и после сеанса.</p>
-        <div class="tabs" id="careTabs"></div>
-        <div id="careBody"></div>
-        <div class="contact-row"><span>Вопрос по своей работе</span><span>@krapfen</span></div>
-        <p class="small-note">Памятка носит ознакомительный характер. Вопросы по конкретной работе — мастеру, по здоровью — врачу.</p>
-      </div>
+  <!-- FAQ -->
+  <main class="screen" id="scr-faq">
+    <div class="ticker"><b>ЗАПИСЬ · СЕАНС · ОГРАНИЧЕНИЯ · ПОСЛЕ · ЧАСТЫЕ ВОПРОСЫ · ЗАПИСЬ · СЕАНС · ОГРАНИЧЕНИЯ · ПОСЛЕ · ЧАСТЫЕ ВОПРОСЫ ·&nbsp;</b></div>
+    <div class="pad">
+      <h1 class="h1">Вопросы</h1>
+      <p class="sub">То, что чаще всего спрашивают до записи. Если ответа здесь нет, напишите мастеру — это быстрее.</p>
+      <div id="faqBody"></div>
+      <div class="contact"><span>Не нашли ответ?</span><a href="https://t.me/neznai01" target="_blank" rel="noopener"><b>@neznai01 ›</b></a></div>
     </div>
+  </main>
 
-    <!-- FAQ -->
-    <div class="view" id="v-faq">
-      <div class="ticker"><b id="tickFaq"></b></div>
-      <div class="page">
-        <h1>Вопросы</h1>
-        <p class="intro">То, что чаще всего спрашивают до записи. Если ответа здесь нет — напишите мастеру, это быстрее.</p>
-        <div id="faqBody"></div>
-        <div class="contact-row"><span>Остался вопрос? Напишите</span><span>@krapfenn</span></div>
-      </div>
+  <!-- MY BOOKINGS -->
+  <main class="screen" id="scr-book">
+    <div class="mr-head">
+      <div class="corner tl" style="border-color:#4c4844"></div>
+      <h1>Мои<br>записи</h1>
+      <span class="mr-count" id="mrCount">[ 000 ]</span>
     </div>
+    <div id="bookBody"></div>
+  </main>
 
-    <!-- BOOKINGS -->
-    <div class="view" id="v-bookings">
-      <div class="ticker"><b>мои записи · статусы заявок · мои записи · статусы заявок · </b></div>
-      <div class="page">
-        <h1>Мои записи</h1>
-        <div id="bkBody"></div>
-      </div>
+  <!-- WIZARD: service -->
+  <main class="screen" id="scr-svc">
+    <div class="ticker"><b>ШАГ 1/4 · ВЫБОР УСЛУГИ · ШАГ 1/4 · ВЫБОР УСЛУГИ · ШАГ 1/4 · ВЫБОР УСЛУГИ ·&nbsp;</b></div>
+    <div class="pad">
+      <h1 class="h1" id="svcName">—</h1>
+      <p class="sub" id="svcMeta">&nbsp;</p>
+      <p class="legal" style="margin-bottom:14px">Длительность ориентировочная, точную мастер назовёт после эскиза.</p>
+      <div id="svcList"></div>
     </div>
+  </main>
 
-    <!-- WIZARD STEP 1 -->
-    <div class="view" id="v-s1">
-      <div class="ticker"><b>шаг 01/03 · выбор услуги · шаг 01/03 · выбор услуги · </b></div>
-      <div class="page" style="padding-top:4px">
-        <div class="svc-preview" id="svcPreview"></div>
-        <div id="svcList"></div>
-      </div>
+  <!-- WIZARD: date -->
+  <main class="screen" id="scr-date">
+    <div class="ticker"><b>ШАГ 2/4 · ВЫБОР ДАТЫ · 14 ДНЕЙ ВПЕРЁД · ШАГ 2/4 · ВЫБОР ДАТЫ · 14 ДНЕЙ ВПЕРЁД ·&nbsp;</b></div>
+    <div class="pad">
+      <div class="tz"><span>Europe / Kaliningrad</span><span id="tzMonth">—</span></div>
+      <div id="dateList"></div>
     </div>
+  </main>
 
-    <!-- WIZARD STEP 2a: dates -->
-    <div class="view" id="v-s2a">
-      <div class="ticker"><b id="tickDate"></b></div>
-      <div class="page">
-        <div class="month-h"><span id="monthLbl"></span><small>UTC+2</small></div>
-        <p class="small-note" style="margin:-2px 0 6px">Europe / Kaliningrad</p>
-        <div id="dateList"></div>
-      </div>
+  <!-- WIZARD: time -->
+  <main class="screen" id="scr-time">
+    <div class="ticker"><b>ШАГ 3/4 · ВЫБОР ВРЕМЕНИ · ШАГ 3/4 · ВЫБОР ВРЕМЕНИ · ШАГ 3/4 · ВЫБОР ВРЕМЕНИ ·&nbsp;</b></div>
+    <div class="pad">
+      <div class="time-head"><h1 class="h1" id="timeDate" style="margin:0">—</h1><button class="other" onclick="nav.go('date')">другой день</button></div>
+      <p class="free" id="freeCount">&nbsp;</p><br>
+      <div class="tgrid" id="tgrid"></div>
+      <p class="legal">Забронируем сразу. Время проверяется повторно при отправке заявки.</p>
     </div>
+  </main>
 
-    <!-- WIZARD STEP 2b: time -->
-    <div class="view" id="v-s2b">
-      <div class="ticker"><b>шаг 02/03 · выбор времени · шаг 02/03 · выбор времени · </b></div>
-      <div class="page">
-        <div class="time-h"><span class="d" id="timeDayLbl"></span><button onclick="openView('s2a')">другой день</button></div>
-        <div class="grid3" id="timeGrid"></div>
-        <p class="small-note" style="margin-top:10px">Зачёркнутое уже занято.<br>Время проверяется повторно при отправке заявки.</p>
-      </div>
+  <!-- WIZARD: idea -->
+  <main class="screen" id="scr-idea">
+    <div class="ticker"><b id="ideaTick"></b></div>
+    <div class="pad">
+      <h1 class="h1">Расскажи про идею</h1>
+      <div class="field-row"><label>Имя</label><input id="fName" placeholder="Как к тебе обращаться"></div>
+      <div class="field-row"><label>Контакт</label><input id="fContact" placeholder="@твой_ник"></div>
+      <div class="field-row"><label>Размер</label><input id="fSize" placeholder="например, 12 см"></div>
+      <div class="field-row"><label>Зона</label><input id="fZone" placeholder="предплечье"></div>
+      <div class="field-row"><label>Идея</label><textarea id="fIdea" placeholder="Что хочешь набить, в каком стиле, без заливки или с ней"></textarea></div>
+      <div class="field-row" style="border-bottom:0"><label>Референсы</label><div class="refs" id="refRow"><button class="refadd" onclick="wiz_addRef()">+</button></div></div>
+      <span class="chip" id="svcChip">услуга</span>
+      <p class="legal">Работаем с 18 лет. Паспорт может понадобиться на сеансе.</p>
     </div>
+  </main>
 
-    <!-- WIZARD STEP 3 -->
-    <div class="view" id="v-s3">
-      <div class="ticker"><b id="tickStep3"></b></div>
-      <div class="page">
-        <h1>Расскажи про идею</h1>
-        <div class="f-row"><label>имя</label><input id="fName" placeholder="как к тебе обращаться" value="Киря"></div>
-        <div class="f-row"><label>контакт</label><input id="fContact" placeholder="@username" value="@krapfen_client"></div>
-        <div class="f-row"><label>размер</label><input id="fSize" placeholder="например, 12 см"></div>
-        <div class="f-row"><label>зона</label><input id="fZone" placeholder="предплечье"></div>
-        <div class="f-area"><label>идея</label><textarea id="fIdea" placeholder="что хочешь набить, в каком стиле, без заливки или с ней"></textarea></div>
-        <div class="f-area"><label>референсы · 0/3</label><div class="refs">+</div></div>
-        <p class="small-note">Работаем с 18 лет. Паспорт может понадобиться на сеансе.</p>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="cta-area"><button class="cta" id="ctaBtn"></button></div>
+  <div class="cta-area"><button class="cta" id="ctaBtn">Записаться</button></div>
   <div class="toast" id="toast"></div>
 </div>
 
 <script>
 /* ---------- data ---------- */
-const CARE = [
- {id:'heal',name:'заживление',type:'tl',items:[
-   {when:'день 0',title:'Сразу после сеанса',text:'Кожа красная и горячая, выступает сукровица. Это работа иммунитета, а не воспаление.',bullets:['Плёнку снимаем тогда, когда сказал мастер: обычную через 2–4 часа, заживляющую можно носить несколько дней','Первое мытьё: тёплая вода, мягкое мыло без отдушек, без мочалки и трения','Промокнуть одноразовым полотенцем и дать высохнуть на воздухе']},
-   {when:'дни 1–3',title:'Сукровица и отёк',text:'Небольшая припухлость и лёгкие выделения — нормальная реакция кожи.'},
-   {when:'дни 4–7',title:'Корочка и зуд',text:'Не сдирать и не чесать — так остаются пробелы и шрамы.'},
-   {when:'недели 2–3',title:'Кожа закрылась',text:'Поверхность выглядит зажившей, но глубокие слои ещё восстанавливаются.'},
-   {when:'месяцы 1–2',title:'Окончательный вид',text:'Именно сейчас виден финальный цвет и чёткость линий.'}
- ],warn:'Покраснение расползается за пределы работы, нарастает отёк, появляется гной, боль усиливается на третий день и позже, поднялась температура. Это не «так бывает», это повод показаться врачу и не ждать.'},
- {id:'pain',name:'где больно',type:'pain',items:[
-   {t:'Предплечье',d:'Мягкие ткани, самая спокойная зона',lvl:2},
-   {t:'Плечо',d:'Терпимо, можно сидеть долго',lvl:2},
-   {t:'Бедро',d:'Много мышц, хорошо переносит длинные сеансы',lvl:2},
-   {t:'Икра',d:'Ближе к кости чувствительнее',lvl:3},
-   {t:'Лопатка',d:'Зависит от близости к позвоночнику',lvl:3},
-   {t:'Предплечье внутри',d:'Тонкая кожа, ощущается острее',lvl:3},
-   {t:'Шея',d:'Чувствительно и сложно сидеть неподвижно',lvl:3},
-   {t:'Рёбра',d:'Кость прямо под кожей, дыхание мешает',lvl:4},
-   {t:'Живот',d:'Кожа подвижная, ощущения неровные',lvl:3},
-   {t:'Стопа и щиколотка',d:'Кость, тонкая кожа, дольше заживает',lvl:4}
- ]},
- {id:'kit',name:'сборы',type:'kit',items:[
-   {t:'Выспаться',d:'Уставшее тело хуже переносит долгий сеанс'},
-   {t:'Плотно поесть за 1,5–2 часа',d:'Голодный желудок это головокружение через час'},
-   {t:'Без алкоголя сутки',d:'Разжижает кровь, пигмент ложится хуже'},
-   {t:'Без свежего загара',d:'По обгоревшей коже не бьют'},
-   {t:'Свободная одежда',d:'С доступом к нужной зоне, которую не жалко'},
-   {t:'Вода и что-то сладкое',d:'Поддержать уровень сахара на длинном сеансе'},
-   {t:'Паспорт',d:'Может понадобиться на сеансе'},
-   {t:'Предупредить о здоровье',d:'Аллергии, лекарства, хронические болезни'},
-   {t:'Взять референсы',d:'Если хочешь что-то уточнить перед сеансом'}
- ]},
- {id:'no',name:'нельзя',type:'no',items:[
-   {t:'Сдирать корочки и чесать',d:'Самая частая причина пробелов и шрамов',b:'до заживления'},
-   {t:'Баня, сауна, бассейн, море',d:'Горячая вода размягчает корку, водоёмы — источник инфекции',b:'2–3 недели'},
-   {t:'Солнце и солярий',d:'Ультрафиолет выжигает пигмент быстрее всего',b:'до заживления, потом spf'},
-   {t:'Долгая ванна',d:'Душ можно сразу, а размокшая кожа теряет пигмент',b:'2 недели'},
-   {t:'Алкоголь',d:'Усиливает сукровицу и отёк',b:'сутки до и после'},
-   {t:'Тесная синтетика',d:'Трение по свежей работе стирает пигмент',b:'первая неделя'},
-   {t:'Спорт до пота',d:'Пот и трение мешают коже закрыться',b:'3–5 дней'},
-   {t:'Мази на своё усмотрение',d:'Спирт, зелёнка, вазелин только вредят',b:'всегда'}
- ]},
- {id:'facts',name:'факты',type:'facts',items:[
-   {t:'Пигмент лежит в дерме',d:'Поэтому тату не смывается и не стирается со временем.'},
-   {t:'Выцветает не от времени, а от солнца',d:'UV-защита продлевает чёткость линий на годы.'},
-   {t:'Чёрный живёт дольше цветного',d:'Крупные молекулы пигмента медленнее вымываются.'},
-   {t:'Тонкая линия требует ухода строже',d:'Малый объём пигмента легче потерять при трении.'},
-   {t:'Кожа бывает разная',d:'Скорость заживления зависит от возраста и типа кожи.'},
-   {t:'Заживление идёт в два этапа',d:'Поверхностное — 2–3 недели, глубокое — до двух месяцев.'},
-   {t:'Свежая и заживш­ая работа выглядят по-разному',d:'Итоговый цвет виден только после полного заживления.'}
- ]}
+const SVC=[
+ {n:"Перекрытие",d:"~5 ч",p:"по эскизу",x:"Поверх старой работы"},
+ {n:"Миниатюра",d:"~1 ч",p:"по эскизу",x:"До 7 см, одна сессия"},
+ {n:"Средняя работа",d:"~2-3 ч",p:"по эскизу",x:"Скетч среднего размера"},
+ {n:"Рукав",d:"5+ ч",p:"по эскизу",x:"Крупная работа, несколько сеансов"},
+ {n:"Консультация",d:"~30 мин",p:"бесплатно",x:"Обсудить идею, посмотреть место"}
 ];
-const FAQ = [
- {g:'запись',items:[
-   ['Как проходит запись?','Выбираешь услугу, дату и время, коротко описываешь идею — мастер подтверждает заявку в чате.'],
-   ['Сколько ждать ответа?','Обычно в течение дня, часто быстрее.'],
-   ['Нужен ли аванс?','Зависит от типа работы, мастер скажет при подтверждении.'],
-   ['Могу ли я перенести или отменить?','Да, заранее — в разделе «мои записи» есть кнопка отмены.'],
-   ['Зачем подтверждать приход?','Это бронирует твоё окно и не даёт мастеру отдать его другому.'],
-   ['Что если опаздываю?','Предупредите заранее. После вас может стоять другая запись, и сеанс придётся сократить или перенести.']
- ]},
- {g:'сеанс',items:[
-   ['Больно ли?','Ощущения ближе к царапанью, чем к уколу. Тело привыкает за первые двадцать минут.'],
-   ['Сколько длится сеанс?','От получаса на консультации до нескольких часов на крупной работе.'],
-   ['Можно с сопровождающим?','Да, если это не мешает работе мастера.'],
-   ['Что взять с собой?','Паспорт, воду, что-то сладкое и удобную одежду.'],
-   ['Делаете ли по чужому эскизу?','Обсуждается индивидуально на консультации.']
- ]},
- {g:'ограничения',items:[
-   ['С какого возраста?','Работаем с 18 лет.'],
-   ['Когда бить нельзя?','При беременности, плохом самочувствии и остром алкогольном опьянении.'],
-   ['А если аллергия?','Предупредите заранее — подберём материалы.'],
-   ['Можно по шрамам и растяжкам?','Да, обсуждается индивидуально на консультации.']
- ]},
- {g:'после',items:[
-   ['Сколько заживает?','Поверхность заживает две-три недели, глубокие слои — до двух месяцев. Итоговый цвет виден именно тогда, а не на седьмой день. Подробная памятка — в разделе «уход за тату».'],
-   ['Нужна ли коррекция?','Иногда, мастер скажет на сеансе.'],
-   ['Тату выцветет?','При уходе и защите от солнца — минимально.']
- ]}
+const HEAL=[
+ ["ДЕНЬ 0","Сразу после сеанса","Кожа красная и горячая, выступает сукровица. Это работа иммунитета, не воспаление.",
+  ["Плёнку снимаем тогда, когда сказал мастер: обычно через 2-4 часа, заживляющую можно носить несколько дней",
+   "Первое мытьё: тёплая вода, мягкое мыло без отдушек, без мочалки и трения",
+   "Промакиваем одноразовым полотенцем и даём высохнуть на воздухе"]],
+ ["ДЕНЬ 1-3","Сукровица и отёк","Отёк спадает, сукровица подсыхает в тонкую плёнку — это нормально, корку не трогаем.",[]],
+ ["ДЕНЬ 4-7","Корочка и зуд","Появляется корочка, может чесаться. Не сдираем и не чешем — только лёгкое увлажнение.",[]],
+ ["НЕДЕЛЯ 1-2","Кожа закрылась","Верхний слой сходит, кожа под ним розовая и гладкая, рисунок ещё не финальный.",[]],
+ ["МЕСЯЦ 1-3","Окончательный вид","Пигмент оседает, цвет и чёткость линий устаканиваются.",[]]
 ];
-const SERVICES = [
- {t:'Перекрытие',d:'Поверх старой работы',h:'≈5 ч',p:'по эскизу'},
- {t:'Минитату',d:'Небольшая работа, часто без заливки',h:'≈1 ч',p:'по эскизу'},
- {t:'Средняя работа',d:'Ладонь–две, проработанная деталь',h:'≈3 ч',p:'по эскизу'},
- {t:'Рукав',d:'Крупный проект в несколько сеансов',h:'по сеансам',p:'по эскизу'},
- {t:'Консультация',d:'Обсудить идею, посмотреть место',h:'≈30 мин',p:'бесплатно'}
+const WARN="Покраснение расползается за пределы работы, нарастает отёк, есть гной, боль усиливается на 3-й день и позже, поднялась температура — это повод к врачу, не к мастеру.";
+const PAIN=[
+ ["Предплечье","Мягкие ткани, спокойная зона для первой работы",2],
+ ["Плечо","Терпимо, можно сидеть долго",2],
+ ["Бедро","Много мышц, хорошо переносит длинные сеансы",2],
+ ["Икра","Ближе к кости — чувствительнее",3],
+ ["Лопатка","Зависит от близости к позвоночнику",3],
+ ["Предплечье изнутри","Тонкая кожа, ощущения острее",4],
+ ["Шея","Чувствительно, сложно сидеть неподвижно",4],
+ ["Живот","Кожа подвижная, ощущения неровные",4],
+ ["Рёбра","Кость прямо под кожей, дыхание мешает работе",5],
+ ["Стопа и щиколотка","Кость, тонкая кожа, дольше заживает",5]
 ];
+const KIT=[
+ ["Выспаться","Уставшее тело хуже переносит долгий сеанс"],
+ ["Плотно поесть за 1,5-2 часа","Голодный желудок — это головокружение через час"],
+ ["Без алкоголя сутки","Разжижает кровь, пигмент ложится хуже"],
+ ["Без свежего загара","По обгоревшей коже не бьют"],
+ ["Свободная одежда","С доступом к нужной зоне, которую не жалко"],
+ ["Вода и что-то сладкое","Поддержать сахар на длинном сеансе"],
+ ["Паспорт","Может понадобиться на сеансе"],
+ ["Предупредить о здоровье","Аллергии, лекарства, хронические болезни"]
+];
+const NOPE=[
+ ["Сдирать корочки и чесать","Самая частая причина пробелов в работе и шрамов","до заживления"],
+ ["Баня, сауна, бассейн, море","Горячая вода размягчает корку, водоём — источник инфекции","2-3 недели"],
+ ["Солнце и солярий","Ультрафиолет выжигает пигмент быстрее всего остального","до заживления, потом SPF"],
+ ["Долгая ванна","Душ можно сразу, в размоченной коже теряется пигмент","2 недели"],
+ ["Алкоголь","Усиливает сукровицу и отёк, заживление идёт дольше","сутки до и после"],
+ ["Тесная синтетика","Трение по свежей работе стирает пигмент","первая неделя"],
+ ["Спорт до пота","Пот и трение мешают коже закрыться","1-2 дня"],
+ ["Мази на свой выбор","Спирт, зелёнка и жирные мази вроде вазелина только вредят","всегда"]
+];
+const FACTS=[
+ ["Пигмент лежит в дерме","Верхний слой кожи обновляется каждые пару недель. Если бы краска была в нём, тату сходила бы за месяц. Игла доставляет пигмент глубже, поэтому рисунок остаётся."],
+ ["Выцветает не от времени, а от солнца","Ультрафиолет разрушает частицы пигмента — SPF на заживший рисунок продлевает ему жизнь сильнее, чем что-либо ещё."],
+ ["Чёрный живёт дольше цветного","Чёрный пигмент плотнее, цветные тоньше и выцветают быстрее — особенно жёлтый и красный."],
+ ["Тонкая линия требует ухода строже","Пигмента на единицу кожи меньше, поэтому любое нарушение заживления заметнее, чем на плотной заливке."],
+ ["Кожа бывает разная","Жирная, сухая, склонная к рубцеванию — заживает по-разному, мастер корректирует уход под тип кожи."],
+ ["Заживление идёт в два этапа","Внешнее — около 2-3 недель, внутреннее, в дерме — до нескольких месяцев. Финальный вид виден не сразу."],
+ ["Свежая и зажившая работа выглядят по-разному","Сразу после сеанса линии кажутся резче, после заживления рисунок становится мягче."]
+];
+const FAQ=[
+ ["ЗАПИСЬ",[
+  ["Как проходит запись?","Выбираете услугу, дату и время, описываете идею — заявка уходит мастеру. Он подтверждает вручную, ответ приходит в этот же чат."],
+  ["Сколько ждать ответа?","Обычно в течение дня, иногда быстрее."],
+  ["Нужен ли аванс?","Нет, бронь подтверждается без предоплаты."],
+  ["Могу ли я перенести или отменить?","Да, напишите мастеру заранее — перенесём на удобное время."],
+  ["Зачем подтверждать приход?","Это освобождает окно для других, если планы изменились."],
+  ["Что если опаздываю?","Напишите сразу: длинный сеанс подождёт, короткий — возможно, придётся перенести."]]],
+ ["СЕАНС",[
+  ["Больно ли?","Ощущения ближе к царапинам, чем к уколу — подробнее в разделе «Где больнее»."],
+  ["Сколько длится сеанс?","От получаса для консультации до нескольких часов для крупной работы."],
+  ["Можно с сопровождающим?","Обычно в кабинете только мастер и клиент — обсудите заранее, если важно иначе."],
+  ["Что взять с собой?","Паспорт, воду и что-то перекусить на длинный сеанс."],
+  ["Делаете ли по чужому эскизу?","Обсуждаем на консультации — референс адаптируется под руку и стиль."]]],
+ ["ОГРАНИЧЕНИЯ",[
+  ["С какого возраста?","С 18 лет, паспорт обязателен на сеансе."],
+  ["Есть противопоказания?","Беременность, плохая свёртываемость крови, острые заболевания кожи — расскажите на консультации."],
+  ["Можно перекрыть старую работу?","Не любую — пришлите фото в референсы, посмотрим, что возможно."]]],
+ ["ПОСЛЕ",[
+  ["Когда можно спорт?","Через 1-2 дня, без пота на свежей работе."],
+  ["Когда снова к мастеру?","Если что-то смущает — сразу, не дожидаясь планового визита."]]]
+];
+const TIMES=["10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00"];
+const WD=["ВС","ПН","ВТ","СР","ЧТ","ПТ","СБ"];
 
 /* ---------- state ---------- */
-let state={svc:null,date:null,time:null};
+let care={tab:0,open:0,kit:new Array(KIT.length).fill(false),fOpen:-1,_faqOpen:'0-0'};
+let wizState={svc:0,date:null,time:null,refs:0};
 let bookings=[];
+let dates=[];
 
 /* ---------- nav ---------- */
-function openView(name){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.getElementById('v-'+name).classList.add('active');
-  document.getElementById('backBtn').style.display=name==='home'?'none':'grid';
-  document.getElementById('scroll').scrollTop=0;
-  if(name==='works') renderWorks();
-  if(name==='care') renderCare();
-  if(name==='faq') renderFaq();
-  if(name==='bookings') renderBookings();
-  if(name==='s1') renderS1();
-  if(name==='s2a') renderS2a();
-  if(name==='s2b') renderS2b();
-  if(name==='s3') renderS3();
-  setCta(name);
-}
-function goHome(){openView('home')}
+const nav=(()=>{
+ let stack=['home'];
+ function render(){
+   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+   const id='scr-'+stack[stack.length-1];
+   document.getElementById(id).classList.add('active');
+   document.getElementById('backBtn').classList.toggle('show',stack.length>1);
+   setCta();
+ }
+ function go(s){stack.push(s);render();}
+ function back(){if(stack.length>1)stack.pop();render();}
+ function home(){stack=['home'];render();}
+ return {go,back,home,render,cur:()=>stack[stack.length-1]};
+})();
 
-function setCta(name){
-  const b=document.getElementById('ctaBtn');
-  const map={home:['записаться',()=>openView('s1')],works:['записаться',()=>openView('s1')],
-    care:['записаться',()=>openView('s1')],faq:['записаться',()=>openView('s1')],
-    bookings:['новая заявка',()=>openView('s1')],
-    s1:['выбрать дату',()=>{if(state.svc!=null)openView('s2a')}],
-    s2a:['выбери день',()=>{}],
-    s2b:['выбери время',()=>{}],
-    s3:['отправить заявку',submitBooking]};
-  let [label,fn]=map[name];
-  if(name==='s2a'&&state.date) label='дальше · '+state.date.short;
-  if(name==='s2b'&&state.time){label='заявка · '+state.time; fn=()=>openView('s3')}
-  b.textContent=label; b.onclick=fn;
-}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),1800);}
 
-/* ---------- works ---------- */
-function renderWorks(){
-  const g=document.getElementById('worksGrid');
-  g.innerHTML=Array.from({length:6}).map((_,i)=>
-   `<div style="aspect-ratio:3/4;background:linear-gradient(160deg,#1a1512,#0c0e10);border:1px solid #23272a;border-radius:6px;display:grid;place-items:center;color:#4a4d50;font-size:11px">фото ${i+1}</div>`
-  ).join('');
+/* ---------- cta per screen ---------- */
+function setCta(){
+ const btn=document.getElementById('ctaBtn');
+ btn.disabled=false;
+ switch(nav.cur()){
+  case 'home': btn.textContent='Записаться'; btn.onclick=()=>startWizard(); break;
+  case 'portfolio': btn.textContent='Записаться'; btn.onclick=()=>startWizard(); break;
+  case 'care': btn.textContent='Записаться'; btn.onclick=()=>startWizard(); break;
+  case 'faq': btn.textContent='Записаться'; btn.onclick=()=>startWizard(); break;
+  case 'book': btn.textContent='Новая заявка'; btn.onclick=()=>startWizard(); break;
+  case 'svc': btn.textContent='Выбрать дату'; btn.onclick=()=>{buildDates();nav.go('date');}; break;
+  case 'date': btn.textContent='Выбрать время'; btn.disabled=true; btn.onclick=()=>{}; break;
+  case 'time': btn.textContent='Далее'; btn.disabled=(wizState.time==null); btn.onclick=()=>{renderIdea();nav.go('idea');}; break;
+  case 'idea': btn.textContent='Отправить заявку'; btn.onclick=()=>submitIdea(); break;
+ }
 }
+function startWizard(){renderSvc();nav.go('svc');}
+
+/* ---------- portfolio placeholder ---------- */
+(function(){const g=document.getElementById('phGrid');for(let i=0;i<6;i++){const d=document.createElement('div');d.className='ph';d.textContent='+';g.appendChild(d);}})();
 
 /* ---------- care ---------- */
-let careTab='heal';
-function renderCare(){
-  document.getElementById('tickCare').textContent=CARE.map(c=>c.name).join(' · ')+' · '+CARE.map(c=>c.name).join(' · ');
-  document.getElementById('careTabs').innerHTML=CARE.map(c=>`<button class="tab ${c.id===careTab?'active':''}" onclick="careTab='${c.id}';renderCare()">${c.name}</button>`).join('');
-  const sec=CARE.find(c=>c.id===careTab);
-  const el=document.getElementById('careBody');
-  if(sec.type==='tl'){
-    el.innerHTML='<div>'+sec.items.map((it,i)=>`
-      <details class="tl" ${i===0?'open':''}><summary><div><span class="when">${it.when}</span><b>${it.title}</b></div></summary>
-      <p>${it.text}</p>${it.bullets?'<ul>'+it.bullets.map(b=>`<li>${b}</li>`).join('')+'</ul>':''}</details>`).join('')
-      +`<div class="warn"><b>Когда к врачу, а не к мастеру</b><p>${sec.warn}</p></div></div>`;
-  } else if(sec.type==='pain'){
-    el.innerHTML='<p class="intro" style="margin-bottom:0">Ощущения ближе к царапанью, чем к уколу. Шкала условная, у всех порог свой.</p>'+
-      sec.items.map(it=>`<div class="row"><div><b>${it.t}</b><p>${it.d}</p></div><div class="dots">${[1,2,3,4].map(n=>`<i class="${n<=it.lvl?'on '+(it.lvl>=4?'r':it.lvl>=3?'o':'g'):''}"></i>`).join('')}</div></div>`).join('');
-  } else if(sec.type==='kit'){
-    const done=sec.items.filter(it=>it.done).length;
-    el.innerHTML=`<div class="progress-head"><span class="num">${done}/${sec.items.length}</span><span class="lbl">собрано к сеансу</span></div>
-      <div class="bar">${sec.items.map(it=>`<i class="${it.done?'on':''}"></i>`).join('')}</div>`+
-      sec.items.map((it,i)=>`<label class="chk ${it.done?'done':''}"><input type="checkbox" ${it.done?'checked':''} onchange="CARE.find(c=>c.id==='kit').items[${i}].done=this.checked;renderCare()"><div><b>${it.t}</b><p>${it.d}</p></div></label>`).join('');
-  } else if(sec.type==='no'){
-    el.innerHTML=`<div style="border-left:2px solid var(--accent);padding-left:11px">`+sec.items.map((it,i)=>`<div class="row" style="padding-left:0"><div><b>${String(i+1).padStart(2,'0')}. ${it.t}</b><p>${it.d}</p></div><span class="badge">${it.b}</span></div>`).join('')+'</div>';
-  } else if(sec.type==='facts'){
-    el.innerHTML=sec.items.map((it,i)=>`<details class="tl"><summary><b>${String(i+1).padStart(2,'0')}. ${it.t.toUpperCase()}</b></summary><p>${it.d}</p></details>`).join('');
-  }
+function renderCareTabs(){
+ const names=['ЗАЖИВЛЕНИЕ','ГДЕ БОЛЬНЕЕ','СБОРЫ','НЕЛЬЗЯ','ФАКТЫ'];
+ document.getElementById('careTabs').innerHTML=names.map((n,i)=>`<button class="tab${i===care.tab?' on':''}" onclick="care.tab=${i};renderCareTabs();renderCareBody();">${n}</button>`).join('');
+ document.getElementById('careTick').innerHTML=Array(4).fill('ЗАЖИВЛЕНИЕ · ЧУВСТВИТЕЛЬНОСТЬ · СБОРЫ · УХОД ЗА ТАТУИРОВКОЙ').join(' · ')+' ·&nbsp;';
+}
+function renderCareBody(){
+ const el=document.getElementById('careBody');
+ if(care.tab===0){
+   el.innerHTML=HEAL.map((h,i)=>{
+     const [d,t,body,bl]=h; const open=care.open===i;
+     return `<div class="row" onclick="care.open=${open?-1:i};renderCareBody();"><div class="rowhead"><span class="lbl">${d}</span><b>${t}</b><span class="x">${open?'−':'+'}</span></div>${open?`<div class="rowbody"><p>${body}</p>${bl.length?'<ul>'+bl.map(b=>'<li>'+b+'</li>').join('')+'</ul>':''}</div>`:''}</div>`;
+   }).join('')+`<div class="warn"><b>Когда к врачу, а не к мастеру</b><p>${WARN}</p></div>`;
+ } else if(care.tab===1){
+   el.innerHTML='<p class="sub" style="margin-bottom:2px">Ощущения ближе к царапинам, чем к уколу. Тело привыкает за первые двадцать минут. Шкала условна, у всех порог свой.</p>'+
+   PAIN.map(p=>{const [n,d,lvl]=p;const color=lvl<=3?'var(--green)':lvl===4?'var(--orange)':'var(--red)';
+     let segs='';for(let j=1;j<=5;j++)segs+=`<span class="seg" style="${j<=lvl?'background:'+color:''}"></span>`;
+     return `<div class="pz"><div class="pz-t"><b>${n}</b><p>${d}</p></div><div class="bar">${segs}</div></div>`;}).join('');
+ } else if(care.tab===2){
+   const n=care.kit.filter(Boolean).length;
+   el.innerHTML=`<div class="kitcount"><b>${n}/${KIT.length}</b><span>собрано к сеансу</span></div><div class="kitbar"><i style="width:${n/KIT.length*100}%"></i></div>`+
+   KIT.map((k,i)=>`<div class="chk${care.kit[i]?' on':''}" onclick="care.kit[${i}]=!care.kit[${i}];renderCareBody();"><span class="box">${care.kit[i]?'✓':''}</span><div><b>${k[0]}</b><p>${k[1]}</p></div></div>`).join('');
+ } else if(care.tab===3){
+   el.innerHTML=NOPE.map((n,i)=>`<div class="nn"><i>${String(i+1).padStart(2,'0')}</i><div><b>${n[0]}</b><p>${n[1]}</p><span class="tag">${n[2]}</span></div></div>`).join('');
+ } else {
+   el.innerHTML=FACTS.map((f,i)=>{const open=care.fOpen===i;
+     return `<div class="row" onclick="care.fOpen=${open?-1:i};renderCareBody();"><div class="rowhead"><b style="text-transform:uppercase;font-size:12.5px">${f[0]}</b><span class="x">${open?'−':'+'}</span></div>${open?`<div class="rowbody"><p>${f[1]}</p></div>`:''}</div>`;}).join('');
+ }
 }
 
 /* ---------- faq ---------- */
 function renderFaq(){
-  document.getElementById('tickFaq').textContent='частые вопросы · ответы · запись · сеанс · ограничения · частые вопросы · ответы · ';
-  document.getElementById('faqBody').innerHTML=FAQ.map(g=>`<div class="grp-h">${g.g}</div>`+
-    g.items.map(([q,a])=>`<details class="qa"><summary>${q}<span>+</span></summary><p>${a}</p></details>`).join('')).join('');
+ document.getElementById('faqBody').innerHTML=FAQ.map((sec,si)=>{
+   const [name,items]=sec;
+   return `<p class="sec-h">${name}</p><div class="rows">`+items.map((it,qi)=>{
+     const key=si+'-'+qi, open=care._faqOpen===key;
+     return `<div class="row" style="border-top:${qi===0?'0':'1px solid var(--hair)'}" onclick="care._faqOpen='${open?'':key}';renderFaq();"><div class="rowhead"><b style="font-size:13px">${it[0]}</b><span class="x">${open?'−':'+'}</span></div>${open?`<div class="rowbody"><p>${it[1]}</p></div>`:''}</div>`;
+   }).join('')+`</div>`;
+ }).join('');
 }
 
-/* ---------- bookings ---------- */
-function renderBookings(){
-  document.getElementById('bkMeta').textContent=bookings.length?bookings.length+' активных':'статусы';
-  const el=document.getElementById('bkBody');
-  if(!bookings.length){
-    el.innerHTML=`<div class="stamp"><i></i></div><div class="empty-box"><h3>Записей нет</h3><p>Здесь появятся твои заявки с датой, статусом и кнопкой отмены.</p></div>`;
-  } else {
-    el.innerHTML=bookings.map((b,i)=>`<div class="bk-card"><div class="r1"><span>${b.svc}</span><span class="bk-status">на рассмотрении</span></div><div class="r2">${b.date} · ${b.time}</div><button class="bk-cancel" onclick="bookings.splice(${i},1);renderBookings()">отменить</button></div>`).join('');
-  }
+/* ---------- wizard: service ---------- */
+function renderSvc(){
+ const s=SVC[wizState.svc];
+ document.getElementById('svcName').textContent=s.n;
+ document.getElementById('svcMeta').textContent=s.d+' · '+s.p;
+ document.getElementById('svcList').innerHTML=SVC.map((v,i)=>{
+   const on=i===wizState.svc;
+   return `<div class="svc-row${on?' on':''}" onclick="wizState.svc=${i};renderSvc();"><div class="svc-top"><b>${v.n}</b><span>${v.p}</span></div>${on?`<div class="svc-desc">${v.x} · ${v.d}</div>`:''}</div>`;
+ }).join('');
 }
 
-/* ---------- wizard step1 ---------- */
-function renderS1(){
-  const idx=state.svc??1;
-  showSvc(idx);
-  document.getElementById('svcList').innerHTML=SERVICES.map((s,i)=>
-    `<div class="svc-row ${i===idx?'sel':''}" onmouseenter="showSvc(${i})" onclick="state.svc=${i};openView('s1')"><b>${s.t}</b><span>${s.p}</span></div>`).join('');
+/* ---------- wizard: date ---------- */
+function buildDates(){
+ dates=[];const base=new Date();
+ for(let i=0;i<14;i++){const d=new Date(base);d.setDate(base.getDate()+i);
+   const slots=i<2?0:((i*3)%5)+3;
+   dates.push({date:d,slots});
+ }
+ const m=dates[0].date;
+ document.getElementById('tzMonth').textContent=String(m.getMonth()+1).padStart(2,'0')+'.'+m.getFullYear();
+ document.getElementById('dateList').innerHTML=dates.map((d,i)=>{
+   const wd=WD[d.date.getDay()], day=String(d.date.getDate()).padStart(2,'0');
+   const label=d.slots>0?d.slots+' окон':'занято';
+   return `<div class="date-row${d.slots>0?'':' off'}" onclick="pickDate(${i})"><b>${day} ${wd}</b><span>${label}</span></div>`;
+ }).join('');
 }
-function showSvc(i){
-  const s=SERVICES[i];
-  document.getElementById('svcPreview').innerHTML=`<h2>${s.t}</h2><div class="meta">${s.h} · ${s.p}</div><div class="desc">${s.d}</div><hr><div class="hint">протяжка — листать · нажатие — выбрать<br>длительность ориентировочная, точную мастер назовёт после эскиза</div>`;
+function pickDate(i){wizState.date=dates[i];renderTime();nav.go('time');}
+
+/* ---------- wizard: time ---------- */
+function renderTime(){
+ const d=wizState.date.date, wd=WD[d.getDay()], day=String(d.getDate()).padStart(2,'0');
+ document.getElementById('timeDate').textContent=day+' '+wd;
+ const free=Math.min(wizState.date.slots,TIMES.length);
+ document.getElementById('freeCount').textContent='свободно '+free+'/'+TIMES.length;
+ wizState.time=null;
+ document.getElementById('tgrid').innerHTML=TIMES.map((t,i)=>{
+   const off=i>=free;
+   return `<div class="tcell${off?' off':''}" onclick="pickTime(${i})">${t}</div>`;
+ }).join('');
+ setCta();
+}
+function pickTime(i){
+ wizState.time=TIMES[i];
+ document.querySelectorAll('#tgrid .tcell').forEach((c,idx)=>c.classList.toggle('on',idx===i));
+ setCta();
 }
 
-/* ---------- wizard step2a: dates ---------- */
-let calDays=[];
-function buildCalendar(){
-  calDays=[];
-  const start=new Date();
-  const names=['вс','пн','вт','ср','чт','пт','сб'];
-  for(let i=1;i<=16;i++){
-    const d=new Date(start); d.setDate(start.getDate()+i);
-    const dow=d.getDay();
-    let status='ok', label=(6+i%3)+' окон';
-    if(dow===6){status='closed';label='закрыто'}
-    else if(dow===0){status='off';label='выходной'}
-    calDays.push({date:d,dow:names[dow],status,label,
-      short:String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0'),
-      full:d.getDate()+' '+names[dow].toUpperCase()});
-  }
+/* ---------- wizard: idea ---------- */
+function renderIdea(){
+ const s=SVC[wizState.svc], d=wizState.date.date, wd=WD[d.getDay()], day=String(d.getDate()).padStart(2,'0');
+ document.getElementById('svcChip').textContent=s.n+' · '+day+' '+wd+' · '+wizState.time;
+ document.getElementById('ideaTick').innerHTML=Array(4).fill(s.n.toUpperCase()+' · '+day+'.'+String(d.getMonth()+1).padStart(2,'0')).join(' · ')+' ·&nbsp;';
+ wizState.refs=0;
+ document.getElementById('refRow').innerHTML='<button class="refadd" onclick="wiz_addRef()">+</button>';
 }
-function renderS2a(){
-  if(!calDays.length) buildCalendar();
-  document.getElementById('tickDate').textContent='шаг 02/03 · выбор даты · 30 дней вперёд · шаг 02/03 · выбор даты · ';
-  const m=calDays[0].date; const months=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
-  document.getElementById('monthLbl').textContent=months[m.getMonth()].slice(0,3)+' '+m.getFullYear();
-  document.getElementById('dateList').innerHTML=calDays.map((d,i)=>{
-    const isSel=state.date&&state.date.short===d.short;
-    const cls=d.status!=='ok'?'off':''; 
-    const right=d.status==='closed'?'<span class="closed">закрыто</span>':d.status==='off'?'<span>выходной</span>':`<span class="free">${d.label}</span>`;
-    return `<div><div class="date-row ${cls} ${isSel?'sel':''}" ${d.status==='ok'?`onclick="selectDate(${i})"`:''}><b>${d.date.getDate()} ${d.dow}</b>${right}</div>${isSel?'<div class="date-sub">рабочее окно 10:00–19:00</div>':''}</div>`;
-  }).join('');
+function wiz_addRef(){
+ if(wizState.refs>=3){toast('Максимум 3 фото');return;}
+ wizState.refs++;
+ const row=document.getElementById('refRow');
+ const t=document.createElement('div');t.className='reftile';
+ row.insertBefore(t,row.lastElementChild);
+ if(wizState.refs>=3)row.lastElementChild.remove();
 }
-function selectDate(i){state.date=calDays[i]; state.time=null; renderS2a(); setCta('s2a')}
-
-/* ---------- wizard step2b: time ---------- */
-const TIMES=['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'];
-let takenTimes=['12:00'];
-function renderS2b(){
-  document.getElementById('timeDayLbl').textContent=state.date?state.date.full:'';
-  document.getElementById('timeGrid').innerHTML=TIMES.map(t=>{
-    const taken=takenTimes.includes(t), sel=state.time===t;
-    return `<div class="slot ${sel?'sel':''} ${taken?'taken':''}" ${taken?'':`onclick="selectTime('${t}')"`}>${t}</div>`;
-  }).join('');
-}
-function selectTime(t){state.time=t; renderS2b(); setCta('s2b')}
-
-/* ---------- wizard step3 ---------- */
-function renderS3(){
-  const s=SERVICES[state.svc??2];
-  document.getElementById('tickStep3').textContent=`шаг 03/03 · ${state.date?state.date.short:''} · ${s.t} · шаг 03/03 · ${state.date?state.date.short:''} · ${s.t} · `;
-}
-function submitBooking(){
-  const s=SERVICES[state.svc??2];
-  bookings.push({svc:s.t,date:state.date?state.date.short:'—',time:state.time||'—'});
-  toast('Заявка отправлена');
-  setTimeout(()=>openView('bookings'),400);
-}
-function toast(msg){
-  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2200);
+function submitIdea(){
+ const name=document.getElementById('fName').value.trim()||'Без имени';
+ const s=SVC[wizState.svc], d=wizState.date.date, wd=WD[d.getDay()], day=String(d.getDate()).padStart(2,'0');
+ bookings.unshift({service:s.n,when:day+' '+wd+', '+wizState.time,name});
+ renderBook();
+ toast('Заявка отправлена');
+ nav.home();nav.go('book');
 }
 
-/* init */
-setCta('home');
+/* ---------- my bookings ---------- */
+function renderBook(){
+ document.getElementById('mrCount').textContent='[ '+String(bookings.length).padStart(3,'0')+' ]';
+ const el=document.getElementById('bookBody');
+ if(!bookings.length){
+   el.innerHTML='<div class="empty"><div class="stamp">✦</div><b>Записей нет</b><p>Здесь появятся твои заявки с датой, статусом и кнопкой отмены.</p></div>';
+ } else {
+   el.innerHTML='<div style="height:14px"></div>'+bookings.map((b,i)=>`<div class="bcard"><div class="bcard-top"><b>${b.service}</b><span class="st">ждёт подтверждения</span></div><p>${b.when} · ${b.name}</p><button onclick="bookings.splice(${i},1);renderBook();">отменить</button></div>`).join('');
+ }
+}
+
+/* ---------- init ---------- */
+renderCareTabs();renderCareBody();renderFaq();renderBook();nav.render();
 </script>
 </body>
 </html>
