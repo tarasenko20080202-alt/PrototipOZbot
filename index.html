@@ -5,2332 +5,559 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#090a0b">
 <meta name="color-scheme" content="dark">
-<title>wiwi · тату · поддержка · запись 24/7</title>
-
+<title>krapfen · тату · поддержка · запись 24/7</title>
 <style>
-:root{
-  --bg:#090a0b;
-  --bg2:#0c0e10;
-  --ink:#f3f0eb;
-  --muted:#85898d;
-  --muted2:#64686d;
-  --hair:#24272a;
-  --hair2:#34363a;
-  --cream:#efece6;
-  --accent:#b43b32;
-  --sheet:#101316;
-  --ease:cubic-bezier(.16,1,.3,1);
-}
-
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
-html,body{
-  width:100%;
-  height:100%;
-  margin:0;
-}
-
-body{
-  overflow:hidden;
-  background:#030404;
-  color:var(--ink);
-  font-family:Arial,Helvetica,sans-serif;
-}
-
-button,input,textarea{
-  font:inherit;
-}
-
-button{
-  color:inherit;
-  border:0;
-  background:none;
-}
-
-button:focus-visible,
-input:focus-visible,
-textarea:focus-visible{
-  outline:2px solid rgba(239,236,230,.55);
-  outline-offset:2px;
-}
-
-
-/* ═══════════════════════════════
-   APP
-═══════════════════════════════ */
-
-.app{
-  position:fixed;
-  inset:50% auto auto 50%;
-  transform:translate(-50%,-50%);
-  width:min(100vw,701px);
-  height:min(100svh,700px);
-  min-height:560px;
-  overflow:hidden;
-  background:linear-gradient(#090a0b,#090a0b);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,.045),
-    0 25px 80px rgba(0,0,0,.55);
-}
-
-
-/* ═══════════════════════════════
-   TOP BAR
-═══════════════════════════════ */
-
-.topbar{
-  height:56px;
-  padding:0 10px;
-
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-
-  border-bottom:1px solid #181a1d;
-
-  background:
-    linear-gradient(#090a0b,#08090a);
-
-  position:relative;
-  z-index:20;
-}
-
-.title{
-  min-width:0;
-
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-
-  font-size:17px;
-  line-height:1;
-  font-weight:700;
-  letter-spacing:-.35px;
-}
-
-.top-actions{
-  display:flex;
-  align-items:center;
-  gap:18px;
-  margin-left:12px;
-}
-
-.top-btn{
-  width:18px;
-  height:28px;
-  padding:0;
-
-  display:grid;
-  place-items:center;
-
-  color:#b7b8b9;
-}
-
-.more{
-  font-size:24px;
-  line-height:1;
-  transform:translateY(-1px);
-}
-
-.close{
-  font-size:29px;
-  font-weight:200;
-  line-height:1;
-  transform:translateY(-1px);
-}
-
-
-/* ═══════════════════════════════
-   HERO
-═══════════════════════════════ */
-
-.hero{
-  position:relative;
-
-  height:293px;
-  overflow:hidden;
-
-  padding:40px 10px 0;
-
-  border-bottom:1px solid #25272a;
-
-  background:
-    radial-gradient(
-      75% 90% at 8% 0%,
-      rgba(185,79,37,.44) 0%,
-      rgba(133,49,29,.28) 27%,
-      transparent 66%
-    ),
-
-    radial-gradient(
-      70% 100% at 92% 2%,
-      rgba(112,64,26,.45),
-      transparent 59%
-    ),
-
-    linear-gradient(
-      180deg,
-      #2d1810 0%,
-      #160d0c 31%,
-      #0e1011 68%,
-      #0a0c0d 100%
-    );
-}
-
-.hero::before{
-  content:"";
-
-  position:absolute;
-  inset:0;
-
-  background:
-    radial-gradient(
-      circle at 22% 16%,
-      rgba(255,255,255,.06),
-      transparent 19%
-    ),
-
-    linear-gradient(
-      90deg,
-      rgba(255,255,255,.02),
-      transparent 22%,
-      rgba(255,255,255,.018) 82%,
-      transparent
-    );
-
-  pointer-events:none;
-}
-
-.hero::after{
-  content:"";
-
-  position:absolute;
-  inset:0;
-
-  pointer-events:none;
-
-  opacity:.08;
-
-  background:
-    repeating-linear-gradient(
-      180deg,
-      transparent 0 3px,
-      rgba(255,255,255,.65) 3px 4px
-    );
-
-  mix-blend-mode:screen;
-}
-
-.dotgrid{
-  position:absolute;
-  inset:0;
-
-  pointer-events:none;
-
-  opacity:.7;
-
-  background-image:
-    radial-gradient(
-      rgba(232,207,193,.78) .75px,
-      transparent .85px
-    );
-
-  background-size:6px 6px;
-
-  mask-image:
-    linear-gradient(
-      to bottom,
-      rgba(0,0,0,.98) 0,
-      rgba(0,0,0,.85) 47%,
-      rgba(0,0,0,.25) 82%,
-      transparent 100%
-    );
-
-  -webkit-mask-image:
-    linear-gradient(
-      to bottom,
-      rgba(0,0,0,.98) 0,
-      rgba(0,0,0,.85) 47%,
-      rgba(0,0,0,.25) 82%,
-      transparent 100%
-    );
-}
-
-.corner{
-  position:absolute;
-
-  width:15px;
-  height:15px;
-
-  z-index:2;
-
-  opacity:.95;
-
-  border-color:#d6d0c8;
-  border-style:solid;
-}
-
-.corner.tl{
-  left:5px;
-  top:14px;
-  border-width:2px 0 0 2px;
-}
-
-.corner.tr{
-  right:15px;
-  top:14px;
-  border-width:2px 2px 0 0;
-}
-
-.eyebrow{
-  position:relative;
-
-  z-index:3;
-
-  margin:0 0 13px;
-
-  font:
-    9px/1
-    "Courier New",
-    monospace;
-
-  letter-spacing:2.3px;
-
-  color:#ebe6e1;
-
-  text-transform:uppercase;
-}
-
-.brand{
-  position:relative;
-
-  z-index:3;
-
-  margin:0;
-
-  display:inline-block;
-
-  font-family:
-    Impact,
-    "Arial Black",
-    Arial,
-    sans-serif;
-
-  font-weight:900;
-
-  font-size:100px;
-
-  line-height:.80;
-
-  letter-spacing:-7px;
-
-  transform:scaleX(.93);
-
-  transform-origin:left top;
-
-  color:#f0eee9;
-
-  text-transform:uppercase;
-
-  text-shadow:
-    0 1px 0 rgba(255,255,255,.15),
-    0 4px 20px rgba(0,0,0,.22);
-}
-
-.brand .accent{
-  color:var(--accent);
-
-  letter-spacing:-2px;
-
-  margin-left:1px;
-}
-
-.tagline{
-  position:absolute;
-
-  z-index:3;
-
-  left:5px;
-  bottom:11px;
-
-  font-size:13px;
-  line-height:1.48;
-
-  color:#ece9e4;
-}
-
-.tagline span{
-  display:block;
-  color:#858a8f;
-}
-
-
-/* ═══════════════════════════════
-   MENU
-═══════════════════════════════ */
-
-.menu{
-  height:240px;
-  background:var(--bg);
-}
-
-.menu-item{
-  width:100%;
-  height:48px;
-
-  padding:0 6px;
-
-  display:flex;
-  align-items:center;
-
-  text-align:left;
-
-  border-bottom:1px solid var(--hair);
-
-  position:relative;
-
-  overflow:hidden;
-}
-
-.menu-item::before{
-  content:"";
-
-  position:absolute;
-
-  left:0;
-  top:0;
-  bottom:0;
-
-  width:2px;
-
-  background:var(--accent);
-
-  transform:scaleY(0);
-
-  transform-origin:center;
-
-  transition:
-    transform .18s var(--ease);
-}
-
-.menu-item::after{
-  content:"";
-
-  position:absolute;
-  inset:0;
-
-  background:rgba(255,255,255,.02);
-
-  opacity:0;
-
-  transition:
-    opacity .18s ease;
-}
-
-.menu-item:active::before,
-.menu-item.active::before{
-  transform:scaleY(1);
-}
-
-.menu-item:active::after,
-.menu-item.active::after{
-  opacity:1;
-}
-
-.menu-label{
-  position:relative;
-
-  z-index:1;
-
-  white-space:nowrap;
-
-  font-size:15px;
-  font-weight:700;
-
-  letter-spacing:-.1px;
-}
-
-.menu-rule{
-  flex:1;
-
-  min-width:22px;
-
-  margin:0 11px;
-
-  border-bottom:1px dotted #383b3f;
-
-  transform:translateY(1px);
-}
-
-.menu-meta{
-  position:relative;
-
-  z-index:1;
-
-  white-space:nowrap;
-
-  font:
-    8px/1
-    "Courier New",
-    monospace;
-
-  letter-spacing:2px;
-
-  color:#6d7176;
-
-  text-transform:uppercase;
-}
-
-.menu-arrow{
-  position:relative;
-
-  z-index:1;
-
-  margin-left:4px;
-
-  color:#777b7f;
-
-  font-size:13px;
-  line-height:1;
-
-  transform:translateY(-1px);
-}
-
-
-/* ═══════════════════════════════
-   FOOTER
-═══════════════════════════════ */
-
-.footer-note{
-  height:47px;
-
-  padding:27px 7px 0;
-
-  font:
-    10px/1
-    "Courier New",
-    monospace;
-
-  letter-spacing:2px;
-
-  color:#62676b;
-
-  text-transform:uppercase;
-}
-
-
-/* ═══════════════════════════════
-   CTA
-═══════════════════════════════ */
-
-.cta-area{
-  height:64px;
-
-  position:absolute;
-
-  left:0;
-  right:0;
-  bottom:0;
-
-  z-index:25;
-
-  padding:11px 1px 13px;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(9,10,11,0),
-      rgba(9,10,11,.92) 24%,
-      #090a0b 54%
-    );
-}
-
-.cta{
-  display:block;
-
-  width:100%;
-  height:39px;
-
-  border:1px solid #d8d5cf;
-
-  border-radius:6px;
-
-  background:var(--cream);
-
-  color:#08090a;
-
-  font-size:12px;
-  font-weight:500;
-
-  letter-spacing:.1px;
-
-  box-shadow:
-    0 1px 0 rgba(255,255,255,.22) inset;
-
-  transition:
-    transform .13s ease,
-    filter .13s ease;
-}
-
-.cta:active{
-  transform:translateY(1px);
-  filter:brightness(.93);
-}
-
-
-/* ═══════════════════════════════
-   SCRIM
-═══════════════════════════════ */
-
-.scrim{
-  position:absolute;
-
-  inset:0;
-
-  z-index:30;
-
-  background:rgba(0,0,0,.58);
-
-  opacity:0;
-
-  pointer-events:none;
-
-  transition:
-    opacity .25s ease;
-}
-
-.scrim.open{
-  opacity:1;
-  pointer-events:auto;
-}
-
-
-/* ═══════════════════════════════
-   SHEET
-═══════════════════════════════ */
-
-.sheet{
-  position:absolute;
-
-  left:0;
-  right:0;
-  bottom:0;
-
-  z-index:31;
-
-  max-height:82%;
-
-  overflow:auto;
-
-  padding:
-    10px
-    14px
-    calc(17px + env(safe-area-inset-bottom));
-
-  border-top:1px solid #35393c;
-
-  border-radius:
-    15px
-    15px
-    0
-    0;
-
-  background:
-    linear-gradient(
-      #111417,
-      #0b0d0f
-    );
-
-  box-shadow:
-    0 -22px 60px rgba(0,0,0,.48);
-
-  transform:translateY(105%);
-
-  transition:
-    transform .34s var(--ease);
-}
-
-.sheet.open{
-  transform:translateY(0);
-}
-
-.grabber{
-  width:44px;
-  height:4px;
-
-  border-radius:99px;
-
-  background:#464b4f;
-
-  margin:
-    0 auto
-    15px;
-}
-
-.sheet-close{
-  position:absolute;
-
-  top:7px;
-  right:9px;
-
-  width:34px;
-  height:34px;
-
-  font-size:26px;
-
-  color:#bfc1c2;
-}
-
-.sheet h2{
-  font-size:21px;
-  line-height:1.1;
-
-  margin:
-    0 38px
-    7px
-    0;
-}
-
-.sheet-intro{
-  margin:
-    0
-    0
-    14px;
-
-  color:#aeb2b5;
-
-  font-size:13px;
-  line-height:1.46;
-}
-
-.section{
-  display:none;
-}
-
-.section.active{
-  display:block;
-}
-
-
-/* ═══════════════════════════════
-   CARDS
-═══════════════════════════════ */
-
-.cards{
-  display:grid;
-  gap:8px;
-}
-
-.card{
-  background:#0c1013;
-
-  border:1px solid #23272a;
-
-  border-radius:6px;
-
-  padding:10px 11px;
-}
-
-.card b{
-  font-size:13px;
-}
-
-.card p{
-  margin:4px 0 0;
-
-  color:#93999e;
-
-  font-size:12px;
-
-  line-height:1.42;
-}
-
-
-/* ═══════════════════════════════
-   FAQ
-═══════════════════════════════ */
-
-.faq details{
-  border-top:1px solid #24282c;
-
-  padding:10px 0;
-}
-
-.faq details:last-child{
-  border-bottom:1px solid #24282c;
-}
-
-.faq summary{
-  cursor:pointer;
-
-  list-style:none;
-
-  font-size:13px;
-  font-weight:700;
-}
-
-.faq summary::-webkit-details-marker{
-  display:none;
-}
-
-.faq p{
-  margin:
-    7px
-    0
-    0;
-
-  color:#a1a6ab;
-
-  font-size:12px;
-
-  line-height:1.5;
-}
-
-
-/* ═══════════════════════════════
-   FORMS
-═══════════════════════════════ */
-
-.field{
-  width:100%;
-  height:44px;
-
-  margin:7px 0;
-
-  border:
-    1px
-    solid
-    #30353a;
-
-  border-radius:6px;
-
-  background:#080b0d;
-
-  color:#efeee9;
-
-  padding:
-    0
-    12px;
-
-  outline:none;
-}
-
-textarea.field{
-  height:86px;
-
-  padding:
-    10px
-    12px;
-
-  resize:none;
-}
-
-.submit{
-  width:100%;
-  height:44px;
-
-  margin-top:6px;
-
-  border-radius:6px;
-
-  background:var(--cream);
-
-  color:#0a0b0c;
-
-  font-size:12px;
-  font-weight:700;
-}
-
-.form-status{
-  display:none;
-
-  margin-top:9px;
-
-  font:
-    10px/1.35
-    "Courier New",
-    monospace;
-
-  letter-spacing:1px;
-
-  color:#80868a;
-
-  text-transform:uppercase;
-}
-
-.form-status.show{
-  display:block;
-}
-
-.back-link{
-  display:inline-flex;
-
-  align-items:center;
-
-  gap:5px;
-
-  margin-bottom:8px;
-
-  color:#858b90;
-
-  font:
-    10px
-    "Courier New",
-    monospace;
-
-  letter-spacing:1px;
-
-  text-transform:uppercase;
-}
-
-
-/* ═══════════════════════════════
-   TOAST
-═══════════════════════════════ */
-
-.toast{
-  position:absolute;
-
-  left:50%;
-  bottom:73px;
-
-  z-index:50;
-
-  transform:
-    translate(-50%,12px);
-
-  opacity:0;
-
-  pointer-events:none;
-
-  padding:
-    10px
-    14px;
-
-  border:
-    1px
-    solid
-    #303438;
-
-  border-radius:8px;
-
-  background:#14181b;
-
-  color:#eeece8;
-
-  font-size:12px;
-
-  white-space:nowrap;
-
-  box-shadow:
-    0 15px 40px rgba(0,0,0,.42);
-
-  transition:
-    opacity .2s ease,
-    transform .2s var(--ease);
-}
-
-.toast.show{
-  opacity:1;
-
-  transform:
-    translate(-50%,0);
-}
-
-
-/* ═══════════════════════════════
-   RESPONSIVE
-═══════════════════════════════ */
-
-@media(max-width:700px){
-
-  .app{
-    width:100vw;
-    height:100svh;
-    min-height:0;
-  }
-
-}
-
-@media(max-width:410px){
-
-  .title{
-    font-size:15px;
-  }
-
-  .top-actions{
-    gap:12px;
-  }
-
-  .hero{
-    height:288px;
-    padding-top:39px;
-  }
-
-  .brand{
-    font-size:86px;
-    letter-spacing:-6px;
-  }
-
-  .tagline{
-    font-size:13px;
-  }
-
-  .menu-label{
-    font-size:14px;
-  }
-
-  .menu-meta{
-    font-size:7px;
-    letter-spacing:1.5px;
-  }
-
-}
-
-@media(max-width:345px){
-
-  .menu-rule{
-    margin-left:7px;
-    margin-right:7px;
-  }
-
-  .menu-meta{
-    display:none;
-  }
-
-  .brand{
-    font-size:78px;
-  }
-
-  .tagline{
-    font-size:12px;
-  }
-
-}
+:root{--bg:#090a0b;--ink:#f3f0eb;--muted:#85898d;--muted2:#64686d;--hair:#24272a;--cream:#efece6;--accent:#b43b32;--green:#5fbf6e;--orange:#d69a4a;--red:#c1544a;--ease:cubic-bezier(.16,1,.3,1)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;margin:0}
+body{overflow:hidden;background:#030404;color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+button,input,textarea{font:inherit;color:inherit}
+button{border:0;background:none;text-align:left;cursor:pointer}
+.app{position:fixed;inset:50% auto auto 50%;transform:translate(-50%,-50%);width:min(100vw,480px);height:min(100svh,780px);min-height:560px;background:var(--bg);box-shadow:0 0 0 1px rgba(255,255,255,.05),0 25px 80px rgba(0,0,0,.55);display:flex;flex-direction:column;overflow:hidden}
+@media(max-width:480px){.app{width:100vw;height:100svh;min-height:0}}
+
+/* topbar */
+.topbar{flex:0 0 auto;height:52px;padding:0 8px 0 4px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #181a1d;position:relative;z-index:20}
+.tb-left{display:flex;align-items:center;gap:2px;min-width:0}
+.tb-btn{width:30px;height:30px;display:grid;place-items:center;color:#b7b8b9;font-size:20px;flex:0 0 auto}
+.title{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:15px;font-weight:700;letter-spacing:-.3px}
+.tb-right{display:flex;gap:14px}
+.tb-right .tb-btn{font-size:19px}
+
+/* scroll area */
+.scroll{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;position:relative}
+.view{display:none}
+.view.active{display:block}
+
+/* hero */
+.hero{position:relative;min-height:250px;padding:34px 14px 16px;overflow:hidden;border-bottom:1px solid #25272a;background:radial-gradient(75% 90% at 8% 0%,rgba(185,79,37,.44),rgba(133,49,29,.28) 27%,transparent 66%),radial-gradient(70% 100% at 92% 2%,rgba(112,64,26,.45),transparent 59%),linear-gradient(180deg,#2d1810 0%,#160d0c 31%,#0e1011 68%,#0a0c0d 100%)}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.55;background-image:radial-gradient(rgba(232,207,193,.5) .7px,transparent .8px);background-size:6px 6px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.9),transparent 90%)}
+.corner{position:absolute;width:13px;height:13px;border-color:#d6d0c8;border-style:solid;opacity:.9;z-index:2}
+.corner.tl{left:6px;top:12px;border-width:2px 0 0 2px}
+.corner.tr{right:14px;top:12px;border-width:2px 2px 0 0}
+.eyebrow{position:relative;z-index:3;margin:0 0 10px;font:9px/1 "Courier New",monospace;letter-spacing:2px;color:#ebe6e1;text-transform:uppercase}
+.brand{position:relative;z-index:3;margin:0;font-family:Impact,"Arial Black",Arial,sans-serif;font-weight:900;font-size:15vw;max-font-size:64px;line-height:.82;letter-spacing:-3px;color:#f0eee9;text-transform:uppercase;text-shadow:0 4px 20px rgba(0,0,0,.25)}
+@media(min-width:481px){.brand{font-size:64px}}
+.brand .dot{color:var(--accent)}
+.tagline{position:relative;z-index:3;margin-top:10px;font-size:12.5px;line-height:1.5;color:#ece9e4}
+.tagline span{display:block;color:#8a8f93}
+
+/* menu */
+.menu-item{width:100%;height:46px;padding:0 4px;display:flex;align-items:center;border-bottom:1px solid var(--hair);position:relative}
+.menu-item::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent);transform:scaleY(0);transition:transform .15s var(--ease)}
+.menu-item:active::before{transform:scaleY(1)}
+.m-label{font-size:14px;font-weight:700}
+.m-rule{flex:1;min-width:14px;margin:0 9px;border-bottom:1px dotted #383b3f;transform:translateY(1px)}
+.m-meta{white-space:nowrap;font:8px/1 "Courier New",monospace;letter-spacing:1.5px;color:#6d7176;text-transform:uppercase}
+.m-arrow{margin-left:4px;color:#777b7f;font-size:12px}
+.footer-note{padding:16px 4px 20px;font:9px/1 "Courier New",monospace;letter-spacing:1.5px;color:#5a5e62;text-transform:uppercase}
+
+/* ticker */
+.ticker{flex:0 0 auto;height:20px;overflow:hidden;border-bottom:1px solid var(--hair);white-space:nowrap}
+.ticker b{display:inline-block;padding-left:100%;font:8px/20px "Courier New",monospace;letter-spacing:2px;color:#5a5e62;text-transform:uppercase;animation:tick 18s linear infinite}
+@keyframes tick{to{transform:translateX(-100%)}}
+
+/* page (care/faq/bookings/wizard) */
+.page{padding:14px 14px 18px}
+.page h1{font-family:Impact,"Arial Black",Arial,sans-serif;font-size:26px;letter-spacing:-.5px;margin:0 0 8px;text-transform:uppercase;font-style:italic}
+.page .intro{font-size:12px;line-height:1.5;color:#a3a7ab;margin:0 0 14px}
+
+/* tabs */
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:12px;margin-bottom:2px}
+.tab{flex:0 0 auto;padding:6px 11px;border:1px solid #2b2e31;border-radius:99px;font:9px "Courier New",monospace;letter-spacing:1px;text-transform:uppercase;color:#b7b8b9}
+.tab.active{background:var(--cream);color:#0a0b0c;border-color:var(--cream)}
+.tabsec{display:none;border-top:1px solid var(--hair);margin-top:2px}
+.tabsec.active{display:block}
+
+/* checklist */
+.progress-head{display:flex;align-items:baseline;gap:8px;padding:12px 0 4px}
+.progress-head .num{font-family:Impact,Arial,sans-serif;font-size:30px}
+.progress-head .lbl{font:8px "Courier New",monospace;letter-spacing:1px;color:#6d7176;text-transform:uppercase}
+.bar{display:flex;gap:3px;margin-bottom:6px}
+.bar i{flex:1;height:3px;background:#24272a;border-radius:2px}
+.bar i.on{background:var(--green)}
+.chk{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid var(--hair)}
+.chk input{width:17px;height:17px;accent-color:var(--green);flex:0 0 auto;margin-top:1px}
+.chk b{font-size:13px;display:block}
+.chk p{margin:2px 0 0;font-size:11.5px;color:#8a8f93}
+.chk.done b{color:#6d7176;text-decoration:line-through}
+
+/* timeline / accordion */
+.tl{border-bottom:1px solid var(--hair)}
+.tl summary{list-style:none;padding:11px 0;cursor:pointer;display:flex;justify-content:space-between;gap:10px}
+.tl summary::-webkit-details-marker{display:none}
+.tl .when{font:8px "Courier New",monospace;color:#6d7176;letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
+.tl b{font-size:13px;display:block}
+.tl p{margin:0 0 11px;font-size:11.5px;color:#8a8f93;line-height:1.5}
+.tl ul{margin:0 0 11px;padding-left:12px;border-left:2px solid var(--green)}
+.tl li{font-size:11.5px;color:#c9cbcd;margin-bottom:6px;list-style:none}
+.warn{margin-top:8px;padding:10px 11px;background:#0c1013;border-left:2px solid var(--accent)}
+.warn b{display:block;font-size:9px;letter-spacing:1px;color:#d98d84;text-transform:uppercase;margin-bottom:4px}
+.warn p{margin:0;font-size:11.5px;color:#a3a7ab;line-height:1.5}
+
+/* pain rows / nельзя rows */
+.row{padding:11px 0;border-bottom:1px solid var(--hair);display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.row b{font-size:13px;display:block}
+.row p{margin:2px 0 0;font-size:11.5px;color:#8a8f93}
+.dots{display:flex;gap:3px;flex:0 0 auto;margin-top:3px}
+.dots i{width:6px;height:6px;border-radius:99px;background:#2b2e31}
+.dots i.on.g{background:var(--green)}
+.dots i.on.o{background:var(--orange)}
+.dots i.on.r{background:var(--red)}
+.badge{flex:0 0 auto;font:8px "Courier New",monospace;letter-spacing:.5px;color:#9a9ea2;background:#161a1d;border:1px solid #2b2e31;padding:3px 6px;border-radius:5px;white-space:nowrap}
+
+.contact-row{margin-top:12px;padding:12px 11px;background:#0c1013;border:1px solid #23272a;border-radius:8px;display:flex;justify-content:space-between;font-size:12.5px}
+.contact-row span:last-child{color:#e0a15c}
+.small-note{margin-top:12px;font:9px "Courier New",monospace;letter-spacing:.5px;color:#54585c}
+
+/* faq groups */
+.grp-h{padding:14px 0 4px;font:9px "Courier New",monospace;letter-spacing:1.5px;color:#6d7176;text-transform:uppercase;border-top:1px solid var(--hair);margin-top:4px}
+.grp-h:first-child{border-top:0}
+.qa summary{list-style:none;padding:11px 0;font-size:13px;font-weight:700;display:flex;justify-content:space-between;cursor:pointer}
+.qa summary::-webkit-details-marker{display:none}
+.qa p{margin:0 0 11px;font-size:11.5px;color:#a3a7ab;line-height:1.5}
+.qa{border-bottom:1px solid var(--hair)}
+
+/* bookings */
+.stamp{width:74px;height:74px;margin:30px auto 14px;border:1px solid #2b2e31;border-radius:99px;display:grid;place-items:center;position:relative}
+.stamp i{width:6px;height:6px;border-radius:99px;background:var(--accent)}
+.empty-box{border:1px solid #23272a;border-radius:8px;padding:20px 20px 26px;text-align:center;margin-top:6px}
+.empty-box h3{font-family:Impact,Arial,sans-serif;font-size:17px;letter-spacing:-.3px;margin:0 0 6px}
+.empty-box p{margin:0;font-size:12px;color:#8a8f93;line-height:1.5}
+.bk-card{border:1px solid #23272a;border-radius:8px;padding:12px 13px;margin-bottom:9px}
+.bk-card .r1{display:flex;justify-content:space-between;font-size:13px;font-weight:700}
+.bk-card .r2{margin:4px 0 8px;font-size:11.5px;color:#8a8f93}
+.bk-status{font:8px "Courier New",monospace;letter-spacing:1px;text-transform:uppercase;padding:3px 7px;border-radius:5px;background:#1c1712;color:#e0a15c;border:1px solid #3a2c1c}
+.bk-cancel{font:9px "Courier New",monospace;letter-spacing:1px;text-transform:uppercase;color:#c1544a}
+
+/* wizard */
+.svc-preview{text-align:center;padding:16px 10px 14px}
+.svc-preview h2{font-family:Impact,"Arial Black",Arial,sans-serif;font-size:24px;font-style:italic;text-transform:uppercase;margin:0 0 5px}
+.svc-preview .meta{font:9px "Courier New",monospace;letter-spacing:1px;color:#6d7176;text-transform:uppercase}
+.svc-preview .desc{margin-top:6px;font-size:12px;color:#a3a7ab}
+.svc-preview hr{width:26px;border:none;border-top:2px solid #e0a15c;margin:12px auto}
+.svc-preview .hint{font:8px "Courier New",monospace;letter-spacing:1px;color:#5a5e62;text-transform:uppercase;line-height:1.8}
+.svc-row{display:flex;justify-content:space-between;align-items:center;padding:13px 4px;border-top:1px solid var(--hair);cursor:pointer}
+.svc-row:last-child{border-bottom:1px solid var(--hair)}
+.svc-row.sel{background:var(--cream);color:#0a0b0c;margin:0 -14px;padding-left:18px;padding-right:18px}
+.svc-row b{font-size:13px}
+.svc-row span{font:8px "Courier New",monospace;letter-spacing:1px;text-transform:uppercase;color:#8a8f93}
+.svc-row.sel span{color:#5a5e62}
+
+.month-h{font-family:Impact,"Arial Black",Arial,sans-serif;font-size:24px;padding:12px 0 2px;display:flex;justify-content:space-between;align-items:baseline}
+.month-h small{font:9px "Courier New",monospace;color:#6d7176;letter-spacing:1px}
+.date-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--hair)}
+.date-row b{font-size:13px}
+.date-row.off b,.date-row.off span{color:#4a4d50}
+.date-row .closed{color:#c1544a}
+.date-row .free{color:var(--green)}
+.date-row.sel{background:var(--cream);color:#0a0b0c;margin:0 -14px;padding:14px 18px;font-size:17px}
+.date-row.sel b{font-size:19px}
+.date-row.sel span{color:#5a5e62}
+.date-sub{font:8px "Courier New",monospace;letter-spacing:1px;color:#6d7176;text-transform:uppercase;padding:0 0 10px;margin:-4px -14px 4px;background:var(--cream);padding-left:18px}
+
+.time-h{display:flex;justify-content:space-between;align-items:center;padding:10px 0 12px}
+.time-h .d{font-family:Impact,"Arial Black",Arial,sans-serif;font-size:26px}
+.time-h button{font:8px "Courier New",monospace;letter-spacing:1px;text-transform:uppercase;border:1px solid #2b2e31;border-radius:99px;padding:6px 11px;color:#b7b8b9}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--hair);border-left:1px solid var(--hair)}
+.slot{padding:16px 0;text-align:center;font-size:13px;border-right:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.slot.sel{background:#c9c6c0;color:#0a0b0c}
+.slot.taken{color:#4a4d50;text-decoration:line-through}
+
+.f-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--hair);gap:10px}
+.f-row label{font:8px "Courier New",monospace;letter-spacing:1px;color:#6d7176;text-transform:uppercase;flex:0 0 auto}
+.f-row input{flex:1;background:none;border:none;text-align:right;color:var(--ink);outline:none;font-size:13px}
+.f-row input::placeholder{color:#5a5e62}
+.f-area label{display:block;font:8px "Courier New",monospace;letter-spacing:1px;color:#6d7176;text-transform:uppercase;margin:14px 0 8px}
+textarea{width:100%;min-height:72px;background:#0a0c0d;border:1px solid #2b2e31;border-radius:6px;padding:10px 11px;color:var(--ink);outline:none;resize:none;font-size:12.5px}
+textarea::placeholder{color:#5a5e62}
+.refs{width:52px;height:52px;border:1px dashed #3a3d40;border-radius:6px;display:grid;place-items:center;color:#6d7176;font-size:20px;margin-top:8px}
+
+/* footer cta */
+.cta-area{flex:0 0 auto;padding:10px 14px 14px;background:linear-gradient(180deg,rgba(9,10,11,0),var(--bg) 40%)}
+.cta{display:block;width:100%;height:42px;border:1px solid #d8d5cf;border-radius:6px;background:var(--cream);color:#08090a;font-size:12px;font-weight:700;letter-spacing:.2px}
+.cta:active{filter:brightness(.93)}
+
+/* toast */
+.toast{position:absolute;left:50%;bottom:70px;z-index:60;transform:translate(-50%,10px);opacity:0;pointer-events:none;padding:10px 15px;border:1px solid #303438;border-radius:8px;background:#14181b;color:#eeece8;font-size:12px;white-space:nowrap;box-shadow:0 15px 40px rgba(0,0,0,.4);transition:.2s var(--ease)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
 </style>
 </head>
-
 <body>
+<div class="app">
 
-<div class="app" id="app">
-
-  <!-- ═══════════════════════════════
-       TOP BAR
-  ═══════════════════════════════ -->
-
-  <header class="topbar">
-
-    <div class="title">
-      wiwi · тату · поддержка · запись 24/7
+  <div class="topbar">
+    <div class="tb-left">
+      <button class="tb-btn" id="backBtn" style="display:none" onclick="goHome()">←</button>
+      <div class="title">krapfen · <b>тату</b> · поддержка · запись 24/7</div>
     </div>
-
-    <div class="top-actions">
-
-      <button
-        class="top-btn more"
-        id="moreBtn"
-        aria-label="Меню"
-      >
-        ⋮
-      </button>
-
-      <button
-        class="top-btn close"
-        id="closeBtn"
-        aria-label="Закрыть"
-      >
-        ×
-      </button>
-
-    </div>
-
-  </header>
-
-
-  <!-- ═══════════════════════════════
-       HERO
-  ═══════════════════════════════ -->
-
-  <section
-    class="hero"
-    aria-label="WIWI tattoo"
-  >
-
-    <div class="dotgrid"></div>
-
-    <i class="corner tl"></i>
-    <i class="corner tr"></i>
-
-    <div class="eyebrow">
-      WIWI / TATTOO
-    </div>
-
-    <h1 class="brand">
-      WI<br>
-      WI<span class="accent">.</span>
-    </h1>
-
-    <div class="tagline">
-
-      Блэкворк, орнамент, тонкая линия.
-
-      <span>
-        Эскиз под тебя, не с листа.
-      </span>
-
-    </div>
-
-  </section>
-
-
-  <!-- ═══════════════════════════════
-       MENU
-  ═══════════════════════════════ -->
-
-  <nav
-    class="menu"
-    aria-label="Разделы"
-  >
-
-    <button
-      class="menu-item"
-      data-section="works"
-    >
-
-      <span class="menu-label">
-        работы
-      </span>
-
-      <span class="menu-rule"></span>
-
-      <span class="menu-meta">
-        ПОРТФОЛИО
-      </span>
-
-      <span class="menu-arrow">
-        ›
-      </span>
-
-    </button>
-
-
-    <button
-      class="menu-item"
-      data-section="care"
-    >
-
-      <span class="menu-label">
-        уход за тату
-      </span>
-
-      <span class="menu-rule"></span>
-
-      <span class="menu-meta">
-        ПАМЯТКА
-      </span>
-
-      <span class="menu-arrow">
-        ›
-      </span>
-
-    </button>
-
-
-    <button
-      class="menu-item"
-      data-section="faq"
-    >
-
-      <span class="menu-label">
-        вопросы
-      </span>
-
-      <span class="menu-rule"></span>
-
-      <span class="menu-meta">
-        КАК ВСЁ УСТРОЕНО
-      </span>
-
-      <span class="menu-arrow">
-        ›
-      </span>
-
-    </button>
-
-
-    <button
-      class="menu-item"
-      data-section="bookings"
-    >
-
-      <span class="menu-label">
-        мои записи
-      </span>
-
-      <span class="menu-rule"></span>
-
-      <span class="menu-meta">
-        СТАТУСЫ
-      </span>
-
-      <span class="menu-arrow">
-        ›
-      </span>
-
-    </button>
-
-
-    <button
-      class="menu-item"
-      data-section="master"
-    >
-
-      <span class="menu-label">
-        написать мастеру
-      </span>
-
-      <span class="menu-rule"></span>
-
-      <span class="menu-meta">
-        @WIWI
-      </span>
-
-      <span class="menu-arrow">
-        ›
-      </span>
-
-    </button>
-
-  </nav>
-
-
-  <!-- ═══════════════════════════════
-       FOOTER
-  ═══════════════════════════════ -->
-
-  <div class="footer-note">
-    КАЛИНИНГРАД · СЕАНСЫ ПО ЗАПИСИ
+    <div class="tb-right"><button class="tb-btn">⋮</button><button class="tb-btn">×</button></div>
   </div>
 
+  <div class="scroll" id="scroll">
 
-  <!-- ═══════════════════════════════
-       CTA
-  ═══════════════════════════════ -->
+    <!-- HOME -->
+    <div class="view active" id="v-home">
+      <div class="hero">
+        <span class="corner tl"></span><span class="corner tr"></span>
+        <p class="eyebrow">KRAPFEN / TATTOO</p>
+        <h1 class="brand">KRAP<br>FEN<span class="dot">.</span></h1>
+        <p class="tagline">Блэкворк, орнамент, тонкая линия.<span>Эскиз под тебя, не с листа.</span></p>
+      </div>
+      <div class="menu">
+        <button class="menu-item" onclick="openView('works')"><span class="m-label">работы</span><span class="m-rule"></span><span class="m-meta">портфолио</span><span class="m-arrow">›</span></button>
+        <button class="menu-item" onclick="openView('care')"><span class="m-label">уход за тату</span><span class="m-rule"></span><span class="m-meta">памятка</span><span class="m-arrow">›</span></button>
+        <button class="menu-item" onclick="openView('faq')"><span class="m-label">вопросы</span><span class="m-rule"></span><span class="m-meta">как всё устроено</span><span class="m-arrow">›</span></button>
+        <button class="menu-item" onclick="openView('bookings')"><span class="m-label">мои записи</span><span class="m-rule"></span><span class="m-meta" id="bkMeta">статусы</span><span class="m-arrow">›</span></button>
+        <button class="menu-item" onclick="location.href='https://t.me/krapfenn'"><span class="m-label">написать мастеру</span><span class="m-rule"></span><span class="m-meta">@krapfenn</span><span class="m-arrow">›</span></button>
+      </div>
+      <p class="footer-note">Калининград · сеансы по записи</p>
+    </div>
 
-  <div class="cta-area">
+    <!-- WORKS -->
+    <div class="view" id="v-works">
+      <div class="page" style="padding-top:14px">
+        <p class="intro">Свежие работы. Оригинальные фото — замени плейсхолдеры на свои снимки.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px" id="worksGrid"></div>
+        <p class="small-note" style="margin-top:14px">@krapfenn</p>
+      </div>
+    </div>
 
-    <button
-      class="cta"
-      id="bookBtn"
-    >
-      ЗАПИСАТЬСЯ
-    </button>
+    <!-- CARE -->
+    <div class="view" id="v-care">
+      <div class="ticker"><b id="tickCare"></b></div>
+      <div class="page">
+        <h1>Уход за тату</h1>
+        <p class="intro">Заживление зависит от ухода не меньше, чем от работы мастера. Здесь то, что важно знать до и после сеанса.</p>
+        <div class="tabs" id="careTabs"></div>
+        <div id="careBody"></div>
+        <div class="contact-row"><span>Вопрос по своей работе</span><span>@krapfen</span></div>
+        <p class="small-note">Памятка носит ознакомительный характер. Вопросы по конкретной работе — мастеру, по здоровью — врачу.</p>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="view" id="v-faq">
+      <div class="ticker"><b id="tickFaq"></b></div>
+      <div class="page">
+        <h1>Вопросы</h1>
+        <p class="intro">То, что чаще всего спрашивают до записи. Если ответа здесь нет — напишите мастеру, это быстрее.</p>
+        <div id="faqBody"></div>
+        <div class="contact-row"><span>Остался вопрос? Напишите</span><span>@krapfenn</span></div>
+      </div>
+    </div>
+
+    <!-- BOOKINGS -->
+    <div class="view" id="v-bookings">
+      <div class="ticker"><b>мои записи · статусы заявок · мои записи · статусы заявок · </b></div>
+      <div class="page">
+        <h1>Мои записи</h1>
+        <div id="bkBody"></div>
+      </div>
+    </div>
+
+    <!-- WIZARD STEP 1 -->
+    <div class="view" id="v-s1">
+      <div class="ticker"><b>шаг 01/03 · выбор услуги · шаг 01/03 · выбор услуги · </b></div>
+      <div class="page" style="padding-top:4px">
+        <div class="svc-preview" id="svcPreview"></div>
+        <div id="svcList"></div>
+      </div>
+    </div>
+
+    <!-- WIZARD STEP 2a: dates -->
+    <div class="view" id="v-s2a">
+      <div class="ticker"><b id="tickDate"></b></div>
+      <div class="page">
+        <div class="month-h"><span id="monthLbl"></span><small>UTC+2</small></div>
+        <p class="small-note" style="margin:-2px 0 6px">Europe / Kaliningrad</p>
+        <div id="dateList"></div>
+      </div>
+    </div>
+
+    <!-- WIZARD STEP 2b: time -->
+    <div class="view" id="v-s2b">
+      <div class="ticker"><b>шаг 02/03 · выбор времени · шаг 02/03 · выбор времени · </b></div>
+      <div class="page">
+        <div class="time-h"><span class="d" id="timeDayLbl"></span><button onclick="openView('s2a')">другой день</button></div>
+        <div class="grid3" id="timeGrid"></div>
+        <p class="small-note" style="margin-top:10px">Зачёркнутое уже занято.<br>Время проверяется повторно при отправке заявки.</p>
+      </div>
+    </div>
+
+    <!-- WIZARD STEP 3 -->
+    <div class="view" id="v-s3">
+      <div class="ticker"><b id="tickStep3"></b></div>
+      <div class="page">
+        <h1>Расскажи про идею</h1>
+        <div class="f-row"><label>имя</label><input id="fName" placeholder="как к тебе обращаться" value="Киря"></div>
+        <div class="f-row"><label>контакт</label><input id="fContact" placeholder="@username" value="@krapfen_client"></div>
+        <div class="f-row"><label>размер</label><input id="fSize" placeholder="например, 12 см"></div>
+        <div class="f-row"><label>зона</label><input id="fZone" placeholder="предплечье"></div>
+        <div class="f-area"><label>идея</label><textarea id="fIdea" placeholder="что хочешь набить, в каком стиле, без заливки или с ней"></textarea></div>
+        <div class="f-area"><label>референсы · 0/3</label><div class="refs">+</div></div>
+        <p class="small-note">Работаем с 18 лет. Паспорт может понадобиться на сеансе.</p>
+      </div>
+    </div>
 
   </div>
 
-
-  <!-- ═══════════════════════════════
-       OVERLAY
-  ═══════════════════════════════ -->
-
-  <div
-    class="scrim"
-    id="scrim"
-  ></div>
-
-
-  <!-- ═══════════════════════════════
-       BOTTOM SHEET
-  ═══════════════════════════════ -->
-
-  <section
-    class="sheet"
-    id="sheet"
-    aria-hidden="true"
-  >
-
-    <div class="grabber"></div>
-
-    <button
-      class="sheet-close"
-      id="sheetClose"
-      aria-label="Закрыть"
-    >
-      ×
-    </button>
-
-
-    <!-- ═══════════════════════════════
-         BOOKING
-    ═══════════════════════════════ -->
-
-    <div
-      class="section"
-      data-content="booking"
-    >
-
-      <h2>
-        Запись
-      </h2>
-
-      <p class="sheet-intro">
-        Оставь имя и контакт.
-        Заявка подготовится прямо здесь.
-      </p>
-
-      <input
-        class="field"
-        id="name"
-        placeholder="Имя"
-        autocomplete="name"
-      >
-
-      <input
-        class="field"
-        id="contact"
-        placeholder="Контакт"
-        autocomplete="tel"
-      >
-
-      <textarea
-        class="field"
-        id="idea"
-        placeholder="Что хочется набить? Размер / место / пример"
-      ></textarea>
-
-      <button
-        class="submit"
-        id="submitBooking"
-      >
-        ОТПРАВИТЬ
-      </button>
-
-      <div
-        class="form-status"
-        id="bookingStatus"
-      >
-        Готово · заявка заполнена
-      </div>
-
-    </div>
-
-
-    <!-- ═══════════════════════════════
-         WORKS
-    ═══════════════════════════════ -->
-
-    <div
-      class="section"
-      data-content="works"
-    >
-
-      <h2>
-        Работы
-      </h2>
-
-      <p class="sheet-intro">
-        Портфолио и направление WIWI.
-        Здесь можно быстро посмотреть,
-        какие идеи ближе по настроению.
-      </p>
-
-      <div class="cards">
-
-        <article class="card">
-
-          <b>
-            Блэкворк
-          </b>
-
-          <p>
-            Контрастные композиции,
-            плотные заливки и графичная форма.
-          </p>
-
-        </article>
-
-
-        <article class="card">
-
-          <b>
-            Орнамент
-          </b>
-
-          <p>
-            Повторяемые элементы,
-            симметрия и тонкая геометрия.
-          </p>
-
-        </article>
-
-
-        <article class="card">
-
-          <b>
-            Тонкая линия
-          </b>
-
-          <p>
-            Лёгкая графика
-            с аккуратным ритмом линий.
-          </p>
-
-        </article>
-
-      </div>
-
-    </div>
-
-
-    <!-- ═══════════════════════════════
-         CARE
-    ═══════════════════════════════ -->
-
-    <div
-      class="section"
-      data-content="care"
-    >
-
-      <h2>
-        Уход за тату
-      </h2>
-
-      <p class="sheet-intro">
-        Короткая памятка после сеанса.
-      </p>
-
-      <div class="cards">
-
-        <article class="card">
-
-          <b>
-            Первые часы
-          </b>
-
-          <p>
-            Не трогай тату без необходимости
-            и следуй инструкции мастера.
-          </p>
-
-        </article>
-
-
-        <article class="card">
-
-          <b>
-            Первые дни
-          </b>
-
-          <p>
-            Содержи место чистым,
-            не сдирай плёнку или корочки самостоятельно.
-          </p>
-
-        </article>
-
-
-        <article class="card">
-
-          <b>
-            Что важно
-          </b>
-
-          <p>
-            Избегай лишнего трения
-            и ориентируйся на персональную
-            памятку мастера.
-          </p>
-
-        </article>
-
-      </div>
-
-    </div>
-
-
-    <!-- ═══════════════════════════════
-         FAQ
-    ═══════════════════════════════ -->
-
-    <div
-      class="section faq"
-      data-content="faq"
-    >
-
-      <h2>
-        Вопросы
-      </h2>
-
-      <p class="sheet-intro">
-        Самое главное — в нескольких ответах.
-      </p>
-
-
-      <details open>
-
-        <summary>
-          Как проходит запись?
-        </summary>
-
-        <p>
-          Описываешь идею, место,
-          размер и удобное время.
-          После этого мастер уточняет
-          детали и предлагает варианты.
-        </p>
-
-      </details>
-
-
-      <details>
-
-        <summary>
-          Можно прислать референс?
-        </summary>
-
-        <p>
-          Да. Референс помогает понять направление,
-          но итоговый эскиз согласуется отдельно.
-        </p>
-
-      </details>
-
-
-      <details>
-
-        <summary>
-          Что подготовить к сеансу?
-        </summary>
-
-        <p>
-          Достаточно прийти вовремя,
-          выспаться и заранее обсудить
-          все важные нюансы с мастером.
-        </p>
-
-      </details>
-
-    </div>
-
-
-    <!-- ═══════════════════════════════
-         BOOKINGS
-    ═══════════════════════════════ -->
-
-    <div
-      class="section"
-      data-content="bookings"
-    >
-
-      <h2>
-        Мои записи
-      </h2>
-
-      <p
-        class="sheet-intro"
-        id="bookingEmpty"
-      >
-        Пока локальных записей нет.
-      </p>
-
-      <div
-        class="cards"
-        id="bookingList"
-      ></div>
-
-    </div>
-
-
-    <!-- ═══════════════════════════════
-         MASTER
-    ═══════════════════════════════ -->
-
-    <div
-      class="section"
-      data-content="master"
-    >
-
-      <h2>
-        Написать мастеру
-      </h2>
-
-      <p class="sheet-intro">
-        Напиши идею здесь —
-        это самый прямой путь
-        к обсуждению заявки.
-      </p>
-
-      <textarea
-        class="field"
-        id="masterMessage"
-        placeholder="Привет! Хочу тату..."
-      ></textarea>
-
-      <button
-        class="submit"
-        id="masterSubmit"
-      >
-        ПЕРЕДАТЬ СООБЩЕНИЕ
-      </button>
-
-    </div>
-
-
-    <!-- ═══════════════════════════════
-         MORE MENU
-    ═══════════════════════════════ -->
-
-    <div
-      class="section"
-      data-content="menu"
-    >
-
-      <h2>
-        WIWI
-      </h2>
-
-      <p class="sheet-intro">
-        Мини-приложение работает одинаково
-        в обычном браузере и внутри Telegram WebApp.
-      </p>
-
-      <div class="cards">
-
-        <article class="card">
-
-          <b>
-            24/7
-          </b>
-
-          <p>
-            Можно открыть приложение
-            и оставить заявку в любое время.
-          </p>
-
-        </article>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- ═══════════════════════════════
-       TOAST
-  ═══════════════════════════════ -->
-
-  <div
-    class="toast"
-    id="toast"
-    role="status"
-    aria-live="polite"
-  ></div>
-
+  <div class="cta-area"><button class="cta" id="ctaBtn"></button></div>
+  <div class="toast" id="toast"></div>
 </div>
 
-
 <script>
-(function(){
+/* ---------- data ---------- */
+const CARE = [
+ {id:'heal',name:'заживление',type:'tl',items:[
+   {when:'день 0',title:'Сразу после сеанса',text:'Кожа красная и горячая, выступает сукровица. Это работа иммунитета, а не воспаление.',bullets:['Плёнку снимаем тогда, когда сказал мастер: обычную через 2–4 часа, заживляющую можно носить несколько дней','Первое мытьё: тёплая вода, мягкое мыло без отдушек, без мочалки и трения','Промокнуть одноразовым полотенцем и дать высохнуть на воздухе']},
+   {when:'дни 1–3',title:'Сукровица и отёк',text:'Небольшая припухлость и лёгкие выделения — нормальная реакция кожи.'},
+   {when:'дни 4–7',title:'Корочка и зуд',text:'Не сдирать и не чесать — так остаются пробелы и шрамы.'},
+   {when:'недели 2–3',title:'Кожа закрылась',text:'Поверхность выглядит зажившей, но глубокие слои ещё восстанавливаются.'},
+   {when:'месяцы 1–2',title:'Окончательный вид',text:'Именно сейчас виден финальный цвет и чёткость линий.'}
+ ],warn:'Покраснение расползается за пределы работы, нарастает отёк, появляется гной, боль усиливается на третий день и позже, поднялась температура. Это не «так бывает», это повод показаться врачу и не ждать.'},
+ {id:'pain',name:'где больно',type:'pain',items:[
+   {t:'Предплечье',d:'Мягкие ткани, самая спокойная зона',lvl:2},
+   {t:'Плечо',d:'Терпимо, можно сидеть долго',lvl:2},
+   {t:'Бедро',d:'Много мышц, хорошо переносит длинные сеансы',lvl:2},
+   {t:'Икра',d:'Ближе к кости чувствительнее',lvl:3},
+   {t:'Лопатка',d:'Зависит от близости к позвоночнику',lvl:3},
+   {t:'Предплечье внутри',d:'Тонкая кожа, ощущается острее',lvl:3},
+   {t:'Шея',d:'Чувствительно и сложно сидеть неподвижно',lvl:3},
+   {t:'Рёбра',d:'Кость прямо под кожей, дыхание мешает',lvl:4},
+   {t:'Живот',d:'Кожа подвижная, ощущения неровные',lvl:3},
+   {t:'Стопа и щиколотка',d:'Кость, тонкая кожа, дольше заживает',lvl:4}
+ ]},
+ {id:'kit',name:'сборы',type:'kit',items:[
+   {t:'Выспаться',d:'Уставшее тело хуже переносит долгий сеанс'},
+   {t:'Плотно поесть за 1,5–2 часа',d:'Голодный желудок это головокружение через час'},
+   {t:'Без алкоголя сутки',d:'Разжижает кровь, пигмент ложится хуже'},
+   {t:'Без свежего загара',d:'По обгоревшей коже не бьют'},
+   {t:'Свободная одежда',d:'С доступом к нужной зоне, которую не жалко'},
+   {t:'Вода и что-то сладкое',d:'Поддержать уровень сахара на длинном сеансе'},
+   {t:'Паспорт',d:'Может понадобиться на сеансе'},
+   {t:'Предупредить о здоровье',d:'Аллергии, лекарства, хронические болезни'},
+   {t:'Взять референсы',d:'Если хочешь что-то уточнить перед сеансом'}
+ ]},
+ {id:'no',name:'нельзя',type:'no',items:[
+   {t:'Сдирать корочки и чесать',d:'Самая частая причина пробелов и шрамов',b:'до заживления'},
+   {t:'Баня, сауна, бассейн, море',d:'Горячая вода размягчает корку, водоёмы — источник инфекции',b:'2–3 недели'},
+   {t:'Солнце и солярий',d:'Ультрафиолет выжигает пигмент быстрее всего',b:'до заживления, потом spf'},
+   {t:'Долгая ванна',d:'Душ можно сразу, а размокшая кожа теряет пигмент',b:'2 недели'},
+   {t:'Алкоголь',d:'Усиливает сукровицу и отёк',b:'сутки до и после'},
+   {t:'Тесная синтетика',d:'Трение по свежей работе стирает пигмент',b:'первая неделя'},
+   {t:'Спорт до пота',d:'Пот и трение мешают коже закрыться',b:'3–5 дней'},
+   {t:'Мази на своё усмотрение',d:'Спирт, зелёнка, вазелин только вредят',b:'всегда'}
+ ]},
+ {id:'facts',name:'факты',type:'facts',items:[
+   {t:'Пигмент лежит в дерме',d:'Поэтому тату не смывается и не стирается со временем.'},
+   {t:'Выцветает не от времени, а от солнца',d:'UV-защита продлевает чёткость линий на годы.'},
+   {t:'Чёрный живёт дольше цветного',d:'Крупные молекулы пигмента медленнее вымываются.'},
+   {t:'Тонкая линия требует ухода строже',d:'Малый объём пигмента легче потерять при трении.'},
+   {t:'Кожа бывает разная',d:'Скорость заживления зависит от возраста и типа кожи.'},
+   {t:'Заживление идёт в два этапа',d:'Поверхностное — 2–3 недели, глубокое — до двух месяцев.'},
+   {t:'Свежая и заживш­ая работа выглядят по-разному',d:'Итоговый цвет виден только после полного заживления.'}
+ ]}
+];
+const FAQ = [
+ {g:'запись',items:[
+   ['Как проходит запись?','Выбираешь услугу, дату и время, коротко описываешь идею — мастер подтверждает заявку в чате.'],
+   ['Сколько ждать ответа?','Обычно в течение дня, часто быстрее.'],
+   ['Нужен ли аванс?','Зависит от типа работы, мастер скажет при подтверждении.'],
+   ['Могу ли я перенести или отменить?','Да, заранее — в разделе «мои записи» есть кнопка отмены.'],
+   ['Зачем подтверждать приход?','Это бронирует твоё окно и не даёт мастеру отдать его другому.'],
+   ['Что если опаздываю?','Предупредите заранее. После вас может стоять другая запись, и сеанс придётся сократить или перенести.']
+ ]},
+ {g:'сеанс',items:[
+   ['Больно ли?','Ощущения ближе к царапанью, чем к уколу. Тело привыкает за первые двадцать минут.'],
+   ['Сколько длится сеанс?','От получаса на консультации до нескольких часов на крупной работе.'],
+   ['Можно с сопровождающим?','Да, если это не мешает работе мастера.'],
+   ['Что взять с собой?','Паспорт, воду, что-то сладкое и удобную одежду.'],
+   ['Делаете ли по чужому эскизу?','Обсуждается индивидуально на консультации.']
+ ]},
+ {g:'ограничения',items:[
+   ['С какого возраста?','Работаем с 18 лет.'],
+   ['Когда бить нельзя?','При беременности, плохом самочувствии и остром алкогольном опьянении.'],
+   ['А если аллергия?','Предупредите заранее — подберём материалы.'],
+   ['Можно по шрамам и растяжкам?','Да, обсуждается индивидуально на консультации.']
+ ]},
+ {g:'после',items:[
+   ['Сколько заживает?','Поверхность заживает две-три недели, глубокие слои — до двух месяцев. Итоговый цвет виден именно тогда, а не на седьмой день. Подробная памятка — в разделе «уход за тату».'],
+   ['Нужна ли коррекция?','Иногда, мастер скажет на сеансе.'],
+   ['Тату выцветет?','При уходе и защите от солнца — минимально.']
+ ]}
+];
+const SERVICES = [
+ {t:'Перекрытие',d:'Поверх старой работы',h:'≈5 ч',p:'по эскизу'},
+ {t:'Минитату',d:'Небольшая работа, часто без заливки',h:'≈1 ч',p:'по эскизу'},
+ {t:'Средняя работа',d:'Ладонь–две, проработанная деталь',h:'≈3 ч',p:'по эскизу'},
+ {t:'Рукав',d:'Крупный проект в несколько сеансов',h:'по сеансам',p:'по эскизу'},
+ {t:'Консультация',d:'Обсудить идею, посмотреть место',h:'≈30 мин',p:'бесплатно'}
+];
 
-  const app =
-    document.getElementById('app');
+/* ---------- state ---------- */
+let state={svc:null,date:null,time:null};
+let bookings=[];
 
-  const sheet =
-    document.getElementById('sheet');
+/* ---------- nav ---------- */
+function openView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('v-'+name).classList.add('active');
+  document.getElementById('backBtn').style.display=name==='home'?'none':'grid';
+  document.getElementById('scroll').scrollTop=0;
+  if(name==='works') renderWorks();
+  if(name==='care') renderCare();
+  if(name==='faq') renderFaq();
+  if(name==='bookings') renderBookings();
+  if(name==='s1') renderS1();
+  if(name==='s2a') renderS2a();
+  if(name==='s2b') renderS2b();
+  if(name==='s3') renderS3();
+  setCta(name);
+}
+function goHome(){openView('home')}
 
-  const scrim =
-    document.getElementById('scrim');
+function setCta(name){
+  const b=document.getElementById('ctaBtn');
+  const map={home:['записаться',()=>openView('s1')],works:['записаться',()=>openView('s1')],
+    care:['записаться',()=>openView('s1')],faq:['записаться',()=>openView('s1')],
+    bookings:['новая заявка',()=>openView('s1')],
+    s1:['выбрать дату',()=>{if(state.svc!=null)openView('s2a')}],
+    s2a:['выбери день',()=>{}],
+    s2b:['выбери время',()=>{}],
+    s3:['отправить заявку',submitBooking]};
+  let [label,fn]=map[name];
+  if(name==='s2a'&&state.date) label='дальше · '+state.date.short;
+  if(name==='s2b'&&state.time){label='заявка · '+state.time; fn=()=>openView('s3')}
+  b.textContent=label; b.onclick=fn;
+}
 
-  const toast =
-    document.getElementById('toast');
+/* ---------- works ---------- */
+function renderWorks(){
+  const g=document.getElementById('worksGrid');
+  g.innerHTML=Array.from({length:6}).map((_,i)=>
+   `<div style="aspect-ratio:3/4;background:linear-gradient(160deg,#1a1512,#0c0e10);border:1px solid #23272a;border-radius:6px;display:grid;place-items:center;color:#4a4d50;font-size:11px">фото ${i+1}</div>`
+  ).join('');
+}
 
-  const bookingStatus =
-    document.getElementById('bookingStatus');
-
-  const bookingList =
-    document.getElementById('bookingList');
-
-  const bookingEmpty =
-    document.getElementById('bookingEmpty');
-
-  let toastTimer;
-
-
-  /*
-   * ═══════════════════════════════
-   * TELEGRAM MINI APP
-   * ═══════════════════════════════
-   */
-
-  const tg =
-    window.Telegram &&
-    window.Telegram.WebApp
-      ? window.Telegram.WebApp
-      : null;
-
-
-  try{
-
-    if(tg){
-
-      tg.ready();
-
-      tg.expand();
-
-      tg.setHeaderColor(
-        '#090a0b'
-      );
-
-      tg.setBackgroundColor(
-        '#090a0b'
-      );
-
-      if(tg.disableVerticalSwipes){
-        tg.disableVerticalSwipes();
-      }
-
-    }
-
-  }catch(_){}
-
-
-  /*
-   * ═══════════════════════════════
-   * TOAST
-   * ═══════════════════════════════
-   */
-
-  function showToast(message){
-
-    toast.textContent =
-      message;
-
-    toast.classList.add(
-      'show'
-    );
-
-    clearTimeout(
-      toastTimer
-    );
-
-    toastTimer =
-      setTimeout(
-        () =>
-          toast.classList.remove(
-            'show'
-          ),
-        1500
-      );
-
+/* ---------- care ---------- */
+let careTab='heal';
+function renderCare(){
+  document.getElementById('tickCare').textContent=CARE.map(c=>c.name).join(' · ')+' · '+CARE.map(c=>c.name).join(' · ');
+  document.getElementById('careTabs').innerHTML=CARE.map(c=>`<button class="tab ${c.id===careTab?'active':''}" onclick="careTab='${c.id}';renderCare()">${c.name}</button>`).join('');
+  const sec=CARE.find(c=>c.id===careTab);
+  const el=document.getElementById('careBody');
+  if(sec.type==='tl'){
+    el.innerHTML='<div>'+sec.items.map((it,i)=>`
+      <details class="tl" ${i===0?'open':''}><summary><div><span class="when">${it.when}</span><b>${it.title}</b></div></summary>
+      <p>${it.text}</p>${it.bullets?'<ul>'+it.bullets.map(b=>`<li>${b}</li>`).join('')+'</ul>':''}</details>`).join('')
+      +`<div class="warn"><b>Когда к врачу, а не к мастеру</b><p>${sec.warn}</p></div></div>`;
+  } else if(sec.type==='pain'){
+    el.innerHTML='<p class="intro" style="margin-bottom:0">Ощущения ближе к царапанью, чем к уколу. Шкала условная, у всех порог свой.</p>'+
+      sec.items.map(it=>`<div class="row"><div><b>${it.t}</b><p>${it.d}</p></div><div class="dots">${[1,2,3,4].map(n=>`<i class="${n<=it.lvl?'on '+(it.lvl>=4?'r':it.lvl>=3?'o':'g'):''}"></i>`).join('')}</div></div>`).join('');
+  } else if(sec.type==='kit'){
+    const done=sec.items.filter(it=>it.done).length;
+    el.innerHTML=`<div class="progress-head"><span class="num">${done}/${sec.items.length}</span><span class="lbl">собрано к сеансу</span></div>
+      <div class="bar">${sec.items.map(it=>`<i class="${it.done?'on':''}"></i>`).join('')}</div>`+
+      sec.items.map((it,i)=>`<label class="chk ${it.done?'done':''}"><input type="checkbox" ${it.done?'checked':''} onchange="CARE.find(c=>c.id==='kit').items[${i}].done=this.checked;renderCare()"><div><b>${it.t}</b><p>${it.d}</p></div></label>`).join('');
+  } else if(sec.type==='no'){
+    el.innerHTML=`<div style="border-left:2px solid var(--accent);padding-left:11px">`+sec.items.map((it,i)=>`<div class="row" style="padding-left:0"><div><b>${String(i+1).padStart(2,'0')}. ${it.t}</b><p>${it.d}</p></div><span class="badge">${it.b}</span></div>`).join('')+'</div>';
+  } else if(sec.type==='facts'){
+    el.innerHTML=sec.items.map((it,i)=>`<details class="tl"><summary><b>${String(i+1).padStart(2,'0')}. ${it.t.toUpperCase()}</b></summary><p>${it.d}</p></details>`).join('');
   }
+}
 
+/* ---------- faq ---------- */
+function renderFaq(){
+  document.getElementById('tickFaq').textContent='частые вопросы · ответы · запись · сеанс · ограничения · частые вопросы · ответы · ';
+  document.getElementById('faqBody').innerHTML=FAQ.map(g=>`<div class="grp-h">${g.g}</div>`+
+    g.items.map(([q,a])=>`<details class="qa"><summary>${q}<span>+</span></summary><p>${a}</p></details>`).join('')).join('');
+}
 
-  /*
-   * ═══════════════════════════════
-   * OPEN SHEET
-   * ═══════════════════════════════
-   */
-
-  function openSheet(type){
-
-    document
-      .querySelectorAll('.section')
-      .forEach(el => {
-
-        el.classList.toggle(
-          'active',
-          el.dataset.content === type
-        );
-
-      });
-
-
-    sheet.classList.add(
-      'open'
-    );
-
-    scrim.classList.add(
-      'open'
-    );
-
-    sheet.setAttribute(
-      'aria-hidden',
-      'false'
-    );
-
+/* ---------- bookings ---------- */
+function renderBookings(){
+  document.getElementById('bkMeta').textContent=bookings.length?bookings.length+' активных':'статусы';
+  const el=document.getElementById('bkBody');
+  if(!bookings.length){
+    el.innerHTML=`<div class="stamp"><i></i></div><div class="empty-box"><h3>Записей нет</h3><p>Здесь появятся твои заявки с датой, статусом и кнопкой отмены.</p></div>`;
+  } else {
+    el.innerHTML=bookings.map((b,i)=>`<div class="bk-card"><div class="r1"><span>${b.svc}</span><span class="bk-status">на рассмотрении</span></div><div class="r2">${b.date} · ${b.time}</div><button class="bk-cancel" onclick="bookings.splice(${i},1);renderBookings()">отменить</button></div>`).join('');
   }
+}
 
+/* ---------- wizard step1 ---------- */
+function renderS1(){
+  const idx=state.svc??1;
+  showSvc(idx);
+  document.getElementById('svcList').innerHTML=SERVICES.map((s,i)=>
+    `<div class="svc-row ${i===idx?'sel':''}" onmouseenter="showSvc(${i})" onclick="state.svc=${i};openView('s1')"><b>${s.t}</b><span>${s.p}</span></div>`).join('');
+}
+function showSvc(i){
+  const s=SERVICES[i];
+  document.getElementById('svcPreview').innerHTML=`<h2>${s.t}</h2><div class="meta">${s.h} · ${s.p}</div><div class="desc">${s.d}</div><hr><div class="hint">протяжка — листать · нажатие — выбрать<br>длительность ориентировочная, точную мастер назовёт после эскиза</div>`;
+}
 
-  /*
-   * ═══════════════════════════════
-   * CLOSE SHEET
-   * ═══════════════════════════════
-   */
-
-  function closeSheet(){
-
-    sheet.classList.remove(
-      'open'
-    );
-
-    scrim.classList.remove(
-      'open'
-    );
-
-    sheet.setAttribute(
-      'aria-hidden',
-      'true'
-    );
-
+/* ---------- wizard step2a: dates ---------- */
+let calDays=[];
+function buildCalendar(){
+  calDays=[];
+  const start=new Date();
+  const names=['вс','пн','вт','ср','чт','пт','сб'];
+  for(let i=1;i<=16;i++){
+    const d=new Date(start); d.setDate(start.getDate()+i);
+    const dow=d.getDay();
+    let status='ok', label=(6+i%3)+' окон';
+    if(dow===6){status='closed';label='закрыто'}
+    else if(dow===0){status='off';label='выходной'}
+    calDays.push({date:d,dow:names[dow],status,label,
+      short:String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0'),
+      full:d.getDate()+' '+names[dow].toUpperCase()});
   }
-
-
-  /*
-   * ═══════════════════════════════
-   * SAVE BOOKING
-   * ═══════════════════════════════
-   */
-
-  function saveBooking(){
-
-    const name =
-      document
-        .getElementById('name')
-        .value
-        .trim();
-
-
-    const contact =
-      document
-        .getElementById('contact')
-        .value
-        .trim();
-
-
-    const idea =
-      document
-        .getElementById('idea')
-        .value
-        .trim();
-
-
-    if(
-      !name ||
-      !contact
-    ){
-
-      showToast(
-        'Заполни имя и контакт'
-      );
-
-      return;
-    }
-
-
-    const saved =
-      JSON.parse(
-        localStorage.getItem(
-          'wiwiBookings'
-        ) || '[]'
-      );
-
-
-    saved.unshift({
-
-      name,
-      contact,
-      idea,
-
-      date:
-        new Date()
-          .toLocaleDateString(
-            'ru-RU'
-          )
-
-    });
-
-
-    localStorage.setItem(
-      'wiwiBookings',
-      JSON.stringify(
-        saved.slice(0,8)
-      )
-    );
-
-
-    bookingStatus.classList.add(
-      'show'
-    );
-
-
-    renderBookings();
-
-
-    /*
-     * Telegram sendData
-     */
-
-    try{
-
-      if(
-        tg &&
-        tg.sendData
-      ){
-
-        tg.sendData(
-
-          JSON.stringify({
-
-            type:'booking',
-
-            name,
-
-            contact,
-
-            idea
-
-          })
-
-        );
-
-      }
-
-    }catch(_){}
-
-
-    showToast(
-      'Заявка сохранена'
-    );
-
-  }
-
-
-  /*
-   * ═══════════════════════════════
-   * RENDER BOOKINGS
-   * ═══════════════════════════════
-   */
-
-  function renderBookings(){
-
-    const items =
-      JSON.parse(
-        localStorage.getItem(
-          'wiwiBookings'
-        ) || '[]'
-      );
-
-
-    bookingList.innerHTML =
-      '';
-
-
-    bookingEmpty.style.display =
-      items.length
-        ? 'none'
-        : 'block';
-
-
-    items.forEach(
-      item => {
-
-        const card =
-          document.createElement(
-            'article'
-          );
-
-
-        card.className =
-          'card';
-
-
-        card.innerHTML =
-
-          '<b>' +
-
-          escapeHtml(
-            item.name
-          ) +
-
-          '</b>' +
-
-          '<p>' +
-
-          escapeHtml(
-            item.date
-          ) +
-
-          ' · ' +
-
-          escapeHtml(
-            item.contact
-          ) +
-
-          (
-            item.idea
-              ? ' · ' +
-                escapeHtml(
-                  item.idea
-                )
-              : ''
-          ) +
-
-          '</p>';
-
-
-        bookingList.appendChild(
-          card
-        );
-
-      }
-    );
-
-  }
-
-
-  /*
-   * ═══════════════════════════════
-   * ESCAPE HTML
-   * ═══════════════════════════════
-   */
-
-  function escapeHtml(
-    value
-  ){
-
-    return String(
-      value
-    ).replace(
-      /[&<>'"]/g,
-
-      c => ({
-
-        '&':'&amp;',
-        '<':'&lt;',
-        '>':'&gt;',
-        "'":'&#39;',
-        '"':'&quot;'
-
-      }[c])
-
-    );
-
-  }
-
-
-  /*
-   * ═══════════════════════════════
-   * MENU BUTTONS
-   * ═══════════════════════════════
-   */
-
-  document
-    .querySelectorAll(
-      '.menu-item'
-    )
-    .forEach(
-      btn => {
-
-        btn.addEventListener(
-          'pointerdown',
-          () =>
-            btn.classList.add(
-              'active'
-            )
-        );
-
-
-        btn.addEventListener(
-          'pointerup',
-          () =>
-            btn.classList.remove(
-              'active'
-            )
-        );
-
-
-        btn.addEventListener(
-          'pointercancel',
-          () =>
-            btn.classList.remove(
-              'active'
-            )
-        );
-
-
-        btn.addEventListener(
-          'click',
-          () =>
-            openSheet(
-              btn.dataset.section
-            )
-        );
-
-      }
-    );
-
-
-  /*
-   * ═══════════════════════════════
-   * BOOK BUTTON
-   * ═══════════════════════════════
-   */
-
-  document
-    .getElementById(
-      'bookBtn'
-    )
-    .addEventListener(
-      'click',
-      () =>
-        openSheet(
-          'booking'
-        )
-    );
-
-
-  /*
-   * ═══════════════════════════════
-   * CLOSE BUTTON
-   * ═══════════════════════════════
-   */
-
-  document
-    .getElementById(
-      'sheetClose'
-    )
-    .addEventListener(
-      'click',
-      closeSheet
-    );
-
-
-  scrim.addEventListener(
-    'click',
-    closeSheet
-  );
-
-
-  document.addEventListener(
-    'keydown',
-    e => {
-
-      if(
-        e.key === 'Escape'
-      ){
-
-        closeSheet();
-
-      }
-
-    }
-  );
-
-
-  /*
-   * ═══════════════════════════════
-   * MORE
-   * ═══════════════════════════════
-   */
-
-  document
-    .getElementById(
-      'moreBtn'
-    )
-    .addEventListener(
-      'click',
-      () =>
-        openSheet(
-          'menu'
-        )
-    );
-
-
-  /*
-   * ═══════════════════════════════
-   * CLOSE / TELEGRAM
-   * ═══════════════════════════════
-   */
-
-  document
-    .getElementById(
-      'closeBtn'
-    )
-    .addEventListener(
-      'click',
-      () => {
-
-        try{
-
-          if(
-            tg &&
-            tg.close
-          ){
-
-            tg.close();
-
-            return;
-          }
-
-        }catch(_){}
-
-
-        showToast(
-          'Закрой вкладку браузера'
-        );
-
-      }
-    );
-
-
-  /*
-   * ═══════════════════════════════
-   * SUBMIT BOOKING
-   * ═══════════════════════════════
-   */
-
-  document
-    .getElementById(
-      'submitBooking'
-    )
-    .addEventListener(
-      'click',
-      saveBooking
-    );
-
-
-  /*
-   * ═══════════════════════════════
-   * MASTER MESSAGE
-   * ═══════════════════════════════
-   */
-
-  document
-    .getElementById(
-      'masterSubmit'
-    )
-    .addEventListener(
-      'click',
-      () => {
-
-        const msg =
-          document
-            .getElementById(
-              'masterMessage'
-            )
-            .value
-            .trim();
-
-
-        if(!msg){
-
-          showToast(
-            'Напиши сообщение'
-          );
-
-          return;
-        }
-
-
-        try{
-
-          if(
-            tg &&
-            tg.sendData
-          ){
-
-            tg.sendData(
-
-              JSON.stringify({
-
-                type:'message',
-
-                text:msg
-
-              })
-
-            );
-
-          }
-
-        }catch(_){}
-
-
-        showToast(
-          tg
-            ? 'Сообщение передано'
-            : 'Сообщение подготовлено'
-        );
-
-      }
-    );
-
-
-  /*
-   * ═══════════════════════════════
-   * SWIPE DOWN TO CLOSE
-   * ═══════════════════════════════
-   */
-
-  let startY = 0;
-
-
-  sheet.addEventListener(
-    'touchstart',
-
-    e => {
-
-      startY =
-        e.touches[0].clientY;
-
-    },
-
-    {
-      passive:true
-    }
-  );
-
-
-  sheet.addEventListener(
-    'touchend',
-
-    e => {
-
-      const dy =
-        e.changedTouches[0].clientY -
-        startY;
-
-
-      if(
-        dy > 80
-      ){
-
-        closeSheet();
-
-      }
-
-    },
-
-    {
-      passive:true
-    }
-  );
-
-
-  /*
-   * ═══════════════════════════════
-   * INITIAL DATA
-   * ═══════════════════════════════
-   */
-
-  renderBookings();
-
-})();
+}
+function renderS2a(){
+  if(!calDays.length) buildCalendar();
+  document.getElementById('tickDate').textContent='шаг 02/03 · выбор даты · 30 дней вперёд · шаг 02/03 · выбор даты · ';
+  const m=calDays[0].date; const months=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  document.getElementById('monthLbl').textContent=months[m.getMonth()].slice(0,3)+' '+m.getFullYear();
+  document.getElementById('dateList').innerHTML=calDays.map((d,i)=>{
+    const isSel=state.date&&state.date.short===d.short;
+    const cls=d.status!=='ok'?'off':''; 
+    const right=d.status==='closed'?'<span class="closed">закрыто</span>':d.status==='off'?'<span>выходной</span>':`<span class="free">${d.label}</span>`;
+    return `<div><div class="date-row ${cls} ${isSel?'sel':''}" ${d.status==='ok'?`onclick="selectDate(${i})"`:''}><b>${d.date.getDate()} ${d.dow}</b>${right}</div>${isSel?'<div class="date-sub">рабочее окно 10:00–19:00</div>':''}</div>`;
+  }).join('');
+}
+function selectDate(i){state.date=calDays[i]; state.time=null; renderS2a(); setCta('s2a')}
+
+/* ---------- wizard step2b: time ---------- */
+const TIMES=['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'];
+let takenTimes=['12:00'];
+function renderS2b(){
+  document.getElementById('timeDayLbl').textContent=state.date?state.date.full:'';
+  document.getElementById('timeGrid').innerHTML=TIMES.map(t=>{
+    const taken=takenTimes.includes(t), sel=state.time===t;
+    return `<div class="slot ${sel?'sel':''} ${taken?'taken':''}" ${taken?'':`onclick="selectTime('${t}')"`}>${t}</div>`;
+  }).join('');
+}
+function selectTime(t){state.time=t; renderS2b(); setCta('s2b')}
+
+/* ---------- wizard step3 ---------- */
+function renderS3(){
+  const s=SERVICES[state.svc??2];
+  document.getElementById('tickStep3').textContent=`шаг 03/03 · ${state.date?state.date.short:''} · ${s.t} · шаг 03/03 · ${state.date?state.date.short:''} · ${s.t} · `;
+}
+function submitBooking(){
+  const s=SERVICES[state.svc??2];
+  bookings.push({svc:s.t,date:state.date?state.date.short:'—',time:state.time||'—'});
+  toast('Заявка отправлена');
+  setTimeout(()=>openView('bookings'),400);
+}
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+/* init */
+setCta('home');
 </script>
-
 </body>
 </html>
