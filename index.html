@@ -255,7 +255,7 @@ a{color:inherit;text-decoration:none;}
   <!-- HOME -->
   <main class="screen active" id="scr-home">
     <div class="hero">
-      <video class="hero-effect" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+      <source src="wiwi-liquid-effect.mp4" type="video/mp4">
         <source src="wiwi-liquid-effect.mp4" type="video/mp4">
       </video>
       <div class="corner tl"></div><div class="corner tr"></div>
@@ -625,8 +625,8 @@ renderCareTabs();renderCareBody();renderFaq();renderBook();nav.render();
 /* Effect moves much slower than the original clip, while the original hero image remains untouched. */
 const heroEffect = document.querySelector('.hero-effect');
 if(heroEffect){
-  heroEffect.playbackRate = 0.38;
-  heroEffect.defaultPlaybackRate = 0.38;
+  heroEffect.playbackRate = 0.67;
+  heroEffect.defaultPlaybackRate = 0.67;
   const keepEffectPlaying = ()=>{
     if(!document.hidden) heroEffect.play().catch(()=>{});
   };
