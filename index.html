@@ -271,7 +271,7 @@ a{color:inherit;text-decoration:none;}
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <video autoplay muted loop playsinline id="bgVideo">
+  <video autoplay muted loop playsinline webkit-playsinline preload="auto" id="bgVideo">
       <source src="My_first_board_Dark_Silk_Ripple_Loop_no_watermark.mp4" type="video/mp4">
     </video>
 <!-- SVG фильтр для эффекта ветра (невидим, только для расчетов) -->
@@ -669,6 +669,55 @@ function renderBook(){
    el.innerHTML='<div style="height:14px"></div>'+bookings.map((b,i)=>`<div class="bcard"><div class="bcard-top"><b>${b.service}</b><span class="st">ждёт подтверждения</span></div><p>${b.when} · ${b.name}</p><button onclick="bookings.splice(${i},1);renderBook();">отменить</button></div>`).join('');
  }
 }
+
+
+/* ---------- cross-device video playback ---------- */
+(function(){
+  const videos = [
+    document.getElementById('bgVideo'),
+    document.querySelector('.hero-video')
+  ].filter(Boolean);
+
+  videos.forEach(video => {
+    video.muted = true;
+    video.defaultMuted = true;
+    video.setAttribute('muted', '');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
+    video.setAttribute('autoplay', '');
+    video.setAttribute('preload', 'auto');
+
+    const start = () => {
+      video.muted = true;
+      const p = video.play();
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+    };
+
+    if (video.readyState >= 2) start();
+    video.addEventListener('loadedmetadata', start, {once:false});
+    video.addEventListener('canplay', start, {once:false});
+
+    // Mobile Safari/Chrome can pause a muted background video after lifecycle changes.
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) start();
+    }, {passive:true});
+
+    window.addEventListener('pageshow', start, {passive:true});
+    window.addEventListener('focus', start, {passive:true});
+
+    // One user interaction is enough to unlock playback if the browser
+    // initially rejected autoplay.
+    const unlock = () => {
+      start();
+      window.removeEventListener('touchstart', unlock);
+      window.removeEventListener('pointerdown', unlock);
+      window.removeEventListener('click', unlock);
+    };
+    window.addEventListener('touchstart', unlock, {passive:true});
+    window.addEventListener('pointerdown', unlock, {passive:true});
+    window.addEventListener('click', unlock, {passive:true});
+  });
+})();
 
 /* ---------- init ---------- */
 renderCareTabs();renderCareBody();renderFaq();renderBook();nav.render();
