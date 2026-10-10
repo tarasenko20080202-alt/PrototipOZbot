@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0a0705">
 <meta name="color-scheme" content="dark">
 <title>WIWI · тату · поддержка · запись 24/7</title>
@@ -11,11 +11,13 @@
   box-sizing:border-box;
   --bg:#0a0705; --ink:#f3efe8; --muted:#8a8580; --muted2:#65605c; --hair:#252220; --hair2:#37332f;
   --cream:#efece6; --accent:#c2432c; --accent2:#e3963f; --green:#4fae72; --orange:#e0a23c; --red:#c2432c;
-  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  
 }
 html{scroll-padding-top:env(safe-area-inset-top,0px);}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{margin:0;width:100%;height:100%;background:var(--bg);}
+html,body{margin:0;width:100%;height:100%;background:var(--bg);overscroll-behavior:none;touch-action:pan-x pan-y;-webkit-text-size-adjust:100%;}
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+input,textarea{-webkit-user-select:text;user-select:text;}
 body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);display:flex;align-items:center;justify-content:center;overflow:hidden;}
 button,input,textarea{font:inherit;color:inherit;}
 button{border:0;background:none;padding:0;cursor:pointer;}
@@ -23,10 +25,10 @@ input,textarea{background:#000;border:0;outline:none;}
 input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid rgba(243,239,232,.5);outline-offset:2px;}
 a{color:inherit;text-decoration:none;}
 
-.app{position:relative;width:100%;height:100svh;background:var(--bg);overflow:hidden;display:flex;flex-direction:column;}
+.app{position:fixed;inset:0;background:var(--bg);overflow:hidden;display:flex;flex-direction:column;}
 
 /* topbar */
-.topbar{flex:none;height:52px;padding:calc(env(safe-area-inset-top,0px)) 8px 0;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--hair);background:#080605;position:relative;z-index:30;}
+.topbar{flex:none;height:calc(52px + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) 8px 0;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--hair);background:#080605;position:relative;z-index:30;}
 .tb-l{display:flex;align-items:center;gap:8px;min-width:0;}
 .tb-back{width:26px;height:26px;display:none;align-items:center;justify-content:center;font-size:18px;color:#c9c5c0;flex:none;}
 .tb-back.show{display:flex;}
@@ -35,9 +37,9 @@ a{color:inherit;text-decoration:none;}
 .tb-icon{font-size:19px;color:#a9a5a0;width:20px;text-align:center;}
 
 /* generic screen */
-.screen{display:none;flex:1;overflow-y:auto;padding:0 0 100px;}
+.screen{display:none;flex:1;overflow-y:auto;padding:0 0 calc(74px + env(safe-area-inset-bottom,0px));}
 .screen.active{display:block;}
-#scr-home.active{display:flex;flex-direction:column;overflow:hidden;padding-bottom:0;}
+#scr-home.active{display:flex;flex-direction:column;overflow-y:auto;padding-bottom:calc(64px + env(safe-area-inset-bottom,0px));}
 
 /* ticker */
 .ticker{overflow:hidden;white-space:nowrap;border-bottom:1px solid var(--hair);background:#070504;}
@@ -145,7 +147,7 @@ a{color:inherit;text-decoration:none;}
 .footer-note{flex:none;padding:12px 14px 14px;font:9px/1 "Courier New",monospace;letter-spacing:1.8px;color:#5c5854;text-transform:uppercase;}
 
 /* cta */
-.cta-area{flex:none;position:absolute;left:0;right:0;bottom:0;z-index:25;padding:10px 12px calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(180deg,rgba(10,7,5,0),rgba(10,7,5,.9) 30%,var(--bg) 62%);}
+.cta-area{position:absolute;left:0;right:0;bottom:0;z-index:25;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));background:var(--bg);border-top:1px solid var(--hair);}
 .cta{display:block;width:100%;height:42px;border-radius:7px;background:var(--cream);color:#0a0705;font-size:12.5px;font-weight:700;letter-spacing:.2px;transition:transform .12s,filter .12s;}
 .cta:active{transform:translateY(1px);filter:brightness(.92);}
 .cta[disabled]{opacity:.35;pointer-events:none;}
@@ -273,7 +275,7 @@ a{color:inherit;text-decoration:none;}
 .bcard button{margin-top:8px;font:9px/1 "Courier New",monospace;letter-spacing:1px;color:#7a756f;text-transform:uppercase;}
 
 /* toast */
-.toast{position:absolute;left:50%;bottom:78px;z-index:60;transform:translate(-50%,10px);opacity:0;pointer-events:none;padding:10px 14px;border:1px solid var(--hair2);border-radius:8px;background:#15100d;font-size:12px;white-space:nowrap;transition:opacity .2s,transform .2s;}
+.toast{position:absolute;left:50%;bottom:calc(78px + env(safe-area-inset-bottom,0px));z-index:60;transform:translate(-50%,10px);opacity:0;pointer-events:none;padding:10px 14px;border:1px solid var(--hair2);border-radius:8px;background:#15100d;font-size:12px;white-space:nowrap;transition:opacity .2s,transform .2s;}
 .toast.show{opacity:1;transform:translate(-50%,0);}
 </style>
 <style>
@@ -743,6 +745,21 @@ function renderBook(){
     window.addEventListener('pointerdown', unlock, {passive:true});
     window.addEventListener('click', unlock, {passive:true});
   });
+})();
+
+/* ---------- запрет зума: щипок и двойной тап ---------- */
+(function(){
+  const opt={passive:false};
+  ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault(),opt));
+  let last=0,moved=false;
+  document.addEventListener('touchstart',()=>{moved=false;},{passive:true});
+  document.addEventListener('touchmove',e=>{moved=true;if(e.touches.length>1)e.preventDefault();},opt);
+  document.addEventListener('touchend',e=>{
+    if(moved||e.touches.length)return;
+    const t=Date.now();
+    if(t-last<300&&!/INPUT|TEXTAREA/.test(e.target.tagName))e.preventDefault();
+    last=t;
+  },opt);
 })();
 
 /* ---------- init ---------- */
