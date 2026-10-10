@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0a0705">
 <meta name="color-scheme" content="dark">
 <title>WIWI · тату · поддержка · запись 24/7</title>
@@ -11,22 +11,22 @@
   box-sizing:border-box;
   --bg:#0a0705; --ink:#f3efe8; --muted:#8a8580; --muted2:#65605c; --hair:#252220; --hair2:#37332f;
   --cream:#efece6; --accent:#c2432c; --accent2:#e3963f; --green:#4fae72; --orange:#e0a23c; --red:#c2432c;
-  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
-html{scroll-padding-top:env(safe-area-inset-top,0px);}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
 html,body{margin:0;width:100%;height:100%;background:var(--bg);}
-body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+body{font-family:Arial,Helvetica,sans-serif;color:var(--ink);overflow:hidden;overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
 button,input,textarea{font:inherit;color:inherit;}
 button{border:0;background:none;padding:0;cursor:pointer;}
-input,textarea{background:#000;border:0;outline:none;}
+input,textarea{background:#000;border:0;outline:none;-webkit-user-select:text;user-select:text;}
 input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid rgba(243,239,232,.5);outline-offset:2px;}
 a{color:inherit;text-decoration:none;}
 
-.app{position:relative;width:100%;height:100svh;background:var(--bg);overflow:hidden;display:flex;flex-direction:column;}
+/* приложение занимает весь экран от края до края, включая зону под home-индикатором */
+.app{position:fixed;top:0;right:0;bottom:0;left:0;background:var(--bg);overflow:hidden;display:flex;flex-direction:column;}
 
 /* topbar */
-.topbar{flex:none;height:52px;padding:calc(env(safe-area-inset-top,0px)) 8px 0;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--hair);background:#080605;position:relative;z-index:30;}
+.topbar{flex:none;height:calc(52px + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) 8px 0;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--hair);background:#080605;position:relative;z-index:30;}
 .tb-l{display:flex;align-items:center;gap:8px;min-width:0;}
 .tb-back{width:26px;height:26px;display:none;align-items:center;justify-content:center;font-size:18px;color:#c9c5c0;flex:none;}
 .tb-back.show{display:flex;}
@@ -37,7 +37,8 @@ a{color:inherit;text-decoration:none;}
 /* generic screen */
 .screen{display:none;flex:1;overflow-y:auto;padding:0 0 100px;}
 .screen.active{display:block;}
-#scr-home.active{display:flex;flex-direction:column;overflow:hidden;padding-bottom:0;}
+/* внизу главной оставляем место под кнопку, чтобы она не закрывала меню */
+#scr-home.active{display:flex;flex-direction:column;overflow:hidden;padding-bottom:calc(64px + env(safe-area-inset-bottom,0px));}
 
 /* ticker */
 .ticker{overflow:hidden;white-space:nowrap;border-bottom:1px solid var(--hair);background:#070504;}
@@ -121,8 +122,15 @@ a{color:inherit;text-decoration:none;}
 .menu-arrow{margin-left:6px;color:#75716c;font-size:13px;flex:none;}
 .footer-note{flex:none;padding:12px 14px 14px;font:9px/1 "Courier New",monospace;letter-spacing:1.8px;color:#5c5854;text-transform:uppercase;}
 
-/* cta */
-.cta-area{flex:none;position:absolute;left:0;right:0;bottom:0;z-index:25;padding:10px 12px calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(180deg,rgba(10,7,5,0),rgba(10,7,5,.9) 30%,var(--bg) 62%);}
+/* cta: отдельный слой, сплошной фон до самого края экрана, чтобы кнопка рисовалась сразу */
+.cta-area{
+  flex:none;position:absolute;left:0;right:0;bottom:0;z-index:40;
+  padding:10px 12px calc(12px + env(safe-area-inset-bottom,0px));
+  background:linear-gradient(180deg,rgba(10,7,5,0),rgba(10,7,5,.9) 30%,var(--bg) 62%);
+  -webkit-transform:translateZ(0);transform:translateZ(0);
+  will-change:transform;
+  -webkit-backface-visibility:hidden;backface-visibility:hidden;
+}
 .cta{display:block;width:100%;height:42px;border-radius:7px;background:var(--cream);color:#0a0705;font-size:12.5px;font-weight:700;letter-spacing:.2px;transition:transform .12s,filter .12s;}
 .cta:active{transform:translateY(1px);filter:brightness(.92);}
 .cta[disabled]{opacity:.35;pointer-events:none;}
@@ -225,7 +233,8 @@ a{color:inherit;text-decoration:none;}
 /* form */
 .field-row{border-bottom:1px solid var(--hair);padding:12px 0;}
 .field-row label{display:block;font:9px/1 "Courier New",monospace;letter-spacing:1.4px;color:#65605c;text-transform:uppercase;margin-bottom:6px;}
-.field-row input,.field-row textarea{width:100%;color:var(--ink);font-size:13.5px;}
+/* 16px — иначе iOS приближает экран при фокусе на поле */
+.field-row input,.field-row textarea{width:100%;color:var(--ink);font-size:16px;}
 .field-row textarea{resize:none;height:60px;line-height:1.4;}
 .field-row input::placeholder,.field-row textarea::placeholder{color:#524e49;}
 .refs{display:flex;gap:8px;margin-top:4px;}
@@ -253,27 +262,9 @@ a{color:inherit;text-decoration:none;}
 .toast{position:absolute;left:50%;bottom:78px;z-index:60;transform:translate(-50%,10px);opacity:0;pointer-events:none;padding:10px 14px;border:1px solid var(--hair2);border-radius:8px;background:#15100d;font-size:12px;white-space:nowrap;transition:opacity .2s,transform .2s;}
 .toast.show{opacity:1;transform:translate(-50%,0);}
 </style>
-<style>
-    #bgVideo {
-      position: fixed !important;
-      right: 0;
-      bottom: 0;
-      min-width: 100%;
-      min-height: 100%;
-      width: auto;
-      height: auto;
-      z-index: -100 !important;
-      object-fit: cover;
-      pointer-events: none;
-    }
-  </style>
-  <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <video autoplay muted loop playsinline webkit-playsinline preload="auto" id="bgVideo">
-      <source src="My_first_board_Dark_Silk_Ripple_Loop_no_watermark.mp4" type="video/mp4">
-    </video>
 <!-- SVG фильтр для эффекта ветра (невидим, только для расчетов) -->
 <svg style="position: absolute; width: 0; height: 0;" xmlns="http://www.w3.org/2000/svg">
   <filter id="silk-filter">
@@ -411,11 +402,16 @@ a{color:inherit;text-decoration:none;}
     </div>
   </main>
 
-  <div class="cta-area"><button class="cta" id="ctaBtn">Записаться</button></div>
+  <div class="cta-area" id="ctaArea"><button class="cta" id="ctaBtn">Записаться</button></div>
   <div class="toast" id="toast"></div>
 </div>
 
 <script>
+/* ---------- no pinch / double-tap zoom ---------- */
+['gesturestart','gesturechange','gestureend'].forEach(function(ev){
+  document.addEventListener(ev,function(e){e.preventDefault();},{passive:false});
+});
+
 /* ---------- data ---------- */
 const SVC=[
  {n:"Перекрытие",d:"~5 ч",p:"по эскизу",x:"Поверх старой работы"},
@@ -674,7 +670,6 @@ function renderBook(){
 /* ---------- cross-device video playback ---------- */
 (function(){
   const videos = [
-    document.getElementById('bgVideo'),
     document.querySelector('.hero-video')
   ].filter(Boolean);
 
@@ -721,6 +716,23 @@ function renderBook(){
 
 /* ---------- init ---------- */
 renderCareTabs();renderCareBody();renderFaq();renderBook();nav.render();
+
+/* Кнопка «Записаться»: iOS иногда не рисует слой с кнопкой над видео, пока экран не перерисуется.
+   Принудительно перерисовываем её после загрузки, при возврате на вкладку и при смене размеров окна. */
+(function(){
+  const area=document.getElementById('ctaArea');
+  if(!area) return;
+  const kick=()=>{
+    area.style.display='none';
+    void area.offsetHeight;
+    area.style.display='';
+  };
+  window.addEventListener('load',()=>{kick();requestAnimationFrame(kick);setTimeout(kick,300);});
+  window.addEventListener('pageshow',kick,{passive:true});
+  window.addEventListener('resize',kick,{passive:true});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)kick();},{passive:true});
+  requestAnimationFrame(kick);
+})();
 
 /* Effect moves much slower than the original clip, while the original hero image remains untouched. */
 const heroEffect = document.querySelector('.hero-effect');
