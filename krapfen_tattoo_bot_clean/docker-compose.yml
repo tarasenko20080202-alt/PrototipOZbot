@@ -1,0 +1,45 @@
+# Запуск: docker compose up -d --build
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  bot:
+    build: .
+    command: python bot.py
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data:/app/data
+    logging: *logging
+
+  web:
+    build: .
+    command: uvicorn server:app --host 0.0.0.0 --port 8000
+    restart: unless-stopped
+    env_file: .env
+    expose:
+      - "8000"
+    logging: *logging
+
+  caddy:                      # выдаёт HTTPS-сертификат автоматически
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+    logging: *logging
+
+volumes:
+  caddy_data:
+  caddy_config:
