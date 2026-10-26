@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#0a0705">
 <meta name="color-scheme" content="dark">
 <title>WIWI · тату · поддержка · запись 24/7</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 :root{
   box-sizing:border-box;
@@ -677,13 +678,24 @@ function wiz_addRef(){
  row.insertBefore(t,row.lastElementChild);
  if(wizState.refs>=3)row.lastElementChild.remove();
 }
-function submitIdea(){
- const name=document.getElementById('fName').value.trim()||'Без имени';
+/* ---------- отправка заявки мастеру (через бота) ---------- */
+const API_URL="https://my-bot.taras-wiwi.workers.dev/booking";
+async function submitIdea(){
+ const g=id=>document.getElementById(id).value.trim();
  const s=SVC[wizState.svc], d=wizState.date.date, wd=WD[d.getDay()], day=String(d.getDate()).padStart(2,'0');
+ const name=g('fName')||'Без имени';
+ const iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+day;
+ const comment=[g('fContact')&&'Контакт: '+g('fContact'), g('fSize')&&'Размер: '+g('fSize'), g('fZone')&&'Зона: '+g('fZone')].filter(Boolean).join(', ')||'—';
+ const payload={action:'booking_request',name,service:s.n,date:iso,time:wizState.time,design:g('fIdea'),comment};
+ const tg=window.Telegram&&Telegram.WebApp;
+ if(!tg||!tg.initData){toast('Откройте запись в Telegram через бота');return;}
+ const btn=document.getElementById('ctaBtn'); btn.disabled=true;
+ try{
+  const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({initData:tg.initData,payload})});
+  if(!r.ok)throw new Error(r.status);
+ }catch(e){toast('Не удалось отправить, попробуйте ещё раз');btn.disabled=false;return;}
  bookings.unshift({service:s.n,when:day+' '+wd+', '+wizState.time,name});
- renderBook();
- toast('Заявка отправлена');
- nav.home();nav.go('book');
+ renderBook();toast('Заявка отправлена');nav.home();nav.go('book');
 }
 
 /* ---------- my bookings ---------- */
@@ -764,6 +776,7 @@ function renderBook(){
 
 /* ---------- init ---------- */
 renderCareTabs();renderCareBody();renderFaq();renderBook();nav.render();
+try{if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}}catch(e){}
 
 /* Effect moves much slower than the original clip, while the original hero image remains untouched. */
 const heroEffect = document.querySelector('.hero-effect');
