@@ -566,17 +566,16 @@ function loadBookings(){
   }catch(e){}
   syncBookings();
 }
-/* статусы с сервера: отмена, сделанная с другого устройства */
+/* записи с сервера: восстанавливает список, даже если память приложения очистилась */
 async function syncBookings(){
   const tg=window.Telegram&&Telegram.WebApp;
-  if(!tg||!tg.initData||!bookings.length)return;
+  if(!tg||!tg.initData)return;
   try{
     const r=await fetch(API_BASE+'/bookings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({initData:tg.initData})});
     if(!r.ok)return;
     const j=await r.json();
-    let changed=false;
-    (j.bookings||[]).forEach(s=>{const b=bookings.find(x=>x.id===s.id);if(b&&s.status==='cancelled'&&b.status!=='cancelled'){b.status='cancelled';changed=true;}});
-    if(changed){saveBookings();renderBook();}
+    const list=(j.bookings||[]).filter(b=>b&&b.id&&b.service);
+    if(list.length){mergeBookings(list);saveBookings();renderBook();}
   }catch(e){}
 }
 function cancelBooking(id){
