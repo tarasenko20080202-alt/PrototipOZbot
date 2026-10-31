@@ -273,7 +273,9 @@ a{color:inherit;text-decoration:none;}
 .bcard b{font-size:14px;}
 .bcard .st{font:8px/1 "Courier New",monospace;letter-spacing:1px;text-transform:uppercase;color:var(--orange);border:1px solid #4a3a20;border-radius:99px;padding:4px 8px;}
 .bcard p{margin:6px 0 0;font-size:12px;color:#918c87;}
-.bcard button{margin-top:8px;font:9px/1 "Courier New",monospace;letter-spacing:1px;color:#7a756f;text-transform:uppercase;}
+.bcard button{margin-top:10px;font:9px/1 "Courier New",monospace;letter-spacing:1px;color:#e0917f;text-transform:uppercase;border:1px solid #3a2420;border-radius:99px;padding:8px 12px;}
+.bcard .st.off{color:#8a857f;border-color:var(--hair2);}
+.bcard.cancelled{opacity:.55;}
 
 /* toast */
 .toast{position:absolute;left:50%;bottom:calc(78px + env(safe-area-inset-bottom,0px));z-index:60;transform:translate(-50%,10px);opacity:0;pointer-events:none;padding:10px 14px;border:1px solid var(--hair2);border-radius:8px;background:#15100d;font-size:12px;white-space:nowrap;transition:opacity .2s,transform .2s;}
@@ -535,6 +537,64 @@ let wizState={svc:0,date:null,time:null,refs:0};
 let bookings=[];
 let dates=[];
 
+/* ---------- хранилище записей ---------- */
+const STORE_KEY='wiwi_bookings';
+function saveBookings(){
+  const json=JSON.stringify(bookings);
+  try{localStorage.setItem(STORE_KEY,json);}catch(e){}
+  try{
+    const tg=window.Telegram&&Telegram.WebApp;
+    if(tg&&tg.CloudStorage&&tg.isVersionAtLeast('6.9'))tg.CloudStorage.setItem(STORE_KEY,json,()=>{});
+  }catch(e){}
+}
+function mergeBookings(list){
+  const map=new Map();
+  [...bookings,...list].forEach(b=>{if(!b||!b.id)return;const p=map.get(b.id);map.set(b.id,p&&p.status==='cancelled'?{...b,status:'cancelled'}:b);});
+  bookings=[...map.values()].sort((a,b)=>b.id-a.id);
+}
+function loadBookings(){
+  try{mergeBookings(JSON.parse(localStorage.getItem(STORE_KEY)||'[]'));}catch(e){}
+  renderBook();
+  try{
+    const tg=window.Telegram&&Telegram.WebApp;
+    if(tg&&tg.CloudStorage&&tg.isVersionAtLeast('6.9')){
+      tg.CloudStorage.getItem(STORE_KEY,(err,val)=>{
+        if(err||!val)return;
+        try{mergeBookings(JSON.parse(val));renderBook();saveBookings();}catch(e){}
+      });
+    }
+  }catch(e){}
+  syncBookings();
+}
+/* статусы с сервера: отмена, сделанная с другого устройства */
+async function syncBookings(){
+  const tg=window.Telegram&&Telegram.WebApp;
+  if(!tg||!tg.initData||!bookings.length)return;
+  try{
+    const r=await fetch(API_BASE+'/bookings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({initData:tg.initData})});
+    if(!r.ok)return;
+    const j=await r.json();
+    let changed=false;
+    (j.bookings||[]).forEach(s=>{const b=bookings.find(x=>x.id===s.id);if(b&&s.status==='cancelled'&&b.status!=='cancelled'){b.status='cancelled';changed=true;}});
+    if(changed){saveBookings();renderBook();}
+  }catch(e){}
+}
+function cancelBooking(id){
+  const b=bookings.find(x=>x.id===id);
+  if(!b||b.status==='cancelled')return;
+  const tg=window.Telegram&&Telegram.WebApp;
+  const run=async()=>{
+    if(!tg||!tg.initData){toast('Откройте запись в Telegram через бота');return;}
+    try{
+      const r=await fetch(API_BASE+'/cancel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({initData:tg.initData,id:b.id,booking:{service:b.service,date:b.date,time:b.time,name:b.name}})});
+      if(!r.ok)throw new Error(r.status);
+    }catch(e){toast('Не удалось отменить, попробуйте ещё раз');return;}
+    b.status='cancelled';saveBookings();renderBook();toast('Запись отменена');
+  };
+  if(tg&&tg.showConfirm)tg.showConfirm('Отменить запись?',ok=>{if(ok)run();});
+  else if(confirm('Отменить запись?'))run();
+}
+
 /* ---------- nav ---------- */
 const nav=(()=>{
  let stack=['home'];
@@ -679,7 +739,8 @@ function wiz_addRef(){
  if(wizState.refs>=3)row.lastElementChild.remove();
 }
 /* ---------- отправка заявки мастеру (через бота) ---------- */
-const API_URL="https://my-bot.taras-wiwi.workers.dev/booking";
+const API_BASE="https://my-bot.taras-wiwi.workers.dev";
+const API_URL=API_BASE+"/booking";
 async function submitIdea(){
  const g=id=>document.getElementById(id).value.trim();
  const s=SVC[wizState.svc], d=wizState.date.date, wd=WD[d.getDay()], day=String(d.getDate()).padStart(2,'0');
@@ -690,22 +751,30 @@ async function submitIdea(){
  const tg=window.Telegram&&Telegram.WebApp;
  if(!tg||!tg.initData){toast('Откройте запись в Telegram через бота');return;}
  const btn=document.getElementById('ctaBtn'); btn.disabled=true;
+ let sid=null;
  try{
   const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({initData:tg.initData,payload})});
   if(!r.ok)throw new Error(r.status);
+  try{const j=await r.json();if(j&&j.id)sid=j.id;}catch(e){}
  }catch(e){toast('Не удалось отправить, попробуйте ещё раз');btn.disabled=false;return;}
- bookings.unshift({service:s.n,when:day+' '+wd+', '+wizState.time,name});
+ bookings.unshift({id:sid||Date.now(),service:s.n,date:iso,time:wizState.time,name,status:'active'});
+ saveBookings();
  renderBook();toast('Заявка отправлена');nav.home();nav.go('book');
 }
 
-/* ---------- my bookings ---------- */
+/* ---------- my bookings (только просмотр) ---------- */
+function fmtBookingDate(iso){
+  const [y,m,d]=iso.split('-').map(Number);
+  const dt=new Date(y,m-1,d);
+  return String(d).padStart(2,'0')+'.'+String(m).padStart(2,'0')+'.'+y+' ('+WD[dt.getDay()]+')';
+}
 function renderBook(){
  document.getElementById('mrCount').textContent='[ '+String(bookings.length).padStart(3,'0')+' ]';
  const el=document.getElementById('bookBody');
  if(!bookings.length){
-   el.innerHTML='<div class="empty"><div class="stamp">✦</div><b>Записей нет</b><p>Здесь появятся твои заявки с датой, статусом и кнопкой отмены.</p></div>';
+   el.innerHTML='<div class="empty"><div class="stamp">✦</div><b>Записей нет</b><p>Здесь появятся твои заявки с датой и временем сеанса. Отсюда же их можно отменить.</p></div>';
  } else {
-   el.innerHTML='<div style="height:14px"></div>'+bookings.map((b,i)=>`<div class="bcard"><div class="bcard-top"><b>${b.service}</b><span class="st">ждёт подтверждения</span></div><p>${b.when} · ${b.name}</p><button onclick="bookings.splice(${i},1);renderBook();">отменить</button></div>`).join('');
+   el.innerHTML='<div style="height:14px"></div>'+bookings.map(b=>{const c=b.status==='cancelled';return `<div class="bcard${c?' cancelled':''}"><div class="bcard-top"><b>${b.service}</b><span class="st${c?' off':''}">${c?'отменена':'ждёт подтверждения'}</span></div><p>${b.date?fmtBookingDate(b.date):b.when} · ${b.time||''}</p><p>${b.name}</p>${c?'':`<button onclick="cancelBooking(${b.id})">отменить запись</button>`}</div>`;}).join('')+'<p class="legal" style="margin:6px 14px">Перенести запись можно, написав мастеру @neznai01.</p>';
  }
 }
 
@@ -777,6 +846,7 @@ function renderBook(){
 /* ---------- init ---------- */
 renderCareTabs();renderCareBody();renderFaq();renderBook();nav.render();
 try{if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}}catch(e){}
+loadBookings();
 
 /* Effect moves much slower than the original clip, while the original hero image remains untouched. */
 const heroEffect = document.querySelector('.hero-effect');
