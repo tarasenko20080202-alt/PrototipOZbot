@@ -277,6 +277,12 @@ a{color:inherit;text-decoration:none;}
 .bcard .st.ok{color:var(--green);border-color:#1f3d2a;}
 .bcard .st.off{color:#8a857f;border-color:var(--hair2);}
 .bcard.cancelled{opacity:.55;}
+.bactions{display:flex;gap:8px;flex-wrap:wrap;}
+.bcard button.edit{color:var(--cream);border-color:var(--hair2);}
+.bcard button.gh{color:#a7a29d;border-color:var(--hair2);}
+.bcard .tabs{margin:12px 0 0;}
+.bcard .tabs button{margin:0;padding:7px 12px;font:10.5px/1 Arial,sans-serif;letter-spacing:.8px;color:#a7a29d;border:1px solid var(--hair2);border-radius:99px;text-transform:uppercase;}
+.bcard .tabs button.on{background:var(--cream);color:#0a0705;border-color:var(--cream);font-weight:700;}
 
 /* toast */
 .toast{position:absolute;left:50%;bottom:calc(78px + env(safe-area-inset-bottom,0px));z-index:60;transform:translate(-50%,10px);opacity:0;pointer-events:none;padding:10px 14px;border:1px solid var(--hair2);border-radius:8px;background:#15100d;font-size:12px;white-space:nowrap;transition:opacity .2s,transform .2s;}
@@ -579,6 +585,23 @@ async function syncBookings(){
     if(list.length){mergeBookings(list);saveBookings();renderBook();}
   }catch(e){}
 }
+let editId=null,editSvc=null;
+function startEdit(id){const b=bookings.find(x=>x.id===id);if(!b||b.status==='cancelled')return;editId=id;editSvc=b.service;renderBook();}
+function stopEdit(){editId=null;editSvc=null;renderBook();}
+function pickEditSvc(i){editSvc=SVC[i].n;renderBook();}
+async function saveEdit(){
+  const b=bookings.find(x=>x.id===editId);
+  if(!b)return stopEdit();
+  if(editSvc===b.service)return stopEdit();
+  const tg=window.Telegram&&Telegram.WebApp;
+  if(!tg||!tg.initData){toast('Откройте запись в Telegram через бота');return;}
+  try{
+    const r=await fetch(API_BASE+'/update',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({initData:tg.initData,id:b.id,service:editSvc,booking:{service:b.service,date:b.date,time:b.time,name:b.name}})});
+    if(r.status===409){b.status='cancelled';saveBookings();stopEdit();toast('Запись уже отменена');return;}
+    if(!r.ok)throw new Error(r.status);
+  }catch(e){toast('Не удалось изменить ('+((e&&e.message)||'нет связи')+')');return;}
+  b.service=editSvc;saveBookings();stopEdit();toast('Процедура изменена');
+}
 function cancelBooking(id){
   const b=bookings.find(x=>x.id===id);
   if(!b||b.status==='cancelled')return;
@@ -588,7 +611,7 @@ function cancelBooking(id){
     try{
       const r=await fetch(API_BASE+'/cancel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({initData:tg.initData,id:b.id,booking:{service:b.service,date:b.date,time:b.time,name:b.name}})});
       if(!r.ok)throw new Error(r.status);
-    }catch(e){toast('Не удалось отменить, попробуйте ещё раз');return;}
+    }catch(e){toast('Не удалось отменить ('+((e&&e.message)||'нет связи')+')');return;}
     b.status='cancelled';saveBookings();renderBook();toast('Запись отменена');
   };
   if(tg&&tg.showConfirm)tg.showConfirm('Отменить запись?',ok=>{if(ok)run();});
@@ -775,7 +798,7 @@ function renderBook(){
  if(!bookings.length){
    el.innerHTML='<div class="empty"><div class="stamp">✦</div><b>Записей нет</b><p>Здесь появятся твои заявки с датой и временем сеанса. Отсюда же их можно отменить.</p></div>';
  } else {
-   el.innerHTML='<div style="height:14px"></div>'+bookings.map(b=>{const c=b.status==='cancelled';return `<div class="bcard${c?' cancelled':''}"><div class="bcard-top"><b>${b.service}</b><span class="st${c?' off':b.status==='confirmed'?' ok':''}">${c?'отменена':b.status==='confirmed'?'подтверждена':'ждёт подтверждения'}</span></div><p>${b.date?fmtBookingDate(b.date):b.when} · ${b.time||''}</p><p>${b.name}</p>${c?'':`<button onclick="cancelBooking(${b.id})">отменить запись</button>`}</div>`;}).join('')+'<p class="legal" style="margin:6px 14px">Перенести запись можно, написав мастеру @neznai01.</p>';
+   el.innerHTML='<div style="height:14px"></div>'+bookings.map(b=>{const c=b.status==='cancelled';return `<div class="bcard${c?' cancelled':''}"><div class="bcard-top"><b>${b.service}</b><span class="st${c?' off':' ok'}">${c?'отменена':'подтверждена'}</span></div><p>${b.date?fmtBookingDate(b.date):b.when} · ${b.time||''}</p><p>${b.name}</p>${c?'':b.id===editId?`<div class="tabs">${SVC.map((v,i)=>`<button class="${v.n===editSvc?'on':''}" onclick="pickEditSvc(${i})">${v.n}</button>`).join('')}</div><div class="bactions"><button class="edit" onclick="saveEdit()">сохранить</button><button class="gh" onclick="stopEdit()">назад</button></div><p class="legal" style="margin:8px 0 0">Менять можно только процедуру. Дату, время и имя — через мастера @neznai01.</p>`:`<div class="bactions"><button class="edit" onclick="startEdit(${b.id})">изменить процедуру</button><button onclick="cancelBooking(${b.id})">отменить запись</button></div>`}</div>`;}).join('')+'<p class="legal" style="margin:6px 14px">Перенести запись на другую дату или время можно, написав мастеру @neznai01.</p>';
  }
 }
 
