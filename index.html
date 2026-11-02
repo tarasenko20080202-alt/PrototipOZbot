@@ -439,8 +439,8 @@ a{color:inherit;text-decoration:none;}
     <div class="ticker"><b id="ideaTick"></b></div>
     <div class="pad">
       <h1 class="h1">Расскажи про идею</h1>
-      <div class="field-row"><label>Имя</label><input id="fName" placeholder="Как к тебе обращаться"></div>
-      <div class="field-row"><label>Контакт</label><input id="fContact" placeholder="@твой_ник"></div>
+      <div class="field-row"><label>Имя *</label><input id="fName" placeholder="Как к тебе обращаться"></div>
+      <div class="field-row"><label>Контакт *</label><input id="fContact" placeholder="@твой_ник" autocapitalize="none" autocomplete="off" spellcheck="false" inputmode="email" maxlength="33" oninput="fixContact(this)" onfocus="fixContact(this,true)"></div>
       <div class="field-row"><label>Размер</label><input id="fSize" placeholder="например, 12 см"></div>
       <div class="field-row"><label>Зона</label><input id="fZone" placeholder="предплечье"></div>
       <div class="field-row"><label>Идея</label><textarea id="fIdea" placeholder="Что хочешь набить, в каком стиле, без заливки или с ней"></textarea></div>
@@ -754,6 +754,11 @@ function renderIdea(){
  document.getElementById('ideaTick').innerHTML=Array(4).fill(s.n.toUpperCase()+' · '+day+'.'+String(d.getMonth()+1).padStart(2,'0')).join(' · ')+' ·&nbsp;';
  wizState.photos=[];wiz_renderRefs();
 }
+function fixContact(el,focus){
+ let v=el.value.replace(/[^A-Za-z0-9_]/g,'');
+ if(!v&&focus)return;
+ el.value=v?'@'+v:'';
+}
 function wiz_renderRefs(){
  const row=document.getElementById('refRow');
  row.innerHTML='';
@@ -797,7 +802,9 @@ const API_URL=API_BASE+"/booking";
 async function submitIdea(){
  const g=id=>document.getElementById(id).value.trim();
  const s=SVC[wizState.svc], d=wizState.date.date, wd=WD[d.getDay()], day=String(d.getDate()).padStart(2,'0');
- const name=g('fName')||'Без имени';
+ const name=g('fName');
+ if(name.length<2){toast('Укажите ваше имя');document.getElementById('fName').focus();return;}
+ if(!/^@[A-Za-z0-9_]{5,32}$/.test(g('fContact'))){toast('Укажите ник Telegram, начиная с @ (минимум 5 символов)');document.getElementById('fContact').focus();return;}
  const iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+day;
  const comment=[g('fContact')&&'Контакт: '+g('fContact'), g('fSize')&&'Размер: '+g('fSize'), g('fZone')&&'Зона: '+g('fZone')].filter(Boolean).join(', ')||'—';
  const payload={action:'booking_request',name,service:s.n,date:iso,time:wizState.time,design:g('fIdea'),comment,photos:wizState.photos};
