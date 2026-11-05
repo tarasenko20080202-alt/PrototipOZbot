@@ -257,27 +257,10 @@ a{color:inherit;text-decoration:none;}
 .toast{position:absolute;left:50%;bottom:calc(78px + env(safe-area-inset-bottom,0px));z-index:60;transform:translate(-50%,10px);opacity:0;pointer-events:none;padding:10px 14px;border:1px solid var(--hair2);border-radius:8px;background:#15100d;font-size:12px;white-space:nowrap;transition:opacity .2s,transform .2s;}
 .toast.show{opacity:1;transform:translate(-50%,0);}
 </style>
-<style>
-    #bgVideo {
-      position: fixed !important;
-      right: 0;
-      bottom: 0;
-      min-width: 100%;
-      min-height: 100%;
-      width: auto;
-      height: auto;
-      z-index: -100 !important;
-      object-fit: cover;
-      pointer-events: none;
-    }
-  </style>
   <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <video autoplay muted loop playsinline webkit-playsinline preload="auto" id="bgVideo">
-      <source src="My_first_board_Dark_Silk_Ripple_Loop_no_watermark.mp4" type="video/mp4">
-    </video>
 <!-- SVG фильтр для эффекта ветра (невидим, только для расчетов) -->
 <svg style="position: absolute; width: 0; height: 0;" xmlns="http://www.w3.org/2000/svg">
   <filter id="silk-filter">
@@ -713,7 +696,6 @@ function renderBook(){
 /* ---------- cross-device video playback ---------- */
 (function(){
   const videos = [
-    document.getElementById('bgVideo'),
     document.querySelector('.hero-video'),
     document.querySelector('.brand-video')
   ].filter(Boolean);
