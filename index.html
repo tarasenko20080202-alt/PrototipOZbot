@@ -174,6 +174,35 @@ a{color:inherit;text-decoration:none;}
 .rowbody p{margin:0 0 8px;font-size:12px;line-height:1.55;color:#a7a29d;}
 .rowbody ul{margin:0;padding-left:14px;}
 .rowbody li{font-size:12px;line-height:1.6;color:#a7a29d;margin-bottom:6px;}
+.warn{margin-top:6px;padding:12px;border:1px solid #3a2420;border-radius:8px;background:rgba(194,67,44,.08);}
+.warn b{display:block;color:#e0917f;font-size:11px;letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px;}
+.warn p{margin:0;font-size:12px;line-height:1.55;color:#c9a8a0;}
+
+/* pain scale */
+.pz{padding:11px 0;border-top:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.pz-t b{font-size:13px;font-weight:700;display:block;}
+.pz-t p{margin:3px 0 0;font-size:11.5px;color:#918c87;line-height:1.4;}
+.bar{display:flex;gap:2px;flex:none;}
+.seg{width:8px;height:14px;border-radius:2px;background:#242220;}
+
+/* checklist */
+.kitcount{display:flex;align-items:baseline;gap:8px;margin-bottom:4px;}
+.kitcount b{font-family:Impact,"Arial Narrow",Arial,sans-serif;font-size:34px;}
+.kitcount span{font:9px/1.3 "Courier New",monospace;color:#65605c;letter-spacing:1px;text-transform:uppercase;}
+.kitbar{height:2px;background:var(--hair2);margin:10px 0 16px;}
+.kitbar i{display:block;height:100%;background:var(--green);width:0%;transition:width .25s;}
+.chk{display:flex;gap:11px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--hair);cursor:pointer;}
+.chk .box{width:16px;height:16px;border:1px solid var(--hair2);border-radius:4px;flex:none;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:11px;}
+.chk.on .box{background:var(--green);border-color:var(--green);color:#08110c;}
+.chk b{font-size:13px;display:block;}
+.chk p{margin:2px 0 0;font-size:11.5px;color:#918c87;}
+
+/* nope list */
+.nn{display:flex;gap:10px;padding:11px 0;border-top:1px solid var(--hair);}
+.nn i{font:10px/1 "Courier New",monospace;color:var(--accent);flex:none;padding-top:2px;font-style:normal;}
+.nn b{font-size:13px;display:block;}
+.nn p{margin:3px 0 0;font-size:11.5px;color:#918c87;}
+.nn .tag{margin-top:5px;display:inline-block;font:8px/1 "Courier New",monospace;letter-spacing:1px;text-transform:uppercase;color:#79746f;border:1px solid var(--hair2);border-radius:99px;padding:3px 7px;}
 
 /* contact strip */
 .contact{margin-top:14px;padding:12px;border:1px solid var(--hair2);border-radius:8px;display:flex;align-items:center;justify-content:space-between;}
@@ -326,6 +355,7 @@ a{color:inherit;text-decoration:none;}
     </div>
     <nav class="menu">
       <button class="menu-item" onclick="nav.go('portfolio')"><span class="menu-label">работы</span><span class="menu-rule"></span><span class="menu-meta">портфолио</span><span class="menu-arrow">›</span></button>
+      <button class="menu-item" onclick="nav.go('care')"><span class="menu-label">уход за тату</span><span class="menu-rule"></span><span class="menu-meta">памятка</span><span class="menu-arrow">›</span></button>
       <button class="menu-item" onclick="nav.go('faq')"><span class="menu-label">вопросы</span><span class="menu-rule"></span><span class="menu-meta">как всё устроено</span><span class="menu-arrow">›</span></button>
       <button class="menu-item" onclick="nav.go('book')"><span class="menu-label">мои записи</span><span class="menu-rule"></span><span class="menu-meta">статусы</span><span class="menu-arrow">›</span></button>
       <a class="menu-item" href="https://t.me/neznai01" target="_blank" rel="noopener"><span class="menu-label">написать мастеру</span><span class="menu-rule"></span><span class="menu-meta">@neznai01</span><span class="menu-arrow">›</span></a>
@@ -337,6 +367,19 @@ a{color:inherit;text-decoration:none;}
   <main class="screen" id="scr-portfolio">
     <p class="ph-note">Фото работ пока не загружены — сюда попадут снимки из портфолио, как только они появятся.</p>
     <div class="grid2" id="phGrid"></div>
+  </main>
+
+  <!-- CARE -->
+  <main class="screen" id="scr-care">
+    <div class="ticker"><b id="careTick"></b></div>
+    <div class="pad">
+      <h1 class="h1">Уход за тату</h1>
+      <p class="sub">Заживление зависит от ухода не меньше, чем от работы мастера. Здесь то, что важно знать до и после сеанса.</p>
+      <div class="tabs" id="careTabs"></div>
+      <div id="careBody"></div>
+      <div class="contact"><span>Вопрос по своей работе</span><a href="https://t.me/neznai01" target="_blank" rel="noopener"><b>@neznai01 ›</b></a></div>
+      <p class="legal">Памятка носит ознакомительный характер. Вопросы по конкретной работе — мастеру, по здоровью — врачу.</p>
+    </div>
   </main>
 
   <!-- FAQ -->
@@ -420,6 +463,58 @@ const SVC=[
  {n:"Рукав",d:"5+ ч",p:"по эскизу",x:"Крупная работа, несколько сеансов"},
  {n:"Консультация",d:"~30 мин",p:"бесплатно",x:"Обсудить идею, посмотреть место"}
 ];
+const HEAL=[
+ ["ДЕНЬ 0","Сразу после сеанса","Кожа красная и горячая, выступает сукровица. Это работа иммунитета, не воспаление.",
+  ["Плёнку снимаем тогда, когда сказал мастер: обычно через 2-4 часа, заживляющую можно носить несколько дней",
+   "Первое мытьё: тёплая вода, мягкое мыло без отдушек, без мочалки и трения",
+   "Промакиваем одноразовым полотенцем и даём высохнуть на воздухе"]],
+ ["ДЕНЬ 1-3","Сукровица и отёк","Отёк спадает, сукровица подсыхает в тонкую плёнку — это нормально, корку не трогаем.",[]],
+ ["ДЕНЬ 4-7","Корочка и зуд","Появляется корочка, может чесаться. Не сдираем и не чешем — только лёгкое увлажнение.",[]],
+ ["НЕДЕЛЯ 1-2","Кожа закрылась","Верхний слой сходит, кожа под ним розовая и гладкая, рисунок ещё не финальный.",[]],
+ ["МЕСЯЦ 1-3","Окончательный вид","Пигмент оседает, цвет и чёткость линий устаканиваются.",[]]
+];
+const WARN="Покраснение расползается за пределы работы, нарастает отёк, есть гной, боль усиливается на 3-й день и позже, поднялась температура — это повод к врачу, не к мастеру.";
+const PAIN=[
+ ["Предплечье","Мягкие ткани, спокойная зона для первой работы",2],
+ ["Плечо","Терпимо, можно сидеть долго",2],
+ ["Бедро","Много мышц, хорошо переносит длинные сеансы",2],
+ ["Икра","Ближе к кости — чувствительнее",3],
+ ["Лопатка","Зависит от близости к позвоночнику",3],
+ ["Предплечье изнутри","Тонкая кожа, ощущения острее",4],
+ ["Шея","Чувствительно, сложно сидеть неподвижно",4],
+ ["Живот","Кожа подвижная, ощущения неровные",4],
+ ["Рёбра","Кость прямо под кожей, дыхание мешает работе",5],
+ ["Стопа и щиколотка","Кость, тонкая кожа, дольше заживает",5]
+];
+const KIT=[
+ ["Выспаться","Уставшее тело хуже переносит долгий сеанс"],
+ ["Плотно поесть за 1,5-2 часа","Голодный желудок — это головокружение через час"],
+ ["Без алкоголя сутки","Разжижает кровь, пигмент ложится хуже"],
+ ["Без свежего загара","По обгоревшей коже не бьют"],
+ ["Свободная одежда","С доступом к нужной зоне, которую не жалко"],
+ ["Вода и что-то сладкое","Поддержать сахар на длинном сеансе"],
+ ["Паспорт","Может понадобиться на сеансе"],
+ ["Предупредить о здоровье","Аллергии, лекарства, хронические болезни"]
+];
+const NOPE=[
+ ["Сдирать корочки и чесать","Самая частая причина пробелов в работе и шрамов","до заживления"],
+ ["Баня, сауна, бассейн, море","Горячая вода размягчает корку, водоём — источник инфекции","2-3 недели"],
+ ["Солнце и солярий","Ультрафиолет выжигает пигмент быстрее всего остального","до заживления, потом SPF"],
+ ["Долгая ванна","Душ можно сразу, в размоченной коже теряется пигмент","2 недели"],
+ ["Алкоголь","Усиливает сукровицу и отёк, заживление идёт дольше","сутки до и после"],
+ ["Тесная синтетика","Трение по свежей работе стирает пигмент","первая неделя"],
+ ["Спорт до пота","Пот и трение мешают коже закрыться","1-2 дня"],
+ ["Мази на свой выбор","Спирт, зелёнка и жирные мази вроде вазелина только вредят","всегда"]
+];
+const FACTS=[
+ ["Пигмент лежит в дерме","Верхний слой кожи обновляется каждые пару недель. Если бы краска была в нём, тату сходила бы за месяц. Игла доставляет пигмент глубже, поэтому рисунок остаётся."],
+ ["Выцветает не от времени, а от солнца","Ультрафиолет разрушает частицы пигмента — SPF на заживший рисунок продлевает ему жизнь сильнее, чем что-либо ещё."],
+ ["Чёрный живёт дольше цветного","Чёрный пигмент плотнее, цветные тоньше и выцветают быстрее — особенно жёлтый и красный."],
+ ["Тонкая линия требует ухода строже","Пигмента на единицу кожи меньше, поэтому любое нарушение заживления заметнее, чем на плотной заливке."],
+ ["Кожа бывает разная","Жирная, сухая, склонная к рубцеванию — заживает по-разному, мастер корректирует уход под тип кожи."],
+ ["Заживление идёт в два этапа","Внешнее — около 2-3 недель, внутреннее, в дерме — до нескольких месяцев. Финальный вид виден не сразу."],
+ ["Свежая и зажившая работа выглядят по-разному","Сразу после сеанса линии кажутся резче, после заживления рисунок становится мягче."]
+];
 const FAQ=[
  ["ЗАПИСЬ",[
   ["Как проходит запись?","Выбираете услугу, дату и время, описываете идею — заявка уходит мастеру. Он подтверждает вручную, ответ приходит в этот же чат."],
@@ -429,7 +524,7 @@ const FAQ=[
   ["Зачем подтверждать приход?","Это освобождает окно для других, если планы изменились."],
   ["Что если опаздываю?","Напишите сразу: длинный сеанс подождёт, короткий — возможно, придётся перенести."]]],
  ["СЕАНС",[
-  ["Больно ли?","Ощущения ближе к царапинам, чем к уколу."],
+  ["Больно ли?","Ощущения ближе к царапинам, чем к уколу — подробнее в разделе «Где больнее»."],
   ["Сколько длится сеанс?","От получаса для консультации до нескольких часов для крупной работы."],
   ["Можно с сопровождающим?","Обычно в кабинете только мастер и клиент — обсудите заранее, если важно иначе."],
   ["Что взять с собой?","Паспорт, воду и что-то перекусить на длинный сеанс."],
@@ -446,7 +541,7 @@ const TIMES=["10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00"];
 const WD=["ВС","ПН","ВТ","СР","ЧТ","ПТ","СБ"];
 
 /* ---------- state ---------- */
-let faqState={open:'0-0'};
+let care={tab:0,open:0,kit:new Array(KIT.length).fill(false),fOpen:-1,_faqOpen:'0-0'};
 let wizState={svc:0,date:null,time:null,refs:0,photos:[]};
 let bookings=[];
 let dates=[];
@@ -550,6 +645,7 @@ function setCta(){
  switch(nav.cur()){
   case 'home': btn.textContent='Записаться'; btn.onclick=()=>startWizard(); break;
   case 'portfolio': btn.textContent='Записаться'; btn.onclick=()=>startWizard(); break;
+  case 'care': btn.textContent='Записаться'; btn.onclick=()=>startWizard(); break;
   case 'faq': btn.textContent='Записаться'; btn.onclick=()=>startWizard(); break;
   case 'book': btn.textContent='Новая заявка'; btn.onclick=()=>startWizard(); break;
   case 'svc': btn.textContent='Выбрать дату'; btn.onclick=()=>{buildDates();nav.go('date');}; break;
@@ -563,13 +659,43 @@ function startWizard(){renderSvc();nav.go('svc');}
 /* ---------- portfolio placeholder ---------- */
 (function(){const g=document.getElementById('phGrid');for(let i=0;i<6;i++){const d=document.createElement('div');d.className='ph';d.textContent='+';g.appendChild(d);}})();
 
+/* ---------- care ---------- */
+function renderCareTabs(){
+ const names=['ЗАЖИВЛЕНИЕ','ГДЕ БОЛЬНЕЕ','СБОРЫ','НЕЛЬЗЯ','ФАКТЫ'];
+ document.getElementById('careTabs').innerHTML=names.map((n,i)=>`<button class="tab${i===care.tab?' on':''}" onclick="care.tab=${i};renderCareTabs();renderCareBody();">${n}</button>`).join('');
+ document.getElementById('careTick').innerHTML=Array(4).fill('ЗАЖИВЛЕНИЕ · ЧУВСТВИТЕЛЬНОСТЬ · СБОРЫ · УХОД ЗА ТАТУИРОВКОЙ').join(' · ')+' ·&nbsp;';
+}
+function renderCareBody(){
+ const el=document.getElementById('careBody');
+ if(care.tab===0){
+   el.innerHTML=HEAL.map((h,i)=>{
+     const [d,t,body,bl]=h; const open=care.open===i;
+     return `<div class="row" onclick="care.open=${open?-1:i};renderCareBody();"><div class="rowhead"><span class="lbl">${d}</span><b>${t}</b><span class="x">${open?'−':'+'}</span></div>${open?`<div class="rowbody"><p>${body}</p>${bl.length?'<ul>'+bl.map(b=>'<li>'+b+'</li>').join('')+'</ul>':''}</div>`:''}</div>`;
+   }).join('')+`<div class="warn"><b>Когда к врачу, а не к мастеру</b><p>${WARN}</p></div>`;
+ } else if(care.tab===1){
+   el.innerHTML='<p class="sub" style="margin-bottom:2px">Ощущения ближе к царапинам, чем к уколу. Тело привыкает за первые двадцать минут. Шкала условна, у всех порог свой.</p>'+
+   PAIN.map(p=>{const [n,d,lvl]=p;const color=lvl<=3?'var(--green)':lvl===4?'var(--orange)':'var(--red)';
+     let segs='';for(let j=1;j<=5;j++)segs+=`<span class="seg" style="${j<=lvl?'background:'+color:''}"></span>`;
+     return `<div class="pz"><div class="pz-t"><b>${n}</b><p>${d}</p></div><div class="bar">${segs}</div></div>`;}).join('');
+ } else if(care.tab===2){
+   const n=care.kit.filter(Boolean).length;
+   el.innerHTML=`<div class="kitcount"><b>${n}/${KIT.length}</b><span>собрано к сеансу</span></div><div class="kitbar"><i style="width:${n/KIT.length*100}%"></i></div>`+
+   KIT.map((k,i)=>`<div class="chk${care.kit[i]?' on':''}" onclick="care.kit[${i}]=!care.kit[${i}];renderCareBody();"><span class="box">${care.kit[i]?'✓':''}</span><div><b>${k[0]}</b><p>${k[1]}</p></div></div>`).join('');
+ } else if(care.tab===3){
+   el.innerHTML=NOPE.map((n,i)=>`<div class="nn"><i>${String(i+1).padStart(2,'0')}</i><div><b>${n[0]}</b><p>${n[1]}</p><span class="tag">${n[2]}</span></div></div>`).join('');
+ } else {
+   el.innerHTML=FACTS.map((f,i)=>{const open=care.fOpen===i;
+     return `<div class="row" onclick="care.fOpen=${open?-1:i};renderCareBody();"><div class="rowhead"><b style="text-transform:uppercase;font-size:12.5px">${f[0]}</b><span class="x">${open?'−':'+'}</span></div>${open?`<div class="rowbody"><p>${f[1]}</p></div>`:''}</div>`;}).join('');
+ }
+}
+
 /* ---------- faq ---------- */
 function renderFaq(){
  document.getElementById('faqBody').innerHTML=FAQ.map((sec,si)=>{
    const [name,items]=sec;
    return `<p class="sec-h">${name}</p><div class="rows">`+items.map((it,qi)=>{
-     const key=si+'-'+qi, open=faqState.open===key;
-     return `<div class="row" style="border-top:${qi===0?'0':'1px solid var(--hair)'}" onclick="faqState.open='${open?'':key}';renderFaq();"><div class="rowhead"><b style="font-size:13px">${it[0]}</b><span class="x">${open?'−':'+'}</span></div>${open?`<div class="rowbody"><p>${it[1]}</p></div>`:''}</div>`;
+     const key=si+'-'+qi, open=care._faqOpen===key;
+     return `<div class="row" style="border-top:${qi===0?'0':'1px solid var(--hair)'}" onclick="care._faqOpen='${open?'':key}';renderFaq();"><div class="rowhead"><b style="font-size:13px">${it[0]}</b><span class="x">${open?'−':'+'}</span></div>${open?`<div class="rowbody"><p>${it[1]}</p></div>`:''}</div>`;
    }).join('')+`</div>`;
  }).join('');
 }
@@ -779,7 +905,7 @@ function renderBook(){
 })();
 
 /* ---------- init ---------- */
-renderFaq();renderBook();nav.render();
+renderCareTabs();renderCareBody();renderFaq();renderBook();nav.render();
 try{if(window.Telegram&&Telegram.WebApp){Telegram.WebApp.ready();Telegram.WebApp.expand();}}catch(e){}
 loadBookings();
 
