@@ -350,6 +350,7 @@ a{color:inherit;text-decoration:none;}
     <nav class="menu">
       <button class="menu-item" onclick="nav.go('portfolio')"><span class="menu-label">работы</span><span class="menu-rule"></span><span class="menu-meta">портфолио</span><span class="menu-arrow">›</span></button>
       <button class="menu-item" onclick="nav.go('rules')"><span class="menu-label">правила</span><span class="menu-rule"></span><span class="menu-meta">что важно знать</span><span class="menu-arrow">›</span></button>
+      <button class="menu-item" onclick="nav.go('info')"><span class="menu-label">доп. информация</span><span class="menu-rule"></span><span class="menu-meta">подробнее</span><span class="menu-arrow">›</span></button>
       <button class="menu-item" onclick="nav.go('book')"><span class="menu-label">мои записи</span><span class="menu-rule"></span><span class="menu-meta">статусы</span><span class="menu-arrow">›</span></button>
       <a class="menu-item" href="https://t.me/neznai01" target="_blank" rel="noopener"><span class="menu-label">написать мастеру</span><span class="menu-rule"></span><span class="menu-meta">@neznai01</span><span class="menu-arrow">›</span></a>
     </nav>
@@ -407,6 +408,55 @@ a{color:inherit;text-decoration:none;}
           <div class="rule-b">
             <b>Расчёт наличными или переводом</b>
             <p>По карте не рассчитываю.</p>
+          </div>
+        </div>
+
+        <a class="paper-tg" href="https://t.me/neznai01" target="_blank" rel="noopener">tg — @neznai01</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- INFO -->
+  <main class="screen" id="scr-info">
+    <div class="ticker"><b>ДОП. ИНФОРМАЦИЯ · ПОДРОБНЕЕ · ДОП. ИНФОРМАЦИЯ · ПОДРОБНЕЕ · ДОП. ИНФОРМАЦИЯ · ПОДРОБНЕЕ ·&nbsp;</b></div>
+    <div class="rules-wrap">
+      <div class="paper">
+        <h1 class="paper-title" style="font-size:clamp(22px,7.4vw,32px)">доп. информация</h1>
+
+        <div class="rule">
+          <span class="rule-n">01</span>
+          <div class="rule-b">
+            <b>Осуществляю запись строго с 15 лет!</b>
+          </div>
+        </div>
+
+        <div class="rule">
+          <span class="rule-n">02</span>
+          <div class="rule-b">
+            <b>ПРИНИМАЮ НА ДОМУ С КОШКОЙ!</b>
+            <p class="note">(При наличии аллергии, лучше воздержаться от записи на процедуру!)</p>
+          </div>
+        </div>
+
+        <div class="rule">
+          <span class="rule-n">03</span>
+          <div class="rule-b">
+            <p>Инструменты после каждого клиента обрабатываются в дез.растворе, очищаются в ультразвуковой мойке и стерилизуются в сухожаровом шкафу. Все расходные материалы одноразовые.</p>
+          </div>
+        </div>
+
+        <div class="rule">
+          <span class="rule-n">04</span>
+          <div class="rule-b">
+            <p><b style="display:inline">Дизайны</b> - при записи на маникюр, вы можете прикрепить пример референса/референсы, мудборд,инспо и.тд. Если вы еще думаете какой дизайн делать, то можете скинуть мне в личные сообщения за несколько дней или за день. ( тг @neznai01 )</p>
+          </div>
+        </div>
+
+        <div class="rule">
+          <span class="rule-n">05</span>
+          <div class="rule-b">
+            <p>Территориально нахожусь - Г. Красноярск, Ул. Дудинская 2б, Советский район.</p>
+            <p class="note">(Остальная информация будет при подтверждении записи)</p>
           </div>
         </div>
 
@@ -593,6 +643,7 @@ function setCta(){
   case 'home': btn.textContent='Записаться'; btn.onclick=()=>startWizard(); break;
   case 'portfolio': btn.textContent='Записаться'; btn.onclick=()=>startWizard(); break;
   case 'rules': btn.textContent='Записаться'; btn.onclick=()=>startWizard(); break;
+  case 'info': btn.textContent='Записаться'; btn.onclick=()=>startWizard(); break;
   case 'book': btn.textContent='Новая заявка'; btn.onclick=()=>startWizard(); break;
   case 'svc': btn.textContent='Выбрать дату'; btn.onclick=()=>{buildDates();nav.go('date');}; break;
   case 'date': btn.textContent='Выбрать время'; btn.disabled=true; btn.onclick=()=>{}; break;
