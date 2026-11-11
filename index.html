@@ -568,6 +568,7 @@ html.thick .rule-b p,html.thick .rule-b p.note,html.thick .late em,html.thick .r
 
 <script>
 /* ---------- data ---------- */
+const CLAW_HINT="Если вы еще думаете какой дизайн делать, то можете скинуть мне в личные сообщения за несколько дней или за день";
 const SVC=[
  {g:"наращивание",n:"Наращивание 1-3",p:"2200 р.",des:1},
  {g:"наращивание",n:"Наращивание 4-6",p:"2500 р.",des:1},
@@ -958,8 +959,8 @@ function renderIdea(){
  document.getElementById('svcChip').textContent=s.n+' · '+day+' '+wd+' · '+wizState.time;
  document.getElementById('ideaTick').innerHTML=Array(4).fill(s.n.toUpperCase()+' · '+day+'.'+String(d.getMonth()+1).padStart(2,'0')).join(' · ')+' ·&nbsp;';
  const fc=document.getElementById('fComment');
- fc.placeholder=s.manic?'Пожелания по маникюру':('Пожелания к дизайну, цвету, форме — всё, что хочешь добавить'+((s.des||s.hint)?'\nЕсли вы еще думаете какой дизайн делать, то можете скинуть мне в личные сообщения за несколько дней или за день':''));
- fc.style.height=(!s.manic&&(s.des||s.hint))?'190px':'';
+ fc.placeholder=s.manic?'Пожелания по маникюру':s.clawsItem?CLAW_HINT:('Пожелания к дизайну, цвету, форме — всё, что хочешь добавить'+((s.des||s.hint)?'\nЕсли вы еще думаете какой дизайн делать, то можете скинуть мне в личные сообщения за несколько дней или за день':''));
+ fc.style.height=s.clawsItem?'120px':((!s.manic&&(s.des||s.hint))?'190px':'');
  wizState.photos=[];wiz_renderRefs();
 }
 function fixContact(el,focus){
