@@ -532,6 +532,7 @@ html.thick .rule-b p,html.thick .rule-b p.note,html.thick .late em,html.thick .r
     <div class="ticker"><b>ШАГ 2/4 · ВЫБОР ДАТЫ · 14 ДНЕЙ ВПЕРЁД · ШАГ 2/4 · ВЫБОР ДАТЫ · 14 ДНЕЙ ВПЕРЁД ·&nbsp;</b></div>
     <div class="pad">
       <div class="tz"><span>Asia / Krasnoyarsk</span><span id="tzMonth">—</span></div>
+      <p id="dateNote" style="display:none;margin:6px 0 12px;font-size:13px;line-height:1.5;color:#b5b0aa"></p>
       <div id="dateList"></div>
     </div>
   </main>
@@ -577,7 +578,7 @@ const SVC=[
  {g:"покрытие и маникюр",n:"Покрытие на свои",p:"1700 р.",x:"укрепление, поднятие клюющих, ремонт - входит в стоимость",des:1},
  {g:"покрытие и маникюр",n:"Аппаратный маникюр",p:"700 р.",x:"снятие покрытия + обработка кутикулы"},
  {g:"дополнительно",n:"Когти",p:"+500 р.",claws:1,x:"выберите длину — цена считается вместе с когтями"},
- {g:"дополнительно",n:"Снятие без последующего покрытия",p:"400 р."},
+ {g:"дополнительно",n:"Снятие без последующего покрытия",p:"400 р.",x:"Обработка кутикулы не входит в стоимость",always:1},
  {g:"дополнительно",n:"Донарастить ноготь/коготь",p:"150/250 р.",x:"механическое повреждение, неправильный уход и т.д."}
 ];
 const CLAWS_ADD=500;
@@ -894,7 +895,7 @@ function renderSvc(){
    const act=v.claws?"svcMode='claws';":"wizState.svc="+i+";";
    const label=v.clawsItem?v.n.replace('Когти · ',''):v.n;
    const price=v.claws?'+500 р. ›':v.p;
-   html+=head+`<div class="svc-row${on?' on':''}" onclick="${act}renderSvc();"><div class="svc-top"><b>${label}</b><span>${price}</span></div>${(on||v.claws)&&v.x?`<div class="svc-desc">${v.x}</div>`:''}</div>`;
+   html+=head+`<div class="svc-row${on?' on':''}" onclick="${act}renderSvc();"><div class="svc-top"><b>${label}</b><span>${price}</span></div>${(on||v.claws||v.always)&&v.x?`<div class="svc-desc">${v.x}</div>`:''}</div>`;
  });
  const notes=[];
  if(inClaws)notes.push('Когти: +500 р. входят в итоговую стоимость — цена выше уже посчитана вместе с ними.');
@@ -907,6 +908,8 @@ function renderSvc(){
 let datesReq=0;
 function buildDates(){
  const el=document.getElementById('dateList'), req=++datesReq;
+ const dn=document.getElementById('dateNote'), sv0=SVC[wizState.svc];
+ if(sv0&&sv0.always&&sv0.x){dn.textContent=sv0.x;dn.style.display='block';}else{dn.style.display='none';dn.textContent='';}
  el.innerHTML='<p class="ph-note">Загружаю свободные окошки…</p>';
  fetch(API_BASE+'/slots',{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json();}).then(data=>{
    if(req!==datesReq)return;
@@ -940,7 +943,7 @@ function renderTime(){
  if(sv.x)notes.push(sv.x);
  if(sv.clawsItem)notes.push(CLAWS_NOTE);
  if(sv.des)notes.push(DESIGN_NOTE);
- document.getElementById('svcIncl').innerHTML='<p class="tinfo-h"><b>'+sv.n+'</b> — '+sv.p+'</p>'+notes.map(t=>'<p>('+t+')</p>').join('');
+ document.getElementById('svcIncl').innerHTML='<p class="tinfo-h"><b>'+sv.n+'</b> — '+sv.p+'</p>'+notes.map(t=>(sv.always&&t===sv.x)?'<p>'+t+'</p>':'<p>('+t+')</p>').join('');
  document.getElementById('tgrid').innerHTML=T.map((t,i)=>{
    return `<div class="tcell" onclick="pickTime(${i})">${t}</div>`;
  }).join('');
