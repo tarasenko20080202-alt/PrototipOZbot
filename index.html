@@ -582,7 +582,7 @@ const SVC=[
  {g:"дополнительно",n:"Донарастить ноготь/коготь",p:"150/250 р.",x:"механическое повреждение, неправильный уход и т.д.",hint:1}
 ];
 const CLAWS_ADD=500;
-const CLAWS=[["1-3",2200],["4-6",2500],["7-9",2800]].map(([l,b])=>({g:"когти",n:"Когти · длина "+l,p:(b+CLAWS_ADD)+" р.",x:b+" р. наращивание + "+CLAWS_ADD+" р. когти",des:1,clawsItem:1}));
+const CLAWS=[["1-3",2200],["4-6",2500],["7-9",2800]].map(([l,b])=>({g:"когти",n:"Когти · длина "+l,p:(b+CLAWS_ADD)+" р.",x:b+"р. наращивание + "+CLAWS_ADD+"р. когти = "+(b+CLAWS_ADD)+"р.",des:1,clawsItem:1}));
 SVC.push(...CLAWS);
 const CLAWS_NOTE="когти (+500 р.) входят в итоговую стоимость";
 let svcMode='main';
@@ -939,7 +939,7 @@ function renderTime(){
  wizState.time=null;
  const sv=SVC[wizState.svc], notes=[];
  if(sv.x)notes.push(sv.x);
- if(sv.clawsItem)notes.push(CLAWS_NOTE);
+ 
  if(sv.des)notes.push(DESIGN_NOTE);
  document.getElementById('svcIncl').innerHTML='<p class="tinfo-h"><b>'+sv.n+'</b> — '+sv.p+'</p>'+notes.map(t=>(sv.always&&t===sv.x)?'<p>'+t+'</p>':'<p>('+t+')</p>').join('');
  document.getElementById('tgrid').innerHTML=T.map((t,i)=>{
