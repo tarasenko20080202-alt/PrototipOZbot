@@ -302,6 +302,13 @@ a{color:inherit;text-decoration:none;}
 .paper-title,.rule-n,.rule-b b,.rule-b p,.rule-b p.note,.late,.late em,.paper-tg{color:#0a0705 !important;-webkit-text-fill-color:#0a0705 !important;opacity:1 !important;}
 .late span{background:#0a0705 !important;color:#f3efe8 !important;-webkit-text-fill-color:#f3efe8 !important;}
 .paper-title,.rule-n,.rule-b b,.rule-b p,.late,.paper-tg{font-family:"Courier New",Courier,"Liberation Mono","Nimbus Mono PS",ui-monospace,monospace !important;}
+
+/* строки услуг — прежний размер; крупнее только заголовки групп и заметки */
+.svc-back .svc-top b{font-size:14px;color:#cfcac4;text-transform:none;}
+.sec-h{font-size:12px;letter-spacing:2px;color:#9a958f;margin:24px 0 4px;}
+.svc-notes{margin-top:18px;padding:14px;border:1px solid var(--hair2);border-radius:8px;}
+.svc-notes p{margin:0 0 8px;font-size:14px;line-height:1.5;color:#cfcac4;}
+.svc-notes p:last-child{margin:0;}
 </style>
 <style>
     #bgVideo {
@@ -562,10 +569,15 @@ const SVC=[
  {g:"коррекция",n:"Коррекция 4-6",p:"2100 р.",x:"в коррекцию входит донарастить 2 ногтя",des:1},
  {g:"покрытие и маникюр",n:"Покрытие на свои",p:"1700 р.",x:"укрепление, поднятие клюющих, ремонт - входит в стоимость",des:1},
  {g:"покрытие и маникюр",n:"Аппаратный маникюр",p:"700 р.",x:"снятие покрытия + обработка кутикулы"},
- {g:"дополнительно",n:"Когти",p:"+500 р."},
+ {g:"дополнительно",n:"Когти",p:"+500 р.",claws:1,x:"выберите длину — цена считается вместе с когтями"},
  {g:"дополнительно",n:"Снятие без последующего покрытия",p:"400 р."},
  {g:"дополнительно",n:"Донарастить ноготь/коготь",p:"150/250 р.",x:"механическое повреждение, неправильный уход и т.д."}
 ];
+const CLAWS_ADD=500;
+const CLAWS=[["1-3",2200],["4-6",2500],["7-9",2800]].map(([l,b])=>({g:"когти",n:"Когти · длина "+l,p:(b+CLAWS_ADD)+" р.",x:b+" р. наращивание + "+CLAWS_ADD+" р. когти",des:1,clawsItem:1}));
+SVC.push(...CLAWS);
+const CLAWS_NOTE="когти (+500 р.) входят в итоговую стоимость";
+let svcMode='main';
 const DESIGN_NOTE="дизайн, фигурки, стразы, наклейки, пирсинг, шипы, френч и т.д. входит в стоимость";
 const TIMES=["10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00"];
 const WD=["ВС","ПН","ВТ","СР","ЧТ","ПТ","СБ"];
@@ -683,7 +695,7 @@ function setCta(){
   case 'idea': btn.textContent='Отправить заявку'; btn.onclick=()=>submitIdea(); break;
  }
 }
-function startWizard(){renderSvc();nav.go('svc');}
+function startWizard(){svcMode='main';if(SVC[wizState.svc].clawsItem)wizState.svc=0;renderSvc();nav.go('svc');}
 
 /* ---------- portfolio placeholder ---------- */
 /* порядок фото = порядок в портфолио; новые добавляй в конец списка */
@@ -722,15 +734,29 @@ const WORKS=[
 /* ---------- wizard: service ---------- */
 function renderSvc(){
  const s=SVC[wizState.svc];
- document.getElementById('svcName').textContent=s.n;
- document.getElementById('svcMeta').textContent=s.p;
- let last=null;
- document.getElementById('svcList').innerHTML=SVC.map((v,i)=>{
-   const on=i===wizState.svc;
-   const head=v.g!==last?'<p class="sec-h">'+v.g+'</p>':'';
+ const inClaws=svcMode==='claws';
+ document.getElementById('svcName').textContent=s.clawsItem||inClaws?(s.clawsItem?s.n:'Когти'):s.n;
+ document.getElementById('svcMeta').textContent=s.clawsItem?('итого '+s.p):(s.claws?'выберите длину':s.p);
+ let last=null,html='';
+ if(inClaws){
+   html+='<div class="svc-row svc-back" onclick="svcMode=\'main\';renderSvc();"><div class="svc-top"><b>← назад к услугам</b></div></div>';
+   html+='<p class="sec-h">когти · выберите длину</p>';
+ }
+ SVC.forEach((v,i)=>{
+   if(inClaws?!v.clawsItem:v.clawsItem)return;
+   const on=i===wizState.svc&&!v.claws;
+   const head=!inClaws&&v.g!==last?'<p class="sec-h">'+v.g+'</p>':'';
    last=v.g;
-   return head+`<div class="svc-row${on?' on':''}" onclick="wizState.svc=${i};renderSvc();"><div class="svc-top"><b>${v.n}</b><span>${v.p}</span></div>${on&&v.x?`<div class="svc-desc">${v.x}</div>`:''}</div>`;
- }).join('');
+   const act=v.claws?"svcMode='claws';":"wizState.svc="+i+";";
+   const label=v.clawsItem?v.n.replace('Когти · ',''):v.n;
+   const price=v.claws?'+500 р. ›':v.p;
+   html+=head+`<div class="svc-row${on?' on':''}" onclick="${act}renderSvc();"><div class="svc-top"><b>${label}</b><span>${price}</span></div>${(on||v.claws)&&v.x?`<div class="svc-desc">${v.x}</div>`:''}</div>`;
+ });
+ const notes=[];
+ if(inClaws)notes.push('Когти: +500 р. входят в итоговую стоимость — цена выше уже посчитана вместе с ними.');
+ notes.push('Дизайн входит в стоимость: '+DESIGN_NOTE.replace(/ входит в стоимость$/,'')+(/\.$/.test(DESIGN_NOTE.replace(/ входит в стоимость$/,''))?'':'.'));
+ html+='<div class="svc-notes">'+notes.map(t=>'<p>'+t+'</p>').join('')+'</div>';
+ document.getElementById('svcList').innerHTML=html;
 }
 
 /* ---------- wizard: date ---------- */
@@ -759,6 +785,7 @@ function renderTime(){
  wizState.time=null;
  const sv=SVC[wizState.svc], notes=[];
  if(sv.x)notes.push(sv.x);
+ if(sv.clawsItem)notes.push(CLAWS_NOTE);
  if(sv.des)notes.push(DESIGN_NOTE);
  document.getElementById('svcIncl').innerHTML='<p class="tinfo-h"><b>'+sv.n+'</b> — '+sv.p+'</p>'+notes.map(t=>'<p>('+t+')</p>').join('');
  document.getElementById('tgrid').innerHTML=TIMES.map((t,i)=>{
@@ -861,7 +888,7 @@ function renderBook(){
  if(!bookings.length){
    el.innerHTML='<div class="empty"><div class="stamp">✦</div><b>Записей нет</b><p>Здесь появятся твои заявки с датой и временем сеанса. Отсюда же их можно отменить.</p></div>';
  } else {
-   el.innerHTML='<div style="height:14px"></div>'+bookings.map(b=>{const c=b.status==='cancelled';return `<div class="bcard${c?' cancelled':''}"><div class="bcard-top"><b>${b.service}</b><span class="st${c?' off':' ok'}">${c?'отменена':'подтверждена'}</span></div><p>${b.date?fmtBookingDate(b.date):b.when} · ${b.time||''}</p><p>${b.name}</p>${c?'':b.id===editId?`<div class="tabs">${SVC.map((v,i)=>`<button class="${v.n===editSvc?'on':''}" onclick="pickEditSvc(${i})">${v.n}</button>`).join('')}</div><div class="bactions"><button class="edit" onclick="saveEdit()">сохранить</button><button class="gh" onclick="stopEdit()">назад</button></div><p class="legal" style="margin:8px 0 0">Менять можно только процедуру.</p>`:`<div class="bactions"><button class="edit" onclick="startEdit(${b.id})">изменить процедуру</button><button onclick="cancelBooking(${b.id})">отменить запись</button></div>`}</div>`;}).join('')+'<p class="legal" style="margin:6px 14px">Перенести запись на другую дату или время можно, написав мастеру @neznai01.</p>';
+   el.innerHTML='<div style="height:14px"></div>'+bookings.map(b=>{const c=b.status==='cancelled';return `<div class="bcard${c?' cancelled':''}"><div class="bcard-top"><b>${b.service}</b><span class="st${c?' off':' ok'}">${c?'отменена':'подтверждена'}</span></div><p>${b.date?fmtBookingDate(b.date):b.when} · ${b.time||''}</p><p>${b.name}</p>${c?'':b.id===editId?`<div class="tabs">${SVC.map((v,i)=>v.claws?'':`<button class="${v.n===editSvc?'on':''}" onclick="pickEditSvc(${i})">${v.n}</button>`).join('')}</div><div class="bactions"><button class="edit" onclick="saveEdit()">сохранить</button><button class="gh" onclick="stopEdit()">назад</button></div><p class="legal" style="margin:8px 0 0">Менять можно только процедуру.</p>`:`<div class="bactions"><button class="edit" onclick="startEdit(${b.id})">изменить процедуру</button><button onclick="cancelBooking(${b.id})">отменить запись</button></div>`}</div>`;}).join('')+'<p class="legal" style="margin:6px 14px">Перенести запись на другую дату или время можно, написав мастеру @neznai01.</p>';
  }
 }
 
