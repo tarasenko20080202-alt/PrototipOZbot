@@ -296,19 +296,12 @@ a{color:inherit;text-decoration:none;}
 .hero-contacts a{padding:7px 12px;border:1px solid rgba(243,239,232,.45);border-radius:99px;background:rgba(0,0,0,.35);font:11px/1 "Courier New",monospace;letter-spacing:1px;color:#f3efe8;}
 .hero-contacts a:active{background:rgba(243,239,232,.15);}
 
-/* paper blocks (правила / доп. информация): одинаковые цвета на всех платформах */
-.paper{color-scheme:only light;forced-color-adjust:none;-webkit-font-smoothing:antialiased;background-color:#cfccc6 !important;color:#0a0705 !important;filter:none !important;mix-blend-mode:normal !important;opacity:1 !important;}
+/* paper blocks: прежние цвета и шрифт, только защита от авто-тёмной темы/подстройки на телефонах */
+.paper{color-scheme:only light;forced-color-adjust:none;}
 .paper,.paper *{forced-color-adjust:none;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
-.paper-title,.rule-n,.rule-b b,.rule-b p,.rule-b p.note,.late,.late em,.paper-tg{color:#0a0705 !important;-webkit-text-fill-color:#0a0705 !important;opacity:1 !important;}
-.late span{background:#0a0705 !important;color:#f3efe8 !important;-webkit-text-fill-color:#f3efe8 !important;}
-.paper-title,.rule-n,.rule-b b,.rule-b p,.late,.paper-tg{font-family:"Courier New",Courier,"Liberation Mono","Nimbus Mono PS",ui-monospace,monospace !important;}
-
-/* строки услуг — прежний размер; крупнее только заголовки групп и заметки */
-.svc-back .svc-top b{font-size:14px;color:#cfcac4;text-transform:none;}
-.sec-h{font-size:12px;letter-spacing:2px;color:#9a958f;margin:24px 0 4px;}
-.svc-notes{margin-top:18px;padding:14px;border:1px solid var(--hair2);border-radius:8px;}
-.svc-notes p{margin:0 0 8px;font-size:14px;line-height:1.5;color:#cfcac4;}
-.svc-notes p:last-child{margin:0;}
+.paper-title,.rule-b b,.paper-tg{-webkit-text-fill-color:#0a0705;}
+.rule-n,.rule-b p,.rule-b p.note,.late em{-webkit-text-fill-color:#171717;}
+.late span{-webkit-text-fill-color:#e9e5df;}
 </style>
 <style>
     #bgVideo {
