@@ -555,12 +555,10 @@ html.thick .rule-b p,html.thick .rule-b p.note,html.thick .late em,html.thick .r
       <h1 class="h1">Расскажи про идею</h1>
       <div class="field-row"><label>Имя *</label><input id="fName" placeholder="Как к тебе обращаться"></div>
       <div class="field-row"><label>Контакт *</label><input id="fContact" placeholder="@твой_ник" autocapitalize="none" autocomplete="off" spellcheck="false" inputmode="email" maxlength="33" oninput="fixContact(this)" onfocus="fixContact(this,true)"></div>
-      <div class="field-row"><label>Размер</label><input id="fSize" placeholder="например, 12 см"></div>
-      <div class="field-row"><label>Зона</label><input id="fZone" placeholder="предплечье"></div>
-      <div class="field-row"><label>Идея</label><textarea id="fIdea" placeholder="Что хочешь набить, в каком стиле, без заливки или с ней"></textarea></div>
-      <div class="field-row" style="border-bottom:0"><label>Референсы</label><div class="refs" id="refRow"><button class="refadd" onclick="wiz_addRef()">+</button></div><input type="file" id="refFile" accept="image/*" multiple style="display:none" onchange="wiz_onFiles(this)"></div>
+      <div class="field-row"><label>Референсы</label><div class="refs" id="refRow"><button class="refadd" onclick="wiz_addRef()">+</button></div><input type="file" id="refFile" accept="image/*" multiple style="display:none" onchange="wiz_onFiles(this)"></div>
+      <div class="field-row" style="border-bottom:0"><label>Комментарий</label><textarea id="fComment" placeholder="Пожелания к дизайну, цвету, форме — всё, что хочешь добавить"></textarea></div>
       <span class="chip" id="svcChip">услуга</span>
-      <p class="legal">Работаем с 18 лет. Паспорт может понадобиться на сеансе.</p>
+      <p class="legal">Принимаю только с 15 лет.</p>
     </div>
   </main>
 
@@ -1013,8 +1011,8 @@ async function submitIdea(){
  if(name.length<2){toast('Укажите ваше имя');document.getElementById('fName').focus();return;}
  if(!/^@[A-Za-z0-9_]{5,32}$/.test(g('fContact'))){toast('Укажите ник Telegram, начиная с @ (минимум 5 символов)');document.getElementById('fContact').focus();return;}
  const iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+day;
- const comment=[g('fContact')&&'Контакт: '+g('fContact'), g('fSize')&&'Размер: '+g('fSize'), g('fZone')&&'Зона: '+g('fZone')].filter(Boolean).join(', ')||'—';
- const payload={action:'booking_request',name,service:s.n,date:iso,time:wizState.time,design:g('fIdea'),comment,photos:wizState.photos};
+ const comment=[g('fContact')&&'Контакт: '+g('fContact'), g('fComment')&&'Комментарий: '+g('fComment')].filter(Boolean).join(', ')||'—';
+ const payload={action:'booking_request',name,service:s.n,date:iso,time:wizState.time,design:'',comment,photos:wizState.photos};
  const tg=window.Telegram&&Telegram.WebApp;
  if(!tg||!tg.initData){toast('Откройте запись в Telegram через бота');return;}
  const btn=document.getElementById('ctaBtn'); btn.disabled=true;
