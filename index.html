@@ -757,19 +757,28 @@ function renderSvc(){
 }
 
 /* ---------- wizard: date ---------- */
+let datesReq=0;
 function buildDates(){
- dates=[];const base=new Date();
- for(let i=0;i<14;i++){const d=new Date(base);d.setDate(base.getDate()+i);
-   const slots=i<2?0:((i*3)%5)+3;
-   dates.push({date:d,slots});
- }
- const m=dates[0].date;
- document.getElementById('tzMonth').textContent=String(m.getMonth()+1).padStart(2,'0')+'.'+m.getFullYear();
- document.getElementById('dateList').innerHTML=dates.map((d,i)=>{
-   const wd=WD[d.date.getDay()], day=String(d.date.getDate()).padStart(2,'0');
-   const label=d.slots>0?d.slots+' окон':'занято';
-   return `<div class="date-row${d.slots>0?'':' off'}" onclick="pickDate(${i})"><b>${day} ${wd}</b><span>${label}</span></div>`;
- }).join('');
+ const el=document.getElementById('dateList'), req=++datesReq;
+ el.innerHTML='<p class="ph-note">Загружаю свободные окошки…</p>';
+ fetch(API_BASE+'/slots',{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json();}).then(data=>{
+   if(req!==datesReq)return;
+   const map=data.slots||{}, today=new Date();today.setHours(0,0,0,0);
+   dates=Object.keys(map).sort().map(k=>{
+     const [y,m,dd]=k.split('-').map(Number);
+     return {key:k,date:new Date(y,m-1,dd,12),times:(map[k]||[]).slice().sort()};
+   }).filter(d=>d.times.length&&d.date>=today).map(d=>({...d,slots:d.times.length}));
+   if(!dates.length){el.innerHTML='<p class="ph-note">Свободных окошек пока нет. Новые окошки выкладываются в канале <a href="https://t.me/Wiwio1" target="_blank" rel="noopener" style="text-decoration:underline">t.me/Wiwio1</a>.</p>';return;}
+   const m=dates[0].date;
+   document.getElementById('tzMonth').textContent=String(m.getMonth()+1).padStart(2,'0')+'.'+m.getFullYear();
+   el.innerHTML=dates.map((d,i)=>{
+     const wd=WD[d.date.getDay()], day=String(d.date.getDate()).padStart(2,'0'), mon=String(d.date.getMonth()+1).padStart(2,'0');
+     return `<div class="date-row" onclick="pickDate(${i})"><b>${day}.${mon} ${wd}</b><span>${d.slots} ${d.slots%10===1&&d.slots%100!==11?'окно':(d.slots%10>=2&&d.slots%10<=4&&(d.slots%100<10||d.slots%100>=20)?'окна':'окон')}</span></div>`;
+   }).join('');
+ }).catch(()=>{
+   if(req!==datesReq)return;
+   el.innerHTML='<p class="ph-note">Не удалось загрузить окошки. Попробуйте ещё раз чуть позже или посмотрите канал t.me/Wiwio1.</p>';
+ });
 }
 function pickDate(i){wizState.date=dates[i];renderTime();nav.go('time');}
 
@@ -777,22 +786,21 @@ function pickDate(i){wizState.date=dates[i];renderTime();nav.go('time');}
 function renderTime(){
  const d=wizState.date.date, wd=WD[d.getDay()], day=String(d.getDate()).padStart(2,'0');
  document.getElementById('timeDate').textContent=day+' '+wd;
- const free=Math.min(wizState.date.slots,TIMES.length);
- document.getElementById('freeCount').textContent='свободно '+free+'/'+TIMES.length;
+ const T=wizState.date.times;
+ document.getElementById('freeCount').textContent='свободно '+T.length;
  wizState.time=null;
  const sv=SVC[wizState.svc], notes=[];
  if(sv.x)notes.push(sv.x);
  if(sv.clawsItem)notes.push(CLAWS_NOTE);
  if(sv.des)notes.push(DESIGN_NOTE);
  document.getElementById('svcIncl').innerHTML='<p class="tinfo-h"><b>'+sv.n+'</b> — '+sv.p+'</p>'+notes.map(t=>'<p>('+t+')</p>').join('');
- document.getElementById('tgrid').innerHTML=TIMES.map((t,i)=>{
-   const off=i>=free;
-   return `<div class="tcell${off?' off':''}" onclick="pickTime(${i})">${t}</div>`;
+ document.getElementById('tgrid').innerHTML=T.map((t,i)=>{
+   return `<div class="tcell" onclick="pickTime(${i})">${t}</div>`;
  }).join('');
  setCta();
 }
 function pickTime(i){
- wizState.time=TIMES[i];
+ wizState.time=wizState.date.times[i];
  document.querySelectorAll('#tgrid .tcell').forEach((c,idx)=>c.classList.toggle('on',idx===i));
  setCta();
 }
