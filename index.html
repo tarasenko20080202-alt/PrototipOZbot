@@ -302,6 +302,9 @@ a{color:inherit;text-decoration:none;}
 .paper-title,.rule-b b,.paper-tg{-webkit-text-fill-color:#0a0705;}
 .rule-n,.rule-b p,.rule-b p.note,.late em{-webkit-text-fill-color:#171717;}
 .late span{-webkit-text-fill-color:#e9e5df;}
+
+/* серый текст: ПК (Windows) — как есть; телефоны/Mac — подтягиваем плотность под вид на ПК */
+html.thick .rule-b p,html.thick .rule-b p.note,html.thick .late em,html.thick .rule-b a{color:#0a0705 !important;-webkit-text-fill-color:#0a0705;-webkit-text-stroke:.35px #0a0705;}
 </style>
 <style>
     #bgVideo {
@@ -319,6 +322,7 @@ a{color:inherit;text-decoration:none;}
   </style>
   <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="style.css">
+<script>try{if(!/Windows/i.test(navigator.userAgent))document.documentElement.classList.add('thick');}catch(e){}</script>
 </head>
 <body>
   <video autoplay muted loop playsinline webkit-playsinline preload="auto" id="bgVideo">
