@@ -544,6 +544,7 @@ html.thick .rule-b p,html.thick .rule-b p.note,html.thick .late em,html.thick .r
       <p class="free" id="freeCount">&nbsp;</p>
       <p class="legal" style="margin:8px 0 16px;font-size:15px;line-height:1.5;color:#b5b0aa">Забронируем сразу. Время проверяется повторно при отправке заявки.</p>
       <div class="tgrid" id="tgrid"></div>
+      <div class="date-row" id="extraRow" style="margin-top:16px" onclick="toggleExtra()"><b>доп. окно — ещё час · +400 р.</b><span id="extraState">выкл</span></div>
       <div class="tinfo" id="svcIncl"></div>
     </div>
   </main>
@@ -591,7 +592,7 @@ const TIMES=["10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00"];
 const WD=["ВС","ПН","ВТ","СР","ЧТ","ПТ","СБ"];
 
 /* ---------- state ---------- */
-let wizState={svc:0,date:null,time:null,refs:0,photos:[]};
+let wizState={svc:0,date:null,time:null,extra:0,refs:0,photos:[]};
 let bookings=[];
 let dates=[];
 
@@ -916,7 +917,7 @@ function buildDates(){
      const [y,m,dd]=k.split('-').map(Number);
      return {key:k,date:new Date(y,m-1,dd,12),times:(map[k]||[]).slice().sort()};
    }).filter(d=>d.times.length&&d.date>=today).map(d=>({...d,slots:d.times.length}));
-   if(!dates.length){el.innerHTML='<p class="ph-note">Свободных окошек пока нет. Новые окошки выкладываются в канале <a href="https://t.me/Wiwio1" target="_blank" rel="noopener" style="text-decoration:underline">t.me/Wiwio1</a>.</p>';return;}
+    if(!dates.length){el.innerHTML='<p class="ph-note">Свободных окошек пока нет.</p>';return;}
    const m=dates[0].date;
    document.getElementById('tzMonth').textContent=String(m.getMonth()+1).padStart(2,'0')+'.'+m.getFullYear();
    el.innerHTML=dates.map((d,i)=>{
@@ -936,27 +937,49 @@ function renderTime(){
  document.getElementById('timeDate').textContent=day+' '+wd;
  const T=wizState.date.times;
  document.getElementById('freeCount').textContent='свободно '+T.length;
- wizState.time=null;
+ wizState.time=null;wizState.extra=0;
  const sv=SVC[wizState.svc], notes=[];
  if(sv.x)notes.push(sv.x);
  
  if(sv.des)notes.push(DESIGN_NOTE);
  document.getElementById('svcIncl').innerHTML='<p class="tinfo-h"><b>'+sv.n+'</b> — '+sv.p+'</p>'+notes.map(t=>(sv.always&&t===sv.x)?'<p>'+t+'</p>':'<p>('+t+')</p>').join('');
- document.getElementById('tgrid').innerHTML=T.map((t,i)=>{
-   return `<div class="tcell" onclick="pickTime(${i})">${t}</div>`;
- }).join('');
- setCta();
+  document.getElementById('tgrid').innerHTML=T.map((t,i)=>{
+    return `<div class="tcell" onclick="pickTime(${i})">${t}</div>`;
+  }).join('');
+  renderExtra();
+  setCta();
 }
 function pickTime(i){
  wizState.time=wizState.date.times[i];
+ wizState.extra=0;
  document.querySelectorAll('#tgrid .tcell').forEach((c,idx)=>c.classList.toggle('on',idx===i));
+ renderExtra();
  setCta();
+}
+
+/* ---------- доп. окно: +400 р. за следующий свободный час того же дня ---------- */
+function nextSlotTime(){
+ const T=wizState.date&&wizState.date.times,m=/^(\d{1,2}):(\d{2})$/.exec(wizState.time||'');
+ if(!T||!m)return null;
+ const t=String((+m[1]+1)%24).padStart(2,'0')+':'+m[2];
+ return T.includes(t)?t:null;
+}
+function renderExtra(){
+ const row=document.getElementById('extraRow'),st=document.getElementById('extraState');
+ const ok=!!nextSlotTime();
+ row.classList.toggle('off',!ok);
+ if(!ok)wizState.extra=0;
+ st.textContent=ok?(wizState.extra?'вкл · +400 р.':'выкл'):'нет окна рядом';
+}
+function toggleExtra(){
+ if(!nextSlotTime())return;
+ wizState.extra=wizState.extra?0:1;renderExtra();
 }
 
 /* ---------- wizard: idea ---------- */
 function renderIdea(){
  const s=SVC[wizState.svc], d=wizState.date.date, wd=WD[d.getDay()], day=String(d.getDate()).padStart(2,'0');
- document.getElementById('svcChip').textContent=s.n+' · '+day+' '+wd+' · '+wizState.time;
+ document.getElementById('svcChip').textContent=s.n+' · '+day+' '+wd+' · '+wizState.time+(wizState.extra?' · доп. окно +400 р.':'');
  document.getElementById('ideaTick').innerHTML=Array(4).fill(s.n.toUpperCase()+' · '+day+'.'+String(d.getMonth()+1).padStart(2,'0')).join(' · ')+' ·&nbsp;';
  const fc=document.getElementById('fComment');
  fc.placeholder=s.manic?'Пожелания по маникюру':s.clawsItem?CLAW_HINT:('Пожелания к дизайну, цвету, форме — всё, что хочешь добавить'+((s.des||s.hint)?'\nЕсли вы еще думаете какой дизайн делать, то можете скинуть мне в личные сообщения за несколько дней или за день':''));
@@ -1016,18 +1039,22 @@ async function submitIdea(){
  if(!/^@[A-Za-z0-9_]{5,32}$/.test(g('fContact'))){toast('Укажите ник Telegram, начиная с @ (минимум 5 символов)');document.getElementById('fContact').focus();return;}
  const iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+day;
  const comment=[g('fContact')&&'Контакт: '+g('fContact'), g('fComment')&&'Комментарий: '+g('fComment')].filter(Boolean).join(', ')||'—';
- const payload={action:'booking_request',name,service:s.n,date:iso,time:wizState.time,design:'',comment,photos:wizState.photos};
+  const payload={action:'booking_request',name,service:s.n,date:iso,time:wizState.time,extra:wizState.extra?1:0,design:'',comment,photos:wizState.photos};
  const tg=window.Telegram&&Telegram.WebApp;
  if(!tg||!tg.initData){toast('Откройте запись в Telegram через бота');return;}
  const btn=document.getElementById('ctaBtn'); btn.disabled=true;
  let sid=null;
  try{
   const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({initData:tg.initData,payload})});
-  if(r.status===409){toast('Это время уже занято, выберите другое');btn.disabled=false;return;}
+   if(r.status===409){
+    let j={};try{j=await r.json();}catch(e){}
+    toast(j.no_extra?'Рядом нет свободного окна — доп. окно недоступно':'Это время уже занято, выберите другое');
+    btn.disabled=false;return;
+   }
   if(!r.ok)throw new Error(r.status);
   try{const j=await r.json();if(j&&j.id)sid=j.id;}catch(e){}
  }catch(e){toast('Не удалось отправить, попробуйте ещё раз');btn.disabled=false;return;}
- bookings.unshift({id:sid||Date.now(),service:s.n,date:iso,time:wizState.time,name,status:'confirmed'});
+ bookings.unshift({id:sid||Date.now(),service:s.n,date:iso,time:wizState.time,extra:wizState.extra?1:0,name,status:'confirmed'});
  saveBookings();
  renderBook();toast('Запись подтверждена');nav.home();nav.go('book');
 }
@@ -1044,7 +1071,7 @@ function renderBook(){
  if(!bookings.length){
    el.innerHTML='<div class="empty"><div class="stamp">✦</div><b>Записей нет</b><p>Здесь появятся твои заявки с датой и временем сеанса. Отсюда же их можно отменить.</p></div>';
  } else {
-   el.innerHTML='<div style="height:14px"></div>'+bookings.map(b=>{const c=b.status==='cancelled';return `<div class="bcard${c?' cancelled':''}"><div class="bcard-top"><b>${b.service}</b><span class="st${c?' off':' ok'}">${c?'отменена':'подтверждена'}</span></div><p>${b.date?fmtBookingDate(b.date):b.when} · ${b.time||''}</p><p>${b.name}</p>${c?'':b.id===editId?`<div class="tabs">${SVC.map((v,i)=>v.claws?'':`<button class="${v.n===editSvc?'on':''}" onclick="pickEditSvc(${i})">${v.n}</button>`).join('')}</div><div class="bactions"><button class="edit" onclick="saveEdit()">сохранить</button><button class="gh" onclick="stopEdit()">назад</button></div><p class="legal" style="margin:8px 0 0">Менять можно только процедуру.</p>`:`<div class="bactions"><button class="edit" onclick="startEdit(${b.id})">изменить процедуру</button><button onclick="cancelBooking(${b.id})">отменить запись</button></div>`}</div>`;}).join('')+'<p class="legal" style="margin:6px 14px">Перенести запись на другую дату или время можно, написав мастеру @neznai01.</p>';
+   el.innerHTML='<div style="height:14px"></div>'+bookings.map(b=>{const c=b.status==='cancelled';return `<div class="bcard${c?' cancelled':''}"><div class="bcard-top"><b>${b.service}</b><span class="st${c?' off':' ok'}">${c?'отменена':'подтверждена'}</span></div><p>${b.date?fmtBookingDate(b.date):b.when} · ${b.time||''}${b.extra?' · доп. окно +400 р.':''}</p><p>${b.name}</p>${c?'':b.id===editId?`<div class="tabs">${SVC.map((v,i)=>v.claws?'':`<button class="${v.n===editSvc?'on':''}" onclick="pickEditSvc(${i})">${v.n}</button>`).join('')}</div><div class="bactions"><button class="edit" onclick="saveEdit()">сохранить</button><button class="gh" onclick="stopEdit()">назад</button></div><p class="legal" style="margin:8px 0 0">Менять можно только процедуру.</p>`:`<div class="bactions"><button class="edit" onclick="startEdit(${b.id})">изменить процедуру</button><button onclick="cancelBooking(${b.id})">отменить запись</button></div>`}</div>`;}).join('')+'<p class="legal" style="margin:6px 14px">Перенести запись на другую дату или время можно, написав мастеру @neznai01.</p>';
  }
 }
 
