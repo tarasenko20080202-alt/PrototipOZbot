@@ -544,7 +544,7 @@ html.thick .rule-b p,html.thick .rule-b p.note,html.thick .late em,html.thick .r
       <p class="free" id="freeCount">&nbsp;</p>
       <p class="legal" style="margin:8px 0 16px;font-size:15px;line-height:1.5;color:#b5b0aa">Забронируем сразу. Время проверяется повторно при отправке заявки.</p>
       <div class="tgrid" id="tgrid"></div>
-      <div class="date-row" id="extraRow" style="margin-top:16px" onclick="toggleExtra()"><b>доп. окно — ещё час · +400 р.</b><span id="extraState">выкл</span></div>
+      <div class="date-row" id="extraRow" style="display:none"><b id="extraText">доп. окно · +400 р. к стоимости</b></div>
       <div class="tinfo" id="svcIncl"></div>
     </div>
   </main>
@@ -912,10 +912,11 @@ function buildDates(){
  el.innerHTML='<p class="ph-note">Загружаю свободные окошки…</p>';
  fetch(API_BASE+'/slots',{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json();}).then(data=>{
    if(req!==datesReq)return;
-   const map=data.slots||{}, today=new Date();today.setHours(0,0,0,0);
-   dates=Object.keys(map).sort().map(k=>{
+   const map=data.slots||{}, exmap=data.extra||{}, today=new Date();today.setHours(0,0,0,0);
+   dates=[...new Set([...Object.keys(map),...Object.keys(exmap)])].sort().map(k=>{
      const [y,m,dd]=k.split('-').map(Number);
-     return {key:k,date:new Date(y,m-1,dd,12),times:(map[k]||[]).slice().sort()};
+     const ft=[...new Set([...(map[k]||[]),...(exmap[k]||[])])].sort();
+     return {key:k,date:new Date(y,m-1,dd,12),times:ft,xset:new Set(exmap[k]||[])};
    }).filter(d=>d.times.length&&d.date>=today).map(d=>({...d,slots:d.times.length}));
     if(!dates.length){el.innerHTML='<p class="ph-note">Свободных окошек пока нет.</p>';return;}
    const m=dates[0].date;
@@ -943,8 +944,9 @@ function renderTime(){
  
  if(sv.des)notes.push(DESIGN_NOTE);
  document.getElementById('svcIncl').innerHTML='<p class="tinfo-h"><b>'+sv.n+'</b> — '+sv.p+'</p>'+notes.map(t=>(sv.always&&t===sv.x)?'<p>'+t+'</p>':'<p>('+t+')</p>').join('');
+  const xs=wizState.date.xset||new Set();
   document.getElementById('tgrid').innerHTML=T.map((t,i)=>{
-    return `<div class="tcell" onclick="pickTime(${i})">${t}</div>`;
+    return `<div class="tcell" onclick="pickTime(${i})">${t}${xs.has(t)?'<span style="display:block;font-size:8px;letter-spacing:.5px;color:#e0a23c">+400</span>':''}</div>`;
   }).join('');
   renderExtra();
   setCta();
@@ -957,23 +959,18 @@ function pickTime(i){
  setCta();
 }
 
-/* ---------- доп. окно: +400 р. за следующий свободный час того же дня ---------- */
-function nextSlotTime(){
- const T=wizState.date&&wizState.date.times,m=/^(\d{1,2}):(\d{2})$/.exec(wizState.time||'');
- if(!T||!m)return null;
- const t=String((+m[1]+1)%24).padStart(2,'0')+':'+m[2];
- return T.includes(t)?t:null;
-}
+/* ---------- доп. окно: окошко из строки «Доп» — +400 р. к стоимости (кроме «Донарастить ноготь/коготь») ---------- */
 function renderExtra(){
- const row=document.getElementById('extraRow'),st=document.getElementById('extraState');
- const ok=!!nextSlotTime();
- row.classList.toggle('off',!ok);
- if(!ok)wizState.extra=0;
- st.textContent=ok?(wizState.extra?'вкл · +400 р.':'выкл'):'нет окна рядом';
-}
-function toggleExtra(){
- if(!nextSlotTime())return;
- wizState.extra=wizState.extra?0:1;renderExtra();
+ const row=document.getElementById('extraRow');
+ const isX=!!(wizState.date&&wizState.date.xset&&wizState.date.xset.has(wizState.time));
+ const noFee=SVC[wizState.svc]&&SVC[wizState.svc].n==='Донарастить ноготь/коготь';
+ if(isX){
+  row.style.display='';
+  document.getElementById('extraText').textContent=noFee?'доп. окно · без доплаты к цене':'доп. окно · +400 р. к стоимости услуги';
+  wizState.extra=noFee?0:1;
+ }else{
+  row.style.display='none';wizState.extra=0;
+ }
 }
 
 /* ---------- wizard: idea ---------- */
@@ -1039,18 +1036,14 @@ async function submitIdea(){
  if(!/^@[A-Za-z0-9_]{5,32}$/.test(g('fContact'))){toast('Укажите ник Telegram, начиная с @ (минимум 5 символов)');document.getElementById('fContact').focus();return;}
  const iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+day;
  const comment=[g('fContact')&&'Контакт: '+g('fContact'), g('fComment')&&'Комментарий: '+g('fComment')].filter(Boolean).join(', ')||'—';
-  const payload={action:'booking_request',name,service:s.n,date:iso,time:wizState.time,extra:wizState.extra?1:0,design:'',comment,photos:wizState.photos};
+  const payload={action:'booking_request',name,service:s.n,date:iso,time:wizState.time,design:'',comment,photos:wizState.photos};
  const tg=window.Telegram&&Telegram.WebApp;
  if(!tg||!tg.initData){toast('Откройте запись в Telegram через бота');return;}
  const btn=document.getElementById('ctaBtn'); btn.disabled=true;
  let sid=null;
  try{
   const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({initData:tg.initData,payload})});
-   if(r.status===409){
-    let j={};try{j=await r.json();}catch(e){}
-    toast(j.no_extra?'Рядом нет свободного окна — доп. окно недоступно':'Это время уже занято, выберите другое');
-    btn.disabled=false;return;
-   }
+   if(r.status===409){toast('Это время уже занято, выберите другое');btn.disabled=false;return;}
   if(!r.ok)throw new Error(r.status);
   try{const j=await r.json();if(j&&j.id)sid=j.id;}catch(e){}
  }catch(e){toast('Не удалось отправить, попробуйте ещё раз');btn.disabled=false;return;}
