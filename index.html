@@ -921,10 +921,14 @@ function buildDates(){
     if(!dates.length){el.innerHTML='<p class="ph-note">Свободных окошек пока нет.</p>';return;}
    const m=dates[0].date;
    document.getElementById('tzMonth').textContent=String(m.getMonth()+1).padStart(2,'0')+'.'+m.getFullYear();
-   el.innerHTML=dates.map((d,i)=>{
-     const wd=WD[d.date.getDay()], day=String(d.date.getDate()).padStart(2,'0'), mon=String(d.date.getMonth()+1).padStart(2,'0');
-     return `<div class="date-row" onclick="pickDate(${i})"><b>${day}.${mon} ${wd}</b><span>${d.slots} ${d.slots%10===1&&d.slots%100!==11?'окно':(d.slots%10>=2&&d.slots%10<=4&&(d.slots%100<10||d.slots%100>=20)?'окна':'окон')}</span></div>`;
-   }).join('');
+    el.innerHTML=dates.map((d,i)=>{
+      const wd=WD[d.date.getDay()], day=String(d.date.getDate()).padStart(2,'0'), mon=String(d.date.getMonth()+1).padStart(2,'0');
+      const pl=d.slots%10===1&&d.slots%100!==11?'окно':(d.slots%10>=2&&d.slots%10<=4&&(d.slots%100<10||d.slots%100>=20)?'окна':'окон');
+      const xn=d.xset?d.xset.size:0, all=xn&&xn===d.slots;
+      const cnt=all?'':'<i style="font-style:normal">'+d.slots+' '+pl+'</i>';
+      const tag=xn?'<i style="font-style:normal;color:#e0a23c">'+(all?'доп. окно':' · доп. окно')+'</i>':'';
+      return `<div class="date-row" onclick="pickDate(${i})"><b>${day}.${mon} ${wd}</b><span>${cnt}${tag}</span></div>`;
+    }).join('');
  }).catch(()=>{
    if(req!==datesReq)return;
    el.innerHTML='<p class="ph-note">Не удалось загрузить окошки. Попробуйте ещё раз чуть позже или посмотрите канал t.me/Wiwio1.</p>';
@@ -944,9 +948,8 @@ function renderTime(){
  
  if(sv.des)notes.push(DESIGN_NOTE);
  document.getElementById('svcIncl').innerHTML='<p class="tinfo-h"><b>'+sv.n+'</b> — '+sv.p+'</p>'+notes.map(t=>(sv.always&&t===sv.x)?'<p>'+t+'</p>':'<p>('+t+')</p>').join('');
-  const xs=wizState.date.xset||new Set();
   document.getElementById('tgrid').innerHTML=T.map((t,i)=>{
-    return `<div class="tcell" onclick="pickTime(${i})">${t}${xs.has(t)?'<span style="display:block;font-size:8px;letter-spacing:.5px;color:#e0a23c">доп. окно</span>':''}</div>`;
+    return `<div class="tcell" onclick="pickTime(${i})">${t}</div>`;
   }).join('');
   renderExtra();
   setCta();
