@@ -946,7 +946,7 @@ function renderTime(){
  document.getElementById('svcIncl').innerHTML='<p class="tinfo-h"><b>'+sv.n+'</b> — '+sv.p+'</p>'+notes.map(t=>(sv.always&&t===sv.x)?'<p>'+t+'</p>':'<p>('+t+')</p>').join('');
   const xs=wizState.date.xset||new Set();
   document.getElementById('tgrid').innerHTML=T.map((t,i)=>{
-    return `<div class="tcell" onclick="pickTime(${i})">${t}${xs.has(t)?'<span style="display:block;font-size:8px;letter-spacing:.5px;color:#e0a23c">+400</span>':''}</div>`;
+    return `<div class="tcell" onclick="pickTime(${i})">${t}${xs.has(t)?'<span style="display:block;font-size:8px;letter-spacing:.5px;color:#e0a23c">доп. окно</span>':''}</div>`;
   }).join('');
   renderExtra();
   setCta();
