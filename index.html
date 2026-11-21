@@ -926,7 +926,7 @@ function buildDates(){
       const pl=d.slots%10===1&&d.slots%100!==11?'окно':(d.slots%10>=2&&d.slots%10<=4&&(d.slots%100<10||d.slots%100>=20)?'окна':'окон');
       const xn=d.xset?d.xset.size:0, all=xn&&xn===d.slots;
       const cnt=all?'':'<i style="font-style:normal">'+d.slots+' '+pl+'</i>';
-      const tag=xn?'<i style="font-style:normal;color:#e0a23c">'+(all?'доп. окно':' · доп. окно')+'</i>':'';
+      const tag=xn?'<i style="font-style:normal;color:#e0a23c">'+(all?'+400 доп. окно':' · +400 доп. окно')+'</i>':'';
       return `<div class="date-row" onclick="pickDate(${i})"><b>${day}.${mon} ${wd}</b><span>${cnt}${tag}</span></div>`;
     }).join('');
  }).catch(()=>{
@@ -942,12 +942,14 @@ function renderTime(){
  document.getElementById('timeDate').textContent=day+' '+wd;
  const T=wizState.date.times;
  document.getElementById('freeCount').textContent='свободно '+T.length;
- wizState.time=null;wizState.extra=0;
- const sv=SVC[wizState.svc], notes=[];
+ wizState.time=null;
+ const sv=SVC[wizState.svc], notes=[], noFee=sv.n==='Донарастить ноготь/коготь';
+ const xall=T.length>0&&wizState.date.xset&&wizState.date.xset.size===T.length;
+ wizState.extra=xall&&!noFee?1:0;
  if(sv.x)notes.push(sv.x);
- 
+
  if(sv.des)notes.push(DESIGN_NOTE);
- document.getElementById('svcIncl').innerHTML='<p class="tinfo-h"><b>'+sv.n+'</b> — '+svcPriceStr()+'</p>'+notes.map(t=>(sv.always&&t===sv.x)?'<p>'+t+'</p>':'<p>('+t+')</p>').join('');
+ document.getElementById('svcIncl').innerHTML='<p class="tinfo-h"><b>'+sv.n+'</b> — '+svcPriceStr()+'</p>'+(wizState.extra?'<p class="xnote" style="color:#e0a23c">+400 доп. окно</p>':'')+notes.map(t=>(sv.always&&t===sv.x)?'<p>'+t+'</p>':'<p>('+t+')</p>').join('');
   document.getElementById('tgrid').innerHTML=T.map((t,i)=>{
     return `<div class="tcell" onclick="pickTime(${i})">${t}</div>`;
   }).join('');
@@ -987,7 +989,8 @@ function renderExtra(){
   document.getElementById('extraText').textContent=noFee?'доп. окно · без доплаты к цене':'доп. окно';
   wizState.extra=noFee?0:1;
  }else{
-  row.style.display='none';wizState.extra=0;
+  row.style.display='none';
+  if(wizState.time)wizState.extra=0;
  }
 }
 
