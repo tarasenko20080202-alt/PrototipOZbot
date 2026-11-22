@@ -926,7 +926,7 @@ function buildDates(){
       const pl=d.slots%10===1&&d.slots%100!==11?'окно':(d.slots%10>=2&&d.slots%10<=4&&(d.slots%100<10||d.slots%100>=20)?'окна':'окон');
       const xn=d.xset?d.xset.size:0, all=xn&&xn===d.slots;
       const noFeeSvc=SVC[wizState.svc]&&SVC[wizState.svc].n==='Донарастить ноготь/коготь';
-      const lbl=noFeeSvc?'доп. окно':'+400 доп. окно';
+      const lbl=noFeeSvc?'доп. окно':'+400 р. доп. окно';
       const cnt=all?'':'<i style="font-style:normal">'+d.slots+' '+pl+'</i>';
       const tag=xn?'<i style="font-style:normal;color:#e0a23c">'+(all?lbl:' · '+lbl)+'</i>':'';
       return `<div class="date-row" onclick="pickDate(${i})"><b>${day}.${mon} ${wd}</b><span>${cnt}${tag}</span></div>`;
@@ -951,7 +951,7 @@ function renderTime(){
  if(sv.x)notes.push(sv.x);
 
  if(sv.des)notes.push(DESIGN_NOTE);
- document.getElementById('svcIncl').innerHTML='<p class="tinfo-h"><b>'+sv.n+'</b> — '+svcPriceStr()+'</p>'+(wizState.extra?'<p class="xnote" style="color:#e0a23c">+400 доп. окно</p>':'')+notes.map(t=>(sv.always&&t===sv.x)?'<p>'+t+'</p>':'<p>('+t+')</p>').join('');
+ document.getElementById('svcIncl').innerHTML='<p class="tinfo-h"><b>'+sv.n+'</b> — '+svcPriceStr()+'</p>'+(wizState.extra?'<p class="xnote" style="color:#e0a23c">+400 р. доп. окно</p>':'')+notes.map(t=>(sv.always&&t===sv.x)?'<p>'+t+'</p>':'<p>('+t+')</p>').join('');
   document.getElementById('tgrid').innerHTML=T.map((t,i)=>{
     return `<div class="tcell" onclick="pickTime(${i})">${t}</div>`;
   }).join('');
@@ -985,7 +985,7 @@ function refreshSvcPrice(){
  let x=document.querySelector('#svcIncl .xnote');
  if(wizState.extra===1){
   if(!x){x=document.createElement('p');x.className='xnote';x.style.color='#e0a23c';if(h&&h.nextSibling)h.parentNode.insertBefore(x,h.nextSibling);else if(h)h.parentNode.appendChild(x);}
-  x.textContent='+400 доп. окно';
+  x.textContent='+400 р. доп. окно';
  }else if(x)x.remove();
 }
 function renderExtra(){
@@ -994,7 +994,7 @@ function renderExtra(){
  const noFee=SVC[wizState.svc]&&SVC[wizState.svc].n==='Донарастить ноготь/коготь';
  if(isX){
   row.style.display='';
-  document.getElementById('extraText').textContent=noFee?'доп. окно · без доплаты к цене':'+400 доп. окно';
+  document.getElementById('extraText').textContent=noFee?'доп. окно · без доплаты к цене':'+400 р. доп. окно';
   wizState.extra=noFee?0:1;
  }else{
   row.style.display='none';
