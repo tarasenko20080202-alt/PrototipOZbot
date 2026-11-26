@@ -938,6 +938,18 @@ function buildDates(){
 }
 function pickDate(i){wizState.date=dates[i];renderTime();nav.go('time');}
 
+/* живая синхронизация окошек: /slots отдаётся без кэша, обновляем расписание,
+   когда пользователь вернулся в приложение (из чата, где мастер меняет окошки) */
+(function(){
+  const refresh=()=>{
+    if(document.hidden)return;
+    if(nav.cur()==='date')buildDates();
+  };
+  document.addEventListener('visibilitychange',refresh,{passive:true});
+  window.addEventListener('focus',refresh,{passive:true});
+  window.addEventListener('pageshow',refresh,{passive:true});
+})();
+
 /* ---------- wizard: time ---------- */
 function renderTime(){
  const d=wizState.date.date, wd=WD[d.getDay()], day=String(d.getDate()).padStart(2,'0');
